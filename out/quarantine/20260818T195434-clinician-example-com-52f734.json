@@ -1,0 +1,24 @@
+{
+  "draft": {
+    "subject": "A note for your Brooklyn practice",
+    "body": "Practices in Brooklyn run into this constantly. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list.\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, 228 Park Ave S, New York, NY 10003",
+    "to": "clinician@example.com",
+    "angle": "no_migration",
+    "claims": []
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "states the recipient's city ('Brooklyn') but identity is only probable at score 51"
+    ],
+    "warnings": []
+  },
+  "context": {
+    "tier": "probable",
+    "score": 51,
+    "forbidden_facts": {
+      "city": "Brooklyn"
+    },
+    "trigger": null
+  }
+}

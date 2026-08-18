@@ -3,7 +3,7 @@ import json, os, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 os.environ.setdefault("DRY_RUN", "1")
 
-from machine import qc, send, io_input, memory, strategy
+from machine import compliance, qc, send, io_input, memory, strategy
 
 def test_input_is_real_and_not_hardcoded():
     """The contract is three columns. Replacing the file must be the only step."""
@@ -111,8 +111,10 @@ def test_qc_passes_a_clean_draft():
             "session yet, so I wanted to offer one thing: I can introduce you to "
             "her for ten minutes. No demo, no pitch, just another psychiatrist in "
             "your state telling you what it is actually like. Would that be useful?")
-    v = qc.check({"to": "a@b.c", "subject": "Another NY psychiatrist, ten minutes",
-                  "body": body})
+    draft = compliance.apply({"to": "a@b.c",
+                              "subject": "Another NY psychiatrist, ten minutes",
+                              "body": body})
+    v = qc.check(draft)
     assert v.ok, v.failures
 
 def test_output_leaves_the_program():
@@ -179,3 +181,38 @@ def test_json_survives_a_model_that_wraps_its_answer(monkeypatch):
     from machine import llm
     assert llm.extract_json('```json\n{"verdict":"fail"}\n```')["verdict"] == "fail"
     assert llm.extract_json('Sure! {"verdict":"pass","note":"a } brace"}')["verdict"] == "pass"
+
+
+
+def test_a_draft_without_an_unsubscribe_never_leaves():
+    """CAN-SPAM requires a postal address and a working opt-out in every
+    commercial message. The footer is appended by the machine, not written by
+    the model, and QC verifies it survived."""
+    body = ("You looked at JotPsych a while back and stayed where you were. That is "
+            "usually the right call mid-contract. It runs alongside the system you "
+            "are on today and takes about five minutes to set up. ") * 2
+    bare = {"to": "a@b.c", "subject": "A perfectly ordinary subject", "body": body}
+    assert not qc.check(bare).ok
+    assert qc.check(compliance.apply(bare)).ok
+
+
+def test_an_unsubscribe_link_cannot_be_forged():
+    """The token is signed, so one clinician's link cannot unsubscribe another."""
+    good = compliance.token("real@example.com")
+    assert compliance.verify(good) == "real@example.com"
+    forged = "victim@example.com:" + good.split(":")[1]
+    assert compliance.verify(forged) == ""
+
+
+def test_suppression_is_enforced_and_recorded():
+    """Unsubscribes, bounces and complaints all land in one place, and every
+    one of them is in the audit trail."""
+    import os, tempfile
+    os.environ["DB_PATH"] = tempfile.mkdtemp() + "/t.db"
+    import importlib
+    from machine import db as _db
+    importlib.reload(_db)
+    c = _db.connect()
+    _db.suppress(c, "Gone@Example.com", "one-click unsubscribe", source="unsubscribe")
+    assert _db.is_suppressed(c, "gone@example.com")
+    assert any(e["action"] == "suppressed" for e in _db.events(c))

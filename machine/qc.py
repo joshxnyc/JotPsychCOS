@@ -10,7 +10,7 @@ show exactly what the machine caught.
 """
 import json, re, pathlib, datetime
 import yaml
-from . import config, llm
+from . import compliance, config, llm
 
 RULES = yaml.safe_load((config.CONFIG / "guardrails.yaml").read_text())
 FACTS = (config.CONFIG / "fact_pack.md").read_text()
@@ -38,7 +38,12 @@ def check(draft: dict, context: dict | None = None) -> Verdict:
     """draft = {'subject':..., 'body':..., 'to':..., 'angle':..., 'claims':[...]}"""
     v = Verdict()
     subject = (draft.get("subject") or "").strip()
-    body    = (draft.get("body") or "").strip()
+    full    = (draft.get("body") or "").strip()
+    # The compliance footer is appended by the machine, not written by the model.
+    # Check it is there, then judge the model only on what the model wrote.
+    if not compliance.present(full):
+        v.fail("missing the required unsubscribe link and postal address")
+    body = full.split("\n--\n")[0].strip()
     blob    = f"{subject}\n{body}"
     low     = blob.lower()
 

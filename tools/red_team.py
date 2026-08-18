@@ -12,7 +12,7 @@ live draft does. If a check ever stops firing, this run says so loudly.
 import pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from machine import qc, ledger
+from machine import compliance, qc, ledger
 
 FILLER = ("JotPsych runs alongside the system you already use and takes about "
           "five minutes to set up. Notes and claims are checked against payer "
@@ -90,8 +90,10 @@ def main() -> int:
     expected_pass = "a clean draft, which must pass"
     wrong = []
     for name, why, draft, ctx in CASES:
-        draft = {**draft, "to": "clinician@example.com", "angle": "no_migration",
-                 "claims": []}
+        # The compliance footer is appended by the machine before QC sees a
+        # draft, so the harness must go through the same door.
+        draft = compliance.apply({**draft, "to": "clinician@example.com",
+                                  "angle": "no_migration", "claims": []})
         v = qc.check(draft, ctx)
         should_block = name != expected_pass
         ok = (not v.ok) == should_block

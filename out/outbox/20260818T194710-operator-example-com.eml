@@ -1,0 +1,31 @@
+From: JotPsych Machine <onboarding@resend.dev>
+To: operator@example.com
+Subject: 3 messages staged, nothing needs you
+Date: Tue, 18 Aug 2026 19:47:10 +0000
+X-Machine-Simulated: DRY_RUN
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Run 1 =C2=B7 18 Aug 2026 19:47 UTC
+
+Looked at 38 clinicians. Re-read 38 from the federal registry; the rest were =
+still fresh.
+
+    0  practice changes detected
+    3  messages staged
+    0  drafts stopped by quality control
+   34  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+3 approved messages are staged in out/outbox/ and NOT delivered to anyone.
+Nothing reaches a clinician until SEND_TO_CLINICIANS is turned on.
+
+--------------------------------------------------------------
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window

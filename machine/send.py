@@ -6,7 +6,7 @@ Fallback: writes a real .eml to out/outbox/ so the loop is still provable
 """
 import json, urllib.request, urllib.error, datetime, re, pathlib
 from email.message import EmailMessage
-from . import config
+from . import compliance, config
 
 RESEND = "https://api.resend.com/emails"
 
@@ -21,6 +21,9 @@ def send_email(to: str, subject: str, body: str, *, reply_to: str = "") -> SendR
     payload = {"from": config.MAIL_FROM, "to": [to], "subject": subject, "text": body}
     if reply_to:
         payload["reply_to"] = reply_to
+    hdrs = compliance.headers(to)
+    if hdrs:
+        payload["headers"] = hdrs
     req = urllib.request.Request(
         RESEND, data=json.dumps(payload).encode(),
         headers={"Authorization": f"Bearer {config.RESEND_API_KEY}",

@@ -3,8 +3,8 @@
 
 Run:  python -m machine.run [--limit N] [--live]
 """
-import argparse, sys, datetime
-from . import config, digest, ledger, memory, qc, send, strategy, report
+import argparse, os, sys, datetime
+from . import compliance, config, db, digest, ledger, memory, qc, send, strategy, report
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
@@ -19,6 +19,12 @@ def main(argv=None) -> int:
     ledger.set_run(state.get("run_count", 0))
     if a.report_only:
         report.build(state); memory.save(state); return 0
+
+    # Everything a person can act on goes to the store. The files stay as they
+    # were — they are what makes the machine inspectable — but the store is what
+    # the web app reads and writes.
+    conn = db.connect()
+    run_id = db.start_run(conn, trigger=os.getenv("RUN_TRIGGER", "schedule"))
 
     inputs = strategy.load_inputs()
     print(f"[input]  {len(inputs['dormant'])} dormant clinicians, "
@@ -54,14 +60,25 @@ def main(argv=None) -> int:
             ledger.append({"action": "skipped", "target_id": plan.target_id,
                            "reason": "no email address"}); skipped += 1; continue
 
-        d = strategy.draft(plan, state)
+        d = compliance.apply(strategy.draft(plan, state))
         v = qc.check(d, plan.context)
 
         # A clinician handed to a person still gets a written email. The person
         # should be editing and sending, not composing from a bullet list — and
         # it goes through exactly the same checks as anything the machine sends.
+        cid = db.upsert_clinician(
+            conn, name=plan.context.get("name", ""), email=plan.to,
+            mobile=plan.context.get("mobile", ""), source="list",
+            npi=plan.context.get("npi", ""), tier=plan.context.get("tier", ""),
+            score=plan.context.get("score", 0))
+
         if v.ok and plan.action == "human_call":
             plan.context["draft"] = {"subject": d["subject"], "body": d["body"]}
+            plan.context["draft_id"] = db.add_draft(
+                conn, run_id=run_id, clinician_id=cid, kind="human_call",
+                channel=plan.channel, angle=d["angle"], subject=d["subject"],
+                body=d["body"], reason=plan.reason, status="staged",
+                peer=(plan.context.get("peer") or {}).get("name", ""))
             human_queue.append(plan)
             ledger.append({"action": "human_call", "target_id": plan.target_id,
                            "reason": plan.reason, "subject": d["subject"],
@@ -70,6 +87,10 @@ def main(argv=None) -> int:
             continue
 
         if not v.ok:
+            db.add_draft(conn, run_id=run_id, clinician_id=cid, kind=plan.action,
+                         channel=plan.channel, angle=d["angle"], subject=d["subject"],
+                         body=d["body"], reason=plan.reason, status="blocked",
+                         qc=__import__("json").dumps(v.as_dict()))
             p = qc.quarantine(d, v, plan.context)
             ledger.append({"action": "blocked", "target_id": plan.target_id,
                            "angle": d["angle"], "subject": d["subject"],
@@ -81,6 +102,10 @@ def main(argv=None) -> int:
             print(f"[QC]     BLOCKED {plan.target_id}: {v.failures[0]}")
             continue
 
+        db.add_draft(conn, run_id=run_id, clinician_id=cid, kind=plan.action,
+                     channel=plan.channel, angle=d["angle"], subject=d["subject"],
+                     body=d["body"], reason=plan.reason,
+                     status="sent" if config.SEND_TO_CLINICIANS else "staged")
         r = send.deliver(d, plan.channel)
         ledger.append({"action": ("staged" if not config.SEND_TO_CLINICIANS
                                   else "sent") if r.ok else "send_failed",
@@ -125,6 +150,10 @@ def main(argv=None) -> int:
     report.write_human_queue(human_queue, state)
     report.build(state)
     memory.save(state)
+    db.end_run(conn, run_id, {"staged": sent, "blocked": blocked, "silent": silent,
+                              "human_queue": queued, "skipped": skipped})
+    db.log(conn, "run_finished", detail=f"run {run_id}: {sent} ready, {blocked} blocked")
+    conn.close()
     verb = "sent" if config.SEND_TO_CLINICIANS else "staged"
     print(f"\n[done]   {verb}={sent} blocked={blocked} silent={silent} "
           f"human_queue={queued} skipped={skipped}")

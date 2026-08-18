@@ -1,0 +1,50 @@
+# Second Window — one machine, one volume.
+# Deploy:  fly launch --no-deploy  then  fly deploy
+app = "second-window"
+primary_region = "ewr"          # Newark: closest to the New York office
+
+[build]
+
+[env]
+  PORT = "8080"
+  DB_PATH = "/data/app.db"
+  STATE_DIR = "/data/state"
+  # Off until someone turns it on deliberately. Approving a draft records the
+  # decision but sends nothing while this is "0".
+  SEND_TO_CLINICIANS = "0"
+  SEND_DIGEST = "1"
+  DRY_RUN = "0"
+  MAX_SENDS_PER_RUN = "5"
+  RESOLVE_BUDGET_PER_RUN = "400"
+  RUN_INTERVAL_HOURS = "24"
+  PROSPECT_STATES = "NY,CA,TX,FL,IL,MA,WA,CO,GA,NC"
+  PROSPECT_WINDOW_DAYS = "90"
+
+[[mounts]]
+  source = "second_window_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 1        # the scheduler lives in-process, so keep one up
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 50
+    soft_limit = 25
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[checks]
+  [checks.health]
+    type = "http"
+    port = 8080
+    path = "/healthz"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"

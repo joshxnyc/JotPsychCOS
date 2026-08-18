@@ -9,7 +9,9 @@ except Exception:
 ROOT   = pathlib.Path(__file__).resolve().parent.parent
 INBOX  = ROOT / "inbox"      # <-- INPUT LIVES HERE. Replace these files with yours.
 OUT    = ROOT / "out"
-STATE  = ROOT / "state"
+# On a container the state directory must sit on the mounted volume, or the
+# machine forgets everything on every deploy and can never detect a change.
+STATE  = pathlib.Path(os.getenv("STATE_DIR") or (ROOT / "state"))
 CONFIG = ROOT / "config"
 for p in (INBOX, OUT, STATE, OUT / "outbox", OUT / "quarantine"):
     p.mkdir(parents=True, exist_ok=True)
