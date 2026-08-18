@@ -16,6 +16,7 @@ def main(argv=None) -> int:
         config.DRY_RUN = False
 
     state = memory.start_run(memory.load())
+    ledger.set_run(state.get("run_count", 0))
     if a.report_only:
         report.build(state); memory.save(state); return 0
 

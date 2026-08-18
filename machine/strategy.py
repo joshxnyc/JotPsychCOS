@@ -89,6 +89,8 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
     run_id = f"run{state.get('run_count', 0)}"
     blocked = {r["email"].strip().lower() for r in inputs["suppress"] if r.get("email")}
 
+    by_email_all = {r["target_id"]: r for r in inputs["dormant"]}
+
     # 1. Three fields -> a verified practice profile, or an honest refusal.
     resolutions = {}
     for row in inputs["dormant"]:
@@ -97,6 +99,21 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
         resolutions[row["target_id"]] = resolve.resolve(row, RULES)
     state.setdefault("resolution_scores", {}).update(
         {t: {"score": r["score"], "tier": r["tier"]} for t, r in resolutions.items()})
+
+    # The roster is what the dashboard shows as "the data": every clinician the
+    # machine knows about, what it worked out about them, and how sure it is.
+    roster = state.setdefault("roster", {})
+    for tid, r in resolutions.items():
+        row, reg = by_email_all[tid], r.get("registry", {})
+        roster[tid] = {
+            "name": row.get("name", ""), "email": row.get("email", ""),
+            "mobile": row.get("mobile", ""),
+            "tier": r["tier"], "score": r["score"], "npi": r.get("npi", ""),
+            "specialty": reg.get("taxonomy", ""), "state_code": reg.get("state", ""),
+            "city": reg.get("city", ""), "candidates": r.get("candidates", 0),
+            "signals": r.get("signals", []),
+            "mobile_state": r.get("mobile_state", ""),
+        }
 
     # 2. What changed since last run. This is the whole readiness detector.
     triggers = watch.observe(resolutions, run_id)
