@@ -1,0 +1,114 @@
+From: JotPsych Machine <onboarding@resend.dev>
+To: operator@jotpsych.com
+Subject: 1 clinician worth your time this cycle
+Date: Tue, 18 Aug 2026 20:57:06 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============4319734798669660933=="
+
+--===============4319734798669660933==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 2 =C2=B7 18 Aug 2026 20:57 UTC
+
+Looked at 38 clinicians. Re-read 6 from the federal registry; the rest were s=
+till fresh.
+
+    5  practice changes detected
+    1  messages staged
+    0  drafts stopped by quality control
+   35  clinicians deliberately left alone
+    1  waiting for you (~12 minutes)
+
+--------------------------------------------------------------
+
+WORTH YOUR TIME =E2=80=94 each email is written and checked. Edit if you
+want to, then send it from your own mailbox.
+
+1. Jordan Blake  <jordan.blake@meadowlarkbh.com>
+   Why now: their practice moved to another state
+   Peer to offer: Tessa Nolan, Behavior Technician in CA
+
+   Subject: Running JotPsych beside what you already use
+
+   You looked at JotPsych a while back and stayed where you were. That is usu=
+ally the right call mid-contract.
+  =20
+   Worth knowing: you do not have to move anything. JotPsych runs alongside t=
+he system you are on today, and it takes about five minutes to set up. Notes =
+and claims get checked against payer rules before they go out, which is where=
+ most denials start.
+  =20
+   If it is useful later, it will still be here.
+  =20
+   =E2=80=94 Josh, JotPsych
+  =20
+   --
+   You are receiving this because you signed up for JotPsych.
+   Unsubscribe: https://jotpsych-second-window.fly.dev/unsubscribe?t=3Djordan=
+.blake@meadowlarkbh.com:7eac3b1133d05cdf
+   JotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205
+
+   (Do not mention that anything was looked up. You are offering
+    an introduction, not reporting on their practice.)
+
+--------------------------------------------------------------
+
+1 approved message is staged in out/outbox/ and NOT delivered to anyone.
+Nothing reaches a clinician until SEND_TO_CLINICIANS is turned on.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============4319734798669660933==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 2 =C2=B7 18 Aug 2026 20:57 UTC</p><p style=3D'margin:0 0 14p=
+x'>Looked at 38 clinicians. Re-read 6 from the federal registry; the rest wer=
+e still fresh.</p><p style=3D'margin:0 0 14px'>    5  practice changes detect=
+ed<br>    1  messages staged<br>    0  drafts stopped by quality control<br> =
+  35  clinicians deliberately left alone<br>    1  waiting for you (~12 minut=
+es)</p><p style=3D'margin:0 0 14px'>-----------------------------------------=
+---------------------</p><p style=3D'margin:0 0 14px'>WORTH YOUR TIME =E2=80=
+=94 each email is written and checked. Edit if you<br>want to, then send it f=
+rom your own mailbox.</p><p style=3D'margin:0 0 14px'>1. Jordan Blake  &lt;jo=
+rdan.blake@meadowlarkbh.com&gt;<br>   Why now: their practice moved to anothe=
+r state<br>   Peer to offer: Tessa Nolan, Behavior Technician in CA</p><p sty=
+le=3D'margin:0 0 14px'>   Subject: Running JotPsych beside what you already u=
+se</p><p style=3D'margin:0 0 14px'>   You looked at JotPsych a while back and=
+ stayed where you were. That is usually the right call mid-contract.<br>   <b=
+r>   Worth knowing: you do not have to move anything. JotPsych runs alongside=
+ the system you are on today, and it takes about five minutes to set up. Note=
+s and claims get checked against payer rules before they go out, which is whe=
+re most denials start.<br>   <br>   If it is useful later, it will still be h=
+ere.<br>   <br>   =E2=80=94 Josh, JotPsych<br>   <br>   --<br>   You are rece=
+iving this because you signed up for JotPsych.<br>   Unsubscribe: https://jot=
+psych-second-window.fly.dev/unsubscribe?t=3Djordan.blake@meadowlarkbh.com:7ea=
+c3b1133d05cdf<br>   JotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brookly=
+n, NY 11205</p><p style=3D'margin:0 0 14px'>   (Do not mention that anything =
+was looked up. You are offering<br>    an introduction, not reporting on thei=
+r practice.)</p><p style=3D'margin:0 0 14px'>--------------------------------=
+------------------------------</p><p style=3D'margin:0 0 14px'>1 approved mes=
+sage is staged in out/outbox/ and NOT delivered to anyone.<br>Nothing reaches=
+ a clinician until SEND_TO_CLINICIANS is turned on.</p><p style=3D'margin:0 0=
+ 14px'>--------------------------------------------------------------</p><p s=
+tyle=3D'margin:0 0 14px'>This workspace runs on sample data: clinician and pe=
+er details are<br>invented, and nothing in it is delivered to any real clinic=
+ian.</p><p style=3D'margin:0 0 14px'>Full report: https://joshxnyc.github.io/=
+JotPsychCOS/<br>Change what it says or when: config/brand.md and config/guard=
+rails.yaml.</p><p style=3D'margin:0 0 14px'>=E2=80=94 Second Window</p></div>
+
+--===============4319734798669660933==--

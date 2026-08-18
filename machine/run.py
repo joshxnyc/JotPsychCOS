@@ -68,9 +68,14 @@ def main(argv=None) -> int:
         # A clinician handed to a person still gets a written email. The person
         # should be editing and sending, not composing from a bullet list — and
         # it goes through exactly the same checks as anything the machine sends.
+        # source='run': a record the machine wrote back about someone it acted
+        # on. Only uploads carry source='list', and only 'list' rows count as
+        # the workspace audience — otherwise a file-based cycle would write its
+        # three contacted clinicians into the store and the store would then
+        # shadow the forty-person file on the very next cycle.
         cid = db.upsert_clinician(
             conn, name=plan.context.get("name", ""), email=plan.to,
-            mobile=plan.context.get("mobile", ""), source="list",
+            mobile=plan.context.get("mobile", ""), source="run",
             npi=plan.context.get("npi", ""), tier=plan.context.get("tier", ""),
             score=plan.context.get("score", 0))
 
