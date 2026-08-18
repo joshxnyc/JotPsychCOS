@@ -57,15 +57,6 @@ jobs:
           name: run-report
           path: out/
 
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: out }
-
-  publish:
-    needs: run
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
-      - id: deploy
-        uses: actions/deploy-pages@v4
+  # Publishing lives in pages.yml. This job commits out/ back to main, which
+  # triggers that workflow — so a scheduled run still updates the live site,
+  # and a hand-edited dashboard does too.
