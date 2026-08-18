@@ -1,6 +1,6 @@
 """OpenRouter client. Falls back to a deterministic stub when no key is set,
 so the whole loop still runs (and is testable) with zero credentials."""
-import json, os, urllib.request, urllib.error
+import json, os, re, urllib.request, urllib.error
 from . import config
 
 ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
@@ -29,6 +29,7 @@ def complete(system: str, user: str, *, model: str | None = None,
         data=json.dumps(body).encode(),
         headers={"Authorization": f"Bearer {config.OPENROUTER_API_KEY}",
                  "Content-Type": "application/json",
+                 "User-Agent": config.USER_AGENT,
                  "HTTP-Referer": "https://github.com/",
                  "X-Title": "jotpsych-machine"},
     )
@@ -39,15 +40,61 @@ def complete(system: str, user: str, *, model: str | None = None,
     except urllib.error.HTTPError as e:
         raise LLMError(f"{e.code}: {e.read()[:400]!r}") from e
 
-def complete_json(system: str, user: str, **kw) -> dict:
-    raw = complete(system, user, json_mode=True, **kw)
+def extract_json(raw: str) -> dict:
+    """Pull an object out of whatever the model actually returned.
+
+    Handles a bare object, a ```json fence, and prose wrapped around one.
+    Raises LLMError (never JSONDecodeError) so callers have one thing to catch.
+    """
+    text = (raw or "").strip()
+    if not text:
+        raise LLMError("model returned empty content")
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\s*", "", text)
+        text = re.sub(r"\s*```$", "", text).strip()
     try:
-        return json.loads(raw)
+        return json.loads(text)
     except json.JSONDecodeError:
-        s, e = raw.find("{"), raw.rfind("}")
-        if s >= 0 and e > s:
-            return json.loads(raw[s:e + 1])
-        raise
+        pass
+    # Scan for the first balanced {...}, ignoring braces inside strings.
+    start = text.find("{")
+    if start >= 0:
+        depth, in_str, esc = 0, False, False
+        for i, ch in enumerate(text[start:], start):
+            if in_str:
+                if esc:            esc = False
+                elif ch == "\\":   esc = True
+                elif ch == '"':    in_str = False
+            elif ch == '"':        in_str = True
+            elif ch == "{":        depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start:i + 1])
+                    except json.JSONDecodeError:
+                        break
+    raise LLMError(f"no JSON object in model output: {text[:300]!r}")
+
+def complete_json(system: str, user: str, *, max_tokens: int = 1200, **kw) -> dict:
+    """Structured output that does not depend on the provider honouring
+    response_format. Tries JSON mode, then falls back to asking plainly.
+
+    A JSON-mode request that comes back empty is the common failure: some
+    providers spend the whole token budget before emitting content. The retry
+    drops response_format and states the requirement in the prompt instead.
+    """
+    attempts = []
+    for json_mode, sys_suffix in ((True, ""),
+                                  (False, "\n\nReturn ONLY a single JSON object. "
+                                          "No prose, no markdown fence, no explanation.")):
+        try:
+            raw = complete(system + sys_suffix, user, json_mode=json_mode,
+                           max_tokens=max_tokens, **kw)
+            return extract_json(raw)
+        except LLMError as e:
+            attempts.append(f"json_mode={json_mode}: {e}")
+    raise LLMError("could not obtain JSON from the model — " + " | ".join(attempts))
 
 def _stub(system: str, user: str, json_mode: bool) -> str:
     """No key? Return something structurally valid so the pipeline is provable."""

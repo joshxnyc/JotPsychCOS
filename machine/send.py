@@ -24,14 +24,15 @@ def send_email(to: str, subject: str, body: str, *, reply_to: str = "") -> SendR
     req = urllib.request.Request(
         RESEND, data=json.dumps(payload).encode(),
         headers={"Authorization": f"Bearer {config.RESEND_API_KEY}",
-                 "Content-Type": "application/json"})
+                 "Content-Type": "application/json",
+                 "User-Agent": config.USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=45) as r:
             data = json.loads(r.read())
         return SendResult(ok=True, channel="resend", id=data.get("id"), to=to)
     except urllib.error.HTTPError as e:
         return SendResult(ok=False, channel="resend", to=to,
-                          error=f"{e.code} {e.read()[:300]!r}")
+                          error=f"{e.code} {explain_http_error(e)}")
     except Exception as e:
         return SendResult(ok=False, channel="resend", to=to, error=str(e))
 
@@ -52,9 +53,26 @@ def post_webhook(url: str, payload: dict) -> SendResult:
     if not url:
         return SendResult(ok=False, error="no webhook url")
     req = urllib.request.Request(url, data=json.dumps(payload).encode(),
-                                 headers={"Content-Type": "application/json"})
+                                 headers={"Content-Type": "application/json",
+                                          "User-Agent": config.USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
             return SendResult(ok=True, channel="webhook", status=r.status)
     except Exception as e:
         return SendResult(ok=False, channel="webhook", error=str(e))
+
+
+def explain_http_error(e) -> str:
+    """Resend's failures are usually configuration, not code. Name the fix."""
+    body = e.read().decode(errors="replace")[:300]
+    if e.code == 403 and "1010" in body:
+        return (f"{body}  <- Cloudflare blocked the User-Agent, not Resend. "
+                f"Set a non-default User-Agent header.")
+    if e.code == 403 and "testing emails" in body:
+        return (f"{body}  <- with no verified domain Resend only delivers to the "
+                f"address the account was created with. Set MAIL_TO_OVERRIDE to it.")
+    if e.code == 403:
+        return f"{body}  <- check the key is valid and MAIL_FROM's domain is verified."
+    if e.code == 422 and "from" in body:
+        return f"{body}  <- MAIL_FROM must be a verified domain, or onboarding@resend.dev."
+    return body

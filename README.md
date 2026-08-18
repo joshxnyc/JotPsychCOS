@@ -101,6 +101,7 @@ the human queue.
 python -m pytest -q
 ```
 
-Seven tests: input is real, NPPES is live, QC blocks banned claims, QC blocks AI
+Ten tests: input is real, NPPES is live, QC blocks banned claims, QC blocks AI
 tells, QC passes a clean draft, output leaves the program, memory changes the
-weights.
+weights, outbound requests are not Cloudflare-blocked, the QC judge fails
+closed when it cannot run, and JSON survives a model that wraps its answer.

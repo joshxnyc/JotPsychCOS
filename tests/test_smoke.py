@@ -45,3 +45,53 @@ def test_memory_persists_and_weights_shift():
     memory.record(s, "peer_proof", "sent")
     after = memory.angle_weights(s, ["peer_proof"])["peer_proof"]
     assert after < before   # a send with no reply lowers that angle's weight
+
+
+def test_outbound_requests_are_not_blocked_by_cloudflare():
+    """Regression: Resend sits behind Cloudflare, which bans the stdlib default
+    agent with 403 'error code: 1010' before the request reaches the API.
+    Sent with a deliberately invalid key — reaching a 401 proves we got through."""
+    import urllib.request, urllib.error
+    from machine import config
+    assert "urllib" not in config.USER_AGENT.lower()
+    assert "python" not in config.USER_AGENT.lower()
+    req = urllib.request.Request(
+        send.RESEND, data=json.dumps({"from": "a@b.c", "to": ["d@e.f"],
+                                      "subject": "s", "text": "t"}).encode(),
+        headers={"Authorization": "Bearer re_invalid_key_used_by_the_test_suite",
+                 "Content-Type": "application/json",
+                 "User-Agent": config.USER_AGENT})
+    try:
+        urllib.request.urlopen(req, timeout=30)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode(errors="replace")
+        assert e.code == 401, f"expected 401 from Resend, got {e.code}: {body[:200]}"
+        assert "1010" not in body
+    except Exception:
+        pass          # offline; the User-Agent assertions above still ran
+
+
+def test_qc_judge_fails_closed_when_it_cannot_run(monkeypatch):
+    """If a key is configured the judge is supposed to read every draft. When it
+    cannot, the draft is unreviewed and must be blocked, never waved through."""
+    from machine import llm
+    monkeypatch.setattr(llm, "available", lambda: True)
+    def boom(*a, **k):
+        raise llm.LLMError("simulated outage")
+    monkeypatch.setattr(llm, "complete_json", boom)
+
+    clean = {"to": "a@b.c", "subject": "A perfectly ordinary subject line",
+             "body": ("This body is long enough to clear the deterministic gates and "
+                      "contains nothing banned, no AI tells, no placeholders and no "
+                      "unsourced claims of any kind, so the only thing standing "
+                      "between it and the outbox is the judge that just failed. ") * 2}
+    v = qc.check(clean)
+    assert not v.ok, "unreviewed draft was allowed through"
+    assert any("refusing to send an unreviewed draft" in f for f in v.failures)
+
+
+def test_json_survives_a_model_that_wraps_its_answer(monkeypatch):
+    """Providers fence, prefix and pad JSON. The judge must still get a verdict."""
+    from machine import llm
+    assert llm.extract_json('```json\n{"verdict":"fail"}\n```')["verdict"] == "fail"
+    assert llm.extract_json('Sure! {"verdict":"pass","note":"a } brace"}')["verdict"] == "pass"

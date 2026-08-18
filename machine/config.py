@@ -38,6 +38,11 @@ MAIL_TO_OVERRIDE   = _s("MAIL_TO_OVERRIDE")
 DRY_RUN            = _b("DRY_RUN", True)          # fail safe: unset means simulate
 MAX_SENDS_PER_RUN  = _i("MAX_SENDS_PER_RUN", 5)
 
+# Every outbound HTTP call identifies itself. Resend sits behind Cloudflare,
+# whose browser-integrity check bans the default "Python-urllib/3.11" agent
+# with 403 "error code: 1010" before the request ever reaches the API.
+USER_AGENT = _s("USER_AGENT", "jotpsych-machine/1.0")
+
 LEDGER   = OUT / "ledger.jsonl"        # append-only record of every decision
 DASH     = OUT / "index.html"          # the dashboard we publish
 HUMANQ   = OUT / "human_queue.md"      # the 1-2 hrs/month of human work

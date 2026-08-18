@@ -86,6 +86,8 @@ def check(draft: dict, context: dict | None = None) -> Verdict:
             v.warn(f"unsourced figure {n!r} - not in fact pack")
 
     # --- LLM judge ---
+    # Only runs when a key is configured. With no key the deterministic gates
+    # above are the whole check, and the run is labeled as such.
     if llm.available():
         judge = _llm_judge(draft, context or {})
         if judge.get("verdict") == "fail":
@@ -118,7 +120,14 @@ def _llm_judge(draft: dict, context: dict) -> dict:
     try:
         return llm.complete_json(JUDGE_SYSTEM, user, temperature=0)
     except Exception as e:
-        return {"verdict": "pass", "reasons": [f"judge unavailable: {e}"], "score": 0}
+        # FAIL CLOSED. A key is configured, so the judge was supposed to read this
+        # draft. If it could not, the draft is unreviewed — and unreviewed output
+        # does not go out under someone else's name. It is quarantined instead,
+        # which is visible and recoverable; sending it would be neither.
+        return {"verdict": "fail",
+                "reasons": [f"judge did not return a verdict ({e}) — "
+                            f"refusing to send an unreviewed draft"],
+                "score": 0}
 
 def quarantine(draft: dict, verdict: Verdict, context: dict | None = None) -> pathlib.Path:
     ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S")

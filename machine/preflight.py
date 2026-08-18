@@ -45,11 +45,17 @@ def check_openrouter_json():
         record("OpenRouter JSON mode (QC judge)", SKIP, "no key")
         return
     try:
-        d = llm.complete_json('Return JSON: {"verdict":"pass"}', "Preflight.",
-                              temperature=0, max_tokens=50)
-        record("OpenRouter JSON mode (QC judge)", OK, json.dumps(d)[:80])
+        d = llm.complete_json(
+            'You are a checker. Return a JSON object with keys '
+            '"verdict" (the string "pass") and "reasons" (an empty array).',
+            "Preflight check.", temperature=0, max_tokens=300)
+        if "verdict" not in d:
+            record("OpenRouter JSON mode (QC judge)", BAD,
+                   f"parsed but no verdict key: {json.dumps(d)[:150]}")
+        else:
+            record("OpenRouter JSON mode (QC judge)", OK, json.dumps(d)[:120])
     except Exception as e:
-        record("OpenRouter JSON mode (QC judge)", BAD, str(e)[:300])
+        record("OpenRouter JSON mode (QC judge)", BAD, str(e)[:400])
 
 def check_resend(do_send: bool):
     if not config.RESEND_API_KEY:
@@ -70,19 +76,25 @@ def check_resend(do_send: bool):
     req = urllib.request.Request(
         send.RESEND, data=json.dumps(payload).encode(),
         headers={"Authorization": f"Bearer {config.RESEND_API_KEY}",
-                 "Content-Type": "application/json"})
+                 "Content-Type": "application/json",
+                 "User-Agent": config.USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=45) as r:
             data = json.loads(r.read())
         record("Resend live send", OK, f"id={data.get('id')} -> {to}")
     except urllib.error.HTTPError as e:
-        body = e.read().decode(errors="replace")[:300]
-        hint = ""
-        if e.code == 403 and "testing emails" in body:
-            hint = "  <- with no verified domain Resend only delivers to your signup address"
-        record("Resend live send", BAD, f"{e.code} {body}{hint}")
+        record("Resend live send", BAD, f"{e.code} {send.explain_http_error(e)}")
     except Exception as e:
         record("Resend live send", BAD, str(e)[:300])
+
+def check_user_agent():
+    """Regression guard. Cloudflare fronts Resend and bans the stdlib default
+    agent with 403 'error code: 1010' before the request reaches the API."""
+    ua = config.USER_AGENT
+    if not ua or "urllib" in ua.lower() or "python" in ua.lower():
+        record("User-Agent", BAD, f"{ua!r} will be blocked by Cloudflare (403/1010)")
+    else:
+        record("User-Agent", OK, ua)
 
 def check_settings():
     """The settings that decide whether a runaway loop is possible."""
@@ -109,6 +121,7 @@ def main(argv=None) -> int:
     check_openrouter()
     check_openrouter_json()
     print("Output")
+    check_user_agent()
     check_resend(a.send)
     print("Safety")
     check_settings()
