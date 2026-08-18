@@ -3,3 +3,4 @@
 {"ts": "2026-08-18T18:41:43.541543+00:00", "run_id": "run2", "target_id": "15c5c1861afb", "npi": "1912467457", "field": "city", "before": "BROOKLYN", "after": "GARDENA", "trigger": "practice_move"}
 {"ts": "2026-08-18T18:41:43.541543+00:00", "run_id": "run2", "target_id": "3a8f99227848", "npi": "1033694476", "field": "address_1", "before": "100 MAIN ST STE 2", "after": "6 OLDE HICKORY PATH", "trigger": "practice_move"}
 {"ts": "2026-08-18T18:41:43.541543+00:00", "run_id": "run2", "target_id": "0d99fce07bda", "npi": "1396308086", "field": "state", "before": "NJ", "after": "CA", "trigger": "practice_move_state"}
+{"ts": "2026-08-18T18:45:20.476899+00:00", "run_id": "test", "target_id": "t1", "npi": "1234567893", "field": "city", "before": "BOSTON", "after": "CAMBRIDGE", "trigger": "practice_move"}

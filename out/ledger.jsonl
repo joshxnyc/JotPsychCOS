@@ -190,3 +190,40 @@
 {"ts": "2026-08-18T18:41:55.343108+00:00", "action": "silence", "target_id": "ee1e332cc2c6", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
 {"ts": "2026-08-18T18:41:55.343132+00:00", "action": "silence", "target_id": "cc6572038101", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
 {"ts": "2026-08-18T18:41:55.343156+00:00", "action": "silence", "target_id": "a0eaa7b5a560", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436183+00:00", "action": "silence", "target_id": "522f104b8680", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436286+00:00", "action": "silence", "target_id": "fe700ae60016", "reason": "already came back — the machine stops here"}
+{"ts": "2026-08-18T18:45:21.436306+00:00", "action": "silence", "target_id": "19ef84aecb5c", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436319+00:00", "action": "silence", "target_id": "55319365c2df", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436331+00:00", "action": "silence", "target_id": "af4a8f4ddbb3", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436342+00:00", "action": "silence", "target_id": "e0f36a8ceef4", "reason": "already came back — the machine stops here"}
+{"ts": "2026-08-18T18:45:21.436351+00:00", "action": "silence", "target_id": "15c5c1861afb", "reason": "no registry change and contacted 0d ago — nothing to say"}
+{"ts": "2026-08-18T18:45:21.436362+00:00", "action": "silence", "target_id": "3a8f99227848", "reason": "already came back — the machine stops here"}
+{"ts": "2026-08-18T18:45:21.436373+00:00", "action": "silence", "target_id": "ab4049cd39fc", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436384+00:00", "action": "silence", "target_id": "528c6335794a", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436394+00:00", "action": "silence", "target_id": "d0acc777b443", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436404+00:00", "action": "silence", "target_id": "d1e9aa8166af", "reason": "no registry change and contacted 0d ago — nothing to say"}
+{"ts": "2026-08-18T18:45:21.436414+00:00", "action": "silence", "target_id": "525b41f206ae", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436423+00:00", "action": "silence", "target_id": "abd5782a5b72", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.436432+00:00", "action": "silence", "target_id": "9f71be493610", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.442833+00:00", "action": "sent", "target_id": "5142d0b8b578", "angle": "audit", "plan_action": "keep_warm", "channel": "outbox(simulated)", "to": "cassius.brightwater@gmail.com", "subject": "Running JotPsych beside what you already use", "reason": "no registry change; last contact never >= 90d — quarterly keep-warm; identity unresolved at 0; angle audit", "warnings": [], "claims": ["JotPsych runs alongside an existing EHR", "setup takes about five minutes", "notes and claims are checked against payer rules"], "error": null}
+{"ts": "2026-08-18T18:45:21.442953+00:00", "action": "silence", "target_id": "068067bd51bc", "reason": "no registry change and contacted 0d ago — nothing to say"}
+{"ts": "2026-08-18T18:45:21.442981+00:00", "action": "silence", "target_id": "6fc9ad566634", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.442997+00:00", "action": "silence", "target_id": "67a326797b8d", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443053+00:00", "action": "silence", "target_id": "16840369ea0c", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443072+00:00", "action": "silence", "target_id": "f315de559c48", "reason": "no registry change and contacted 0d ago — nothing to say"}
+{"ts": "2026-08-18T18:45:21.443086+00:00", "action": "silence", "target_id": "81be1545b9cc", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443098+00:00", "action": "silence", "target_id": "76862dd33866", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443109+00:00", "action": "silence", "target_id": "cef1d963df80", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443120+00:00", "action": "silence", "target_id": "0d99fce07bda", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443129+00:00", "action": "silence", "target_id": "0aab33fd9faf", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443139+00:00", "action": "silence", "target_id": "90a78c7fd4a7", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443148+00:00", "action": "silence", "target_id": "a154f7d0e704", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443158+00:00", "action": "silence", "target_id": "417074ba96c3", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443167+00:00", "action": "silence", "target_id": "d7850ecf9582", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443177+00:00", "action": "silence", "target_id": "da9ae0d3ea4f", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443186+00:00", "action": "silence", "target_id": "5bb316f5ea77", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443196+00:00", "action": "silence", "target_id": "4a1355d9dcee", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443217+00:00", "action": "silence", "target_id": "7a717a4e6354", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443229+00:00", "action": "silence", "target_id": "ee1e332cc2c6", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443238+00:00", "action": "silence", "target_id": "cc6572038101", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}
+{"ts": "2026-08-18T18:45:21.443248+00:00", "action": "silence", "target_id": "a0eaa7b5a560", "reason": "due for keep-warm but not in this run's slot — staggered across 20 runs to avoid a blast"}

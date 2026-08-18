@@ -198,7 +198,15 @@ def _context(row: dict, res: dict, trig: dict | None, peer: dict | None) -> dict
                                    ("city", reg.get("city", "")),
                                    ("practice_name", reg.get("name", "")))
                  if v and k not in allowed}
-    return {"name": row.get("name", ""), "tier": res["tier"], "score": res["score"],
+    # True of every row on this list by definition — it is what "dormant" means,
+    # and it is the one thing we know without the registry. The judge was right
+    # to reject it while it was missing from the record.
+    first = (res.get("first") or "").strip(".")
+    return {"name": row.get("name", ""),
+            "first_name": first if len(first) > 1 else "",
+            "known_relationship": ("they signed up for JotPsych at some point and "
+                                   "did not become a paying customer"),
+            "tier": res["tier"], "score": res["score"],
             "forbidden_facts": forbidden,
             "npi": res.get("npi", ""), "signals": res.get("signals", []),
             "allowed_facts": facts, "tier_permissions": allowed,
@@ -280,8 +288,13 @@ You will be given a FACT PACK, a VOICE spec, and a RECIPIENT RECORD.
 
 Absolute rules:
 - Assert nothing about JotPsych that is not in the FACT PACK.
-- Assert nothing about the recipient that is not in ALLOWED FACTS. If a fact is
-  not listed there, you do not know it. Do not guess, infer or hedge toward it.
+- Assert nothing about the recipient that is not in ALLOWED FACTS or KNOWN
+  RELATIONSHIP. If a fact is not there, you do not know it. Do not guess, infer
+  or hedge toward it. In particular you do not know their practice size, their
+  current software, why they left, or anything about their patients.
+- Do not characterise their specialty's documentation burden unless the FACT
+  PACK says something about it. Speak about JotPsych, not about their field.
+- Never address anyone by an initial. If no first name is given, use none.
 - NEVER say or imply how we know anything about them. Do not mention records,
   registries, listings, or that you noticed anything. Write to the situation.
 - No clinical, reimbursement or audit-outcome guarantees.
@@ -311,6 +324,8 @@ VOICE
 RECIPIENT RECORD
 ---
 Name: {ctx.get('name')}
+First name you may use: {ctx.get('first_name') or 'NONE — we only have an initial. Do not address them by a first name at all.'}
+Known relationship (true of everyone on this list): {ctx.get('known_relationship')}
 Identity confidence: {ctx.get('tier')} (score {ctx.get('score')})
 ALLOWED FACTS (the only things you may say about them): {ctx.get('allowed_facts') or 'none'}
 Situation you are writing into (DO NOT REPEAT THIS BACK TO THEM, it is why you

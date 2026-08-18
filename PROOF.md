@@ -162,6 +162,57 @@ Quarantined at `out/quarantine/20260818T184154-clinician-example-com-bfa74b.json
 
 ---
 
+## What it caught live, with nobody watching
+
+The section above is a harness I wrote, so it proves the gates fire but not
+that they matter. This section is different: these are drafts written by a
+real model during a **scheduled GitHub Actions run**, judged and rejected by
+the machine itself with no human in the loop. I found them by reading the
+ledger afterwards.
+
+**Subject:** _When the payer asks to see the notes_
+
+Why it was drafted: `no registry change; last contact never >= 90d — quarterly keep-warm; identity probable at 40; angle audit`
+
+> judge: "You tried JotPsych once" — states a fact about the recipient's history with the company that does not appear in the RECIPIENT RECORD.
+
+> judge: "the thing that brings behavior analysts back" — implies the recipient tried and left the product, a claim not supported by the RECIPIENT RECORD.
+
+**Subject:** _Notes that hold up when the payer asks_
+
+Why it was drafted: `no registry change; last contact never >= 90d — quarterly keep-warm; identity unresolved at 0; angle audit`
+
+> unfilled placeholder / template artifact left in the draft
+
+> judge: "You tried it once." - This states a fact about the recipient's past behavior that does not appear in the RECIPIENT RECORD. The record shows tier 'unresolved' with score 0 and no allowed_facts about prior usage.
+
+**Subject:** _Notes that survive a payer audit_
+
+Why it was drafted: `no registry change; last contact never >= 90d — quarterly keep-warm; identity probable at 55; angle audit`
+
+> judge: The draft addresses the recipient as 'K.' using only a first initial, which creates an inappropriately casual tone for a licensed professional and suggests incomplete data rather than respectful formality.
+
+> judge: The opening line 'Case management documentation gets reviewed hard' makes a clinical/reimbursement claim about case management specifically that is not supported in the FACT PACK. The fact pack discusses behavioral health documentation broadly but does not contain specific statements about case management documentation review practices.
+
+The second and third are ordinary quality catches. The first is the
+interesting one: the judge rejected *"You tried JotPsych once"* as a claim
+about the recipient that the record did not support — and it was right. That
+fact is true of every clinician on this list, but I had never put it in the
+recipient record, so the drafter was inferring it and the judge caught the
+inference.
+
+**The bug was in my prompt, not in the model's writing.** An unsupervised
+check refused to send three messages under JotPsych's name because the person
+who built it had left something out. That is the behaviour I would want if
+nobody were watching, and it is the reason the judge fails closed: if it
+cannot return a verdict, the draft is quarantined rather than sent.
+
+The fix was to give both the drafter and the judge the one fact we genuinely
+know about everyone on this list — they signed up and did not subscribe —
+and to forbid addressing anyone by an initial when that is all we have.
+
+---
+
 ## An output that actually left the program
 
 `DRY_RUN=1` writes a real RFC-822 message to `out/outbox/` rather than calling

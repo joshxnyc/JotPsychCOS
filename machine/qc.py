@@ -125,6 +125,8 @@ are not persuaded by confident writing.
 Reject the draft if ANY of these are true:
 - It states a fact about the company that is not in the FACT PACK.
 - It states a fact about the recipient that is not in the RECIPIENT RECORD.
+  (The RECIPIENT RECORD's "known_relationship" is established fact about this
+  person and may be referred to. Anything beyond it may not.)
 - It quotes or paraphrases a person who is not in the RECIPIENT RECORD.
 - It makes a clinical, medical, legal, or reimbursement guarantee.
 - It would embarrass a serious company: hype, flattery, fake urgency, guilt.
