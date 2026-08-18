@@ -1,7 +1,7 @@
 {
-  "run_count": 1,
+  "run_count": 2,
   "first_run": "2026-08-18T19:47:10.897788+00:00",
-  "last_run": "2026-08-18T19:47:10.897788+00:00",
+  "last_run": "2026-08-18T19:57:01.924876+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -1104,7 +1104,7 @@
   },
   "resolve_coverage": {
     "list_size": 38,
-    "reread_this_run": 38,
+    "reread_this_run": 0,
     "budget": 400,
     "ttl_days": 14,
     "runs_for_full_sweep": 1,
