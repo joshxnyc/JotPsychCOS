@@ -384,6 +384,17 @@ def trigger_run(request: Request):
             os.environ["RUN_TRIGGER"] = "manual"
             from machine import run as machine_run
             machine_run.main(["--limit", str(config.MAX_SENDS_PER_RUN)])
+        except Exception as exc:
+            # A cycle that dies silently looks identical to a cycle that found
+            # nothing to do. Put the reason somewhere a person will see it.
+            import traceback
+            c = db.connect()
+            try:
+                db.log(c, "cycle_failed", actor="machine",
+                       detail=f"{type(exc).__name__}: {exc} · "
+                              f"{traceback.format_exc().strip().splitlines()[-1][:200]}")
+            finally:
+                c.close()
         finally:
             _run_lock.release()
 

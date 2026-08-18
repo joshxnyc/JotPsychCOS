@@ -87,6 +87,37 @@ class Plan:
 
 
 # ------------------------------------------------------------------ input ---
+def _audience_from_store() -> list[dict]:
+    """Clinicians a person added through the console. Prospects are excluded:
+    they have no email address, so there is nothing to write to."""
+    try:
+        from . import db
+        c = db.connect()
+        try:
+            return [{"name": r["name"], "email": r["email"] or "",
+                     "mobile": r["mobile"] or ""}
+                    for r in db.clinicians(c, "list", 100000) if r["email"]]
+        finally:
+            c.close()
+    except Exception:
+        return []          # no store configured: files are the source
+
+
+def _suppressed_from_store() -> list[dict]:
+    """Unsubscribes, bounces and complaints recorded by the console must bind the
+    scheduled cycle too, not only the send path."""
+    try:
+        from . import db
+        c = db.connect()
+        try:
+            return [{"email": r["email"], "reason": r["reason"]}
+                    for r in db.suppressions(c)]
+        finally:
+            c.close()
+    except Exception:
+        return []
+
+
 def _tid(email: str) -> str:
     return hashlib.sha1(email.strip().lower().encode()).hexdigest()[:12]
 
@@ -95,10 +126,19 @@ def load_inputs() -> dict:
 
     Swap the real list in by dropping inbox/dormant.csv next to the sample.
     Columns are the contract: name, email, mobile. Nothing else is required."""
-    dormant  = io_input.read_source("dormant",  "DORMANT_URL")
+    # The store wins when it has an audience. Otherwise the machine falls back to
+    # files, which is what makes it runnable from a clone with no database.
+    # Without this, uploading a list through the console changed nothing about
+    # what the next cycle actually read.
+    dormant = _audience_from_store()
+    if dormant:
+        print(f"[input]  {len(dormant):>5} clinicians from the workspace")
+    else:
+        dormant = io_input.read_source("dormant", "DORMANT_URL")
+
     peers    = io_input.read_source("peers",    "PEERS_URL")
     returns  = io_input.read_source("returns",  "RETURNS_URL")
-    suppress = io_input.read_source("suppress", "SUPPRESS_URL")
+    suppress = io_input.read_source("suppress", "SUPPRESS_URL") + _suppressed_from_store()
     for r in dormant:
         r["target_id"] = _tid(r.get("email", ""))
     return {"dormant": dormant, "peers": peers, "returns": returns,
