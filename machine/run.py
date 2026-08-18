@@ -4,7 +4,7 @@
 Run:  python -m machine.run [--limit N] [--live]
 """
 import argparse, sys, datetime
-from . import config, ledger, memory, qc, send, strategy, report
+from . import config, digest, ledger, memory, qc, send, strategy, report
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
@@ -43,14 +43,6 @@ def main(argv=None) -> int:
             silent += 1
             continue
 
-        if plan.action == "human_call":
-            human_queue.append(plan)
-            ledger.append({"action": "human_call", "target_id": plan.target_id,
-                           "reason": plan.reason,
-                           "peer": (plan.context.get("peer") or {}).get("name", "")})
-            queued += 1
-            continue
-
         # The model call is the cost, so the budget counts drafts, not sends.
         # Anything over budget waits for the next run rather than being dropped.
         if sent + blocked >= a.limit:
@@ -65,6 +57,18 @@ def main(argv=None) -> int:
         d = strategy.draft(plan, state)
         v = qc.check(d, plan.context)
 
+        # A clinician handed to a person still gets a written email. The person
+        # should be editing and sending, not composing from a bullet list — and
+        # it goes through exactly the same checks as anything the machine sends.
+        if v.ok and plan.action == "human_call":
+            plan.context["draft"] = {"subject": d["subject"], "body": d["body"]}
+            human_queue.append(plan)
+            ledger.append({"action": "human_call", "target_id": plan.target_id,
+                           "reason": plan.reason, "subject": d["subject"],
+                           "peer": (plan.context.get("peer") or {}).get("name", "")})
+            queued += 1
+            continue
+
         if not v.ok:
             p = qc.quarantine(d, v, plan.context)
             ledger.append({"action": "blocked", "target_id": plan.target_id,
@@ -78,7 +82,8 @@ def main(argv=None) -> int:
             continue
 
         r = send.deliver(d, plan.channel)
-        ledger.append({"action": "sent" if r.ok else "send_failed",
+        ledger.append({"action": ("staged" if not config.SEND_TO_CLINICIANS
+                                  else "sent") if r.ok else "send_failed",
                        "target_id": plan.target_id, "angle": d["angle"],
                        "plan_action": plan.action, "channel": r.get("channel"),
                        "to": r.get("to"), "subject": d["subject"],
@@ -88,7 +93,8 @@ def main(argv=None) -> int:
             memory.record(state, d["angle"], "sent")
             _mark_contacted(state, plan, d)
             sent += 1
-            print(f"[send]   {r.get('channel')} -> {r.get('to')} :: {d['subject']}")
+            print(f"[{'send' if config.SEND_TO_CLINICIANS else 'stage'}]  "
+                  f"{r.get('channel')} -> {r.get('to')} :: {d['subject']}")
         else:
             print(f"[send]   FAILED {r.get('error')}")
 
@@ -100,13 +106,27 @@ def main(argv=None) -> int:
         "why": (p.context.get("trigger") or {}).get("detail", ""),
         "peer": (p.context.get("peer") or {}).get("name", ""),
         "peer_line": (p.context.get("peer") or {}).get("attestation", ""),
+        "subject": (p.context.get("draft") or {}).get("subject", ""),
+        "body": (p.context.get("draft") or {}).get("body", ""),
         "peer_role": " — ".join(x for x in ((p.context.get("peer") or {}).get("specialty", ""),
                                             (p.context.get("peer") or {}).get("state", "")) if x),
     } for p in human_queue]
+    # The output that leaves on every cycle: a report to the operator. The
+    # machine reports to a person by default and writes to clinicians only when
+    # someone has deliberately turned that on.
+    if config.SEND_DIGEST:
+        dg = digest.send_report(state, human_queue)
+        print(f"[digest] {dg.get('channel')} -> {dg.get('to')} "
+              f"{'' if dg.ok else dg.get('error', '')}")
+        ledger.append({"action": "digest", "target_id": "operator",
+                       "reason": f"run summary to {dg.get('to')}",
+                       "channel": dg.get("channel")})
+
     report.write_human_queue(human_queue, state)
     report.build(state)
     memory.save(state)
-    print(f"\n[done]   sent={sent} blocked={blocked} silent={silent} "
+    verb = "sent" if config.SEND_TO_CLINICIANS else "staged"
+    print(f"\n[done]   {verb}={sent} blocked={blocked} silent={silent} "
           f"human_queue={queued} skipped={skipped}")
     print(f"[done]   report  {config.DASH}")
     print(f"[done]   queue   {config.HUMANQ}")

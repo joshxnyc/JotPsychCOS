@@ -77,17 +77,35 @@ your real list.
 generates a list the size of the real one, with the same messiness — mixed email
 domains, names written five ways, missing mobiles, duplicates.
 
-## 4. When you actually want it to send to clinicians
+## 4. What the machine actually sends
 
-Four deliberate steps, in this order. Nothing happens by accident.
+Two different questions, deliberately separated.
 
-1. **Verify a sending domain** at resend.com/domains. Until you do, Resend only
+**To you, every cycle.** `SEND_DIGEST=1` (the default) emails whoever operates
+the machine a report of each run: what changed, what it decided, what quality
+control stopped, and every message waiting for a person — each one already
+written, subject and body, ready to edit and send from your own mailbox. Set
+`DIGEST_TO` to the address that should receive it.
+
+**To clinicians: off by default.** `SEND_TO_CLINICIANS=0` means approved drafts
+are staged as real `.eml` files in `out/outbox/` and go nowhere. The machine
+decides who is worth writing to and writes it well; whether those messages reach
+anyone is a decision a company makes once, deliberately.
+
+### Turning clinician sending on
+
+Four steps, in this order. Nothing happens by accident.
+
+1. Read `out/outbox/` and `out/quarantine/` first. If you are not comfortable
+   with what is in there, the fix is `config/brand.md` or
+   `config/guardrails.yaml` — plain text, no code change, no redeploy.
+2. **Verify a sending domain** at resend.com/domains, set `MAIL_FROM` to a real
+   mailbox on it that a clinician can reply to. Until you do, Resend only
    delivers to the address the account was created with.
-2. Set `MAIL_FROM` to an address on that domain, and make it a real mailbox a
-   clinician can reply to.
-3. **Clear `MAIL_TO_OVERRIDE`.** This is the switch. Until it is empty, every
-   message goes to you.
-4. Set `DRY_RUN=0` and raise `MAX_SENDS_PER_RUN` slowly. Start at 3.
+3. **Clear `MAIL_TO_OVERRIDE`**, which until now has been redirecting every
+   message to you.
+4. Set `SEND_TO_CLINICIANS=1` and `DRY_RUN=0`, and raise `MAX_SENDS_PER_RUN`
+   slowly. Start at 3.
 
 Read `out/outbox/` and `out/quarantine/` before step 3. If you are not
 comfortable with what is in there, the fix is `config/brand.md` or
@@ -98,7 +116,10 @@ or a redeploy.
 
 | Name | Default | What it controls |
 |---|---|---|
-| `DRY_RUN` | `1` | `1` writes `.eml` files instead of sending. Unset means `1` — it fails safe. |
+| `SEND_TO_CLINICIANS` | `0` | Off means approved drafts are staged and nobody receives them. |
+| `SEND_DIGEST` | `1` | Email a run report to the operator each cycle. |
+| `DIGEST_TO` | `MAIL_TO_OVERRIDE` | Who receives that report. |
+| `DRY_RUN` | `1` | `1` writes `.eml` files instead of calling Resend. Unset means `1` — it fails safe. |
 | `MAIL_TO_OVERRIDE` | — | Redirects every send here. The safety catch. |
 | `MAX_SENDS_PER_RUN` | `5` | Hard cap per run. A runaway loop cannot happen. |
 | `RESOLVE_BUDGET_PER_RUN` | `400` | Registry lookups per run. Cost stays flat as the list grows. |

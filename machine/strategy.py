@@ -356,6 +356,28 @@ def _attribute(inputs: dict, state: dict) -> set[str]:
 
 
 # ---------------------------------------------------------------- drafting --
+INTRO_SYSTEM = """You write for JotPsych. Write the email a JotPsych person \
+will send by hand to a clinician who tried JotPsych once and did not buy, \
+offering to introduce them to a named peer who already uses it.
+
+You will be given a FACT PACK, a VOICE spec, and a RECIPIENT RECORD including
+the peer who has agreed to speak to them.
+
+Absolute rules:
+- The offer is an introduction to a specific named person. That is the whole ask.
+- Quote the peer only using the exact attestation given. Never invent a quote.
+- NEVER say or imply how we know anything about them. No records, no registries,
+  no "I noticed". Write to the situation, not to the surveillance.
+- Assert nothing about JotPsych outside the FACT PACK, nothing about the
+  recipient outside ALLOWED FACTS and KNOWN RELATIONSHIP.
+- No clinical, reimbursement or audit-outcome guarantees.
+- It is signed by a real person and sent from their mailbox, so it may read
+  slightly warmer than an automated message — but it still follows the VOICE spec.
+- End with a plain way to decline.
+
+Return JSON only: {"subject": string, "body": string, "claims": [string]}"""
+
+
 DRAFT_SYSTEM = """You write for JotPsych. You are writing one message to one \
 licensed behavioral-health clinician who tried JotPsych once and did not buy.
 
@@ -382,12 +404,26 @@ Return JSON only:
 checked against the fact pack."""
 
 def draft(plan: Plan, state: dict) -> dict:
+    """Every plan that is not silence produces a real message. A clinician the
+    machine hands to a person still gets a written email — the person should be
+    editing and sending, not composing from a bullet list."""
     ctx = plan.context
     trig = ctx.get("trigger")
     situation = (trig["detail"] if trig else
                  "nothing about their practice has visibly changed; this is a "
                  "quarterly keep-warm message")
     peer = ctx.get("peer")
+    # Built outside the f-string: it contains quotes, and the peer's words must
+    # reach the model verbatim so it cannot paraphrase a real person.
+    peer_block = ""
+    if peer:
+        quote = peer.get("attestation", "")
+        peer_block = (
+            f"PEER WHO HAS AGREED TO SPEAK TO THEM: {peer['name']}, "
+            f"{peer['credential']}, {peer['specialty']} in {peer['state']}, "
+            f"{peer.get('months_using', '?')} months on JotPsych.\n"
+            f"Their exact words, which you may quote verbatim and may not alter: "
+            f"{quote!r}")
     user = f"""FACT PACK
 ---
 {FACTS}
@@ -406,11 +442,12 @@ ALLOWED FACTS (the only things you may say about them): {ctx.get('allowed_facts'
 Situation you are writing into (DO NOT REPEAT THIS BACK TO THEM, it is why you
 are writing, not something they told you): {situation}
 Angle to take: {plan.angle} — {ANGLES.get(plan.angle, '')}
-{"A peer who has agreed to speak to them: " + peer['name'] + ', ' + peer['credential'] + ', ' + peer['specialty'] + ' in ' + peer['state'] if peer else ""}
+{peer_block}
 
 Write the message. Under 140 words."""
+    system = INTRO_SYSTEM if plan.action == "human_call" else DRAFT_SYSTEM
     try:
-        out = llm.complete_json(DRAFT_SYSTEM, user, temperature=0.5)
+        out = llm.complete_json(system, user, temperature=0.5)
     except Exception as e:
         out = {"subject": "", "body": "", "claims": [], "_error": str(e)}
     return {"to": plan.to, "subject": (out.get("subject") or "").strip(),

@@ -78,6 +78,18 @@ def explain_http_error(e) -> str:
     return body
 
 
+def stage(draft: dict) -> SendResult:
+    """Write an approved draft to out/outbox/ without delivering it.
+
+    This is the default. The machine's job is to decide who is worth writing to
+    and to write it well; whether a message reaches a clinician is a decision a
+    company makes once, deliberately, by setting SEND_TO_CLINICIANS. Until then
+    every approved draft waits here as a real, sendable .eml."""
+    return _write_eml(draft.get("to", ""), draft.get("subject", ""),
+                      draft.get("body", ""),
+                      reason="STAGED - passed every check, awaiting approval")
+
+
 def deliver(draft: dict, channel: str) -> SendResult:
     """One door for every channel, so the ledger records what actually happened.
 
@@ -87,6 +99,8 @@ def deliver(draft: dict, channel: str) -> SendResult:
     """
     if channel == "sms":
         return _write_sms(draft)
+    if not config.SEND_TO_CLINICIANS:
+        return stage(draft)
     return send_email(draft["to"], draft["subject"], draft["body"])
 
 

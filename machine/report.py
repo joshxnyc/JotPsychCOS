@@ -58,7 +58,9 @@ CHECKS = {
 
 # Plain English. The machine's internal names are not the reader's vocabulary.
 ACTION = {
-    "sent":        ("Message sent", "A draft passed every check and left the program as email."),
+    "sent":        ("Message sent", "A draft passed every check and was delivered to the clinician."),
+    "staged":      ("Ready to send", "A draft passed every check and is staged as a real email file, waiting for a person. Nothing reached a clinician."),
+    "digest":      ("Report emailed", "The run summary was emailed to whoever operates the machine."),
     "blocked":     ("Stopped by QC", "A draft was written but a check refused to let it go out. It is in quarantine, not in an inbox."),
     "silence":     ("Left alone", "The machine deliberately said nothing this cycle — nothing had changed, or it was not confident enough to write."),
     "human_call":  ("Needs a person", "The strongest kind of signal, plus a peer who fits. A person should make this introduction."),
@@ -99,17 +101,20 @@ def metrics(state: dict) -> dict:
     recs = ledger.all_records()
     by = collections.Counter(r.get("action") for r in recs)
     sent, blocked = by.get("sent", 0), by.get("blocked", 0)
+    staged = by.get("staged", 0)
     silent, queued = by.get("silence", 0), by.get("human_call", 0)
-    drafted = sent + blocked
+    drafted = sent + blocked + by.get("staged", 0)
     considered = sum(by.get(k, 0) for k in
-                     ("sent", "blocked", "silence", "human_call", "deferred", "skipped"))
+                     ("sent", "staged", "blocked", "silence", "human_call",
+                      "deferred", "skipped"))
     returns = state.get("returns", {})
     attributed = [r for r in returns.values() if r.get("attributed")]
     touches = sum(r.get("touches", 0) for r in attributed)
     return {
         "runs": state.get("run_count", 0), "considered": considered,
         "sent": sent, "blocked": blocked, "silent": silent, "queued": queued,
-        "drafted": drafted, "roster": len(state.get("roster", {})),
+        "drafted": drafted, "staged": staged,
+        "roster": len(state.get("roster", {})),
         "silence_rate": (silent / considered * 100) if considered else 0,
         "catch_rate": (blocked / drafted * 100) if drafted else 0,
         "returns_total": len(returns), "returns_attributed": len(attributed),
@@ -151,7 +156,8 @@ def build(state: dict) -> None:
         shutil.copy(src, config.OUT / "jotpsych-logo.svg")
 
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%d %b %Y, %H:%M UTC")
-    mode = "Simulated send" if config.DRY_RUN else "Live send"
+    mode = ("Sending to clinicians" if config.SEND_TO_CLINICIANS
+            else "Staging only — nothing reaches a clinician")
 
     page = _TEMPLATE
     page = page.replace("%%CSS%%", _CSS)
@@ -182,10 +188,11 @@ def _overview(m, state, recs) -> str:
              "Changes in the federal NPI registry since the previous run — a "
              "practice that moved, renamed, changed specialty or became a group. "
              "This is the readiness signal. Zero means the detector is dead."),
-        _kpi("Messages sent", m["sent"],
-             f"{m['blocked']} blocked before sending",
-             "Drafts that passed every quality check and left the program as "
-             "email. Blocked drafts never reach a clinician."),
+        _kpi("Messages ready", m["sent"] + m.get("staged", 0),
+             f"{m['blocked']} stopped by quality control",
+             "Drafts that passed every check. By default they are staged as real "
+             "email files and wait for a person — the machine does not write to "
+             "clinicians unless someone turns that on."),
         _kpi("Returns traced", f"{m['returns_attributed']} of {m['returns_total']}",
              ("none contacted before returning yet" if not m["returns_attributed"]
               else f"{m['touches_per_return']:.1f} touches per return"),
@@ -201,7 +208,7 @@ def _overview(m, state, recs) -> str:
         a = r.get("action")
         if a in ("silence", "human_call"):
             dec[a] += 1
-        elif a in ("sent", "blocked", "deferred") and r.get("plan_action"):
+        elif a in ("sent", "staged", "blocked", "deferred") and r.get("plan_action"):
             dec[r["plan_action"]] += 1
     tiers = "".join(
         f'<div class="tier"><div class="tier-h"><span><i style="background:{TIER_RAMP[t]}"></i>'
@@ -374,12 +381,19 @@ def _queue(state, recs) -> str:
         <span>Reach them at</span><b class="mono">{_e(x['email'])}</b>
         <span>Peer to offer</span><b>{_e(x['peer'] or '—')}{(' · ' + _e(x['peer_role'])) if x['peer_role'] else ''}</b>
       </div>
-      <p class="qline">Open with: &ldquo;{_e(x['peer_line'])}&rdquo;</p>
-      <p class="qwarn">Do not say anything was looked up. You are offering an
-      introduction, not reporting on their practice.</p>
-    </div>""" for x in q)
+      <p class="qline">Peer's own words, quote them verbatim:
+        &ldquo;{_e(x['peer_line'])}&rdquo;</p>
+      <div class="mail">
+        <div class="mail-h"><span>Ready to send — written and checked</span>
+          <button class="pgbtn copy" data-copy="q{i}">Copy</button></div>
+        <div class="mail-s"><span>Subject</span><b>{_e(x.get('subject', ''))}</b></div>
+        <pre class="mail-b" id="q{i}">{_e(x.get('body', ''))}</pre>
+      </div>
+      <p class="qwarn">Send it from your own mailbox. Do not say anything was looked
+      up — you are offering an introduction, not reporting on their practice.</p>
+    </div>""" for i, x in enumerate(q))
 
-    sent = [r for r in recs if r.get("action") == "sent"][-12:][::-1]
+    sent = [r for r in recs if r.get("action") in ("sent", "staged")][-12:][::-1]
     srows = "".join(
         f'<tr><td class="mono">{_e((r.get("ts") or "")[:16].replace("T", " "))}</td>'
         f'<td>{_e(r.get("to"))}</td><td><b>{_e(r.get("subject"))}</b></td>'
@@ -526,59 +540,132 @@ def _quality(recs, m) -> str:
 
 
 # -------------------------------------------------------------------- files --
+FILE_CAP = 80_000          # per file, embedded into the page
+TAIL_LINES = 400           # for append-only logs, the most recent N lines
+
+
+def _read(path: pathlib.Path, tail: bool = False) -> tuple[str, bool]:
+    """Read a file for embedding. Returns (text, was_truncated)."""
+    try:
+        raw = path.read_text(encoding="utf-8", errors="replace")
+    except Exception as e:
+        return f"(could not read: {e})", False
+    if tail:
+        lines = raw.splitlines()
+        if len(lines) > TAIL_LINES:
+            return "\n".join(lines[-TAIL_LINES:]), True
+    if len(raw) > FILE_CAP:
+        return raw[:FILE_CAP], True
+    return raw, False
+
+
+def _collect() -> list[dict]:
+    """Everything the machine reads or writes, with its contents, so the whole
+    system is inspectable from the site without a GitHub account."""
+    R, O, C, S = config.ROOT, config.OUT, config.CONFIG, config.STATE
+    spec = [
+        ("Input", "What it reads. Replace these with yours.", [
+            ("inbox/dormant.sample.csv",  R / "inbox/dormant.sample.csv",  False,
+             "The list. Three columns: name, email, mobile. Drop inbox/dormant.csv beside it and that one wins."),
+            ("inbox/dormant.csv",         R / "inbox/dormant.csv",         False,
+             "Your list, if you have added one."),
+            ("inbox/suppress.sample.csv", R / "inbox/suppress.sample.csv", False,
+             "Never contacted, no exceptions."),
+            ("inbox/peers.sample.csv",    R / "inbox/peers.sample.csv",    False,
+             "Consenting clinicians who will speak to a peer. Only consent=yes is ever used."),
+            ("inbox/returns.sample.csv",  R / "inbox/returns.sample.csv",  False,
+             "Clinicians who came back. Stands in for a billing or signup webhook."),
+        ]),
+        ("Rules", "Change what it says and when, without touching code.", [
+            ("config/brand.md",       C / "brand.md",       False,
+             "How JotPsych sounds, and the rule that outranks every other rule."),
+            ("config/fact_pack.md",   C / "fact_pack.md",   False,
+             "The only things the machine may assert about JotPsych."),
+            ("config/guardrails.yaml", C / "guardrails.yaml", False,
+             "Confidence thresholds, banned claims, what each confidence tier may say."),
+        ]),
+        ("Memory", "What survives between runs. Delete this and it goes blind.", [
+            ("state/state.json",             S / "state.json",             False,
+             "Run count, the roster, angle weights, attributed returns."),
+            ("state/registry_snapshot.json", S / "registry_snapshot.json", False,
+             "What the federal registry said last run. The other half of the diff."),
+            ("state/registry_history.jsonl", S / "registry_history.jsonl", True,
+             "Append-only: every registry change ever observed."),
+            ("out/ledger.jsonl",             O / "ledger.jsonl",           True,
+             "Append-only: every decision, including the silent ones."),
+        ]),
+        ("Output", "What the machine produced.", [
+            ("out/human_queue.md", O / "human_queue.md", False,
+             "This cycle's hour of human work."),
+        ]),
+        ("Documentation", "", [
+            ("README.md",         R / "README.md",         False, "What it is and how to run it."),
+            ("SETUP.md",          R / "SETUP.md",          False, "Run it yourself, with your own keys and list."),
+            ("RECOMMENDATION.md", R / "RECOMMENDATION.md", False, "What I chose to build and why."),
+            ("PROOF.md",          R / "PROOF.md",          False, "One full pass, with what it rejected."),
+        ]),
+    ]
+    files = []
+    for group, blurb, items in spec:
+        for name, path, tail, desc in items:
+            if not path.exists():
+                continue
+            text, trunc = _read(path, tail)
+            files.append({"g": group, "gb": blurb, "n": name, "d": desc,
+                          "t": text, "tr": trunc,
+                          "sz": path.stat().st_size,
+                          "x": path.suffix.lstrip(".") or "txt"})
+    # generated artefacts, newest first
+    for sub, pattern, group, desc in (
+            ("outbox", "*.eml", "Messages", "An approved draft, as a real email file."),
+            ("outbox", "*.sms.txt", "Messages", "A simulated SMS."),
+            ("quarantine", "*.json", "Blocked", "A draft the machine refused to send, with the reason.")):
+        d = O / sub
+        for f in sorted(d.glob(pattern), reverse=True)[:25] if d.exists() else []:
+            text, trunc = _read(f)
+            files.append({"g": group, "gb": ("Every message that passed every check."
+                                             if group == "Messages" else
+                                             "Every draft that did not, and why."),
+                          "n": f"out/{sub}/{f.name}", "d": desc, "t": text, "tr": trunc,
+                          "sz": f.stat().st_size, "x": f.suffix.lstrip(".")})
+    return files
+
+
 def _files(m) -> str:
-    def listing(sub, pattern, label, desc, tip):
-        d = config.OUT / sub
-        files = sorted(d.glob(pattern), reverse=True)[:20] if d.exists() else []
-        items = "".join(
-            f'<li><a href="{sub}/{_e(f.name)}" target="_blank" class="mono">{_e(f.name)}</a>'
-            f'<span class="sub">{f.stat().st_size:,} bytes</span></li>' for f in files)
-        n = len(list(d.glob(pattern))) if d.exists() else 0
-        return (f'<section class="card"><div class="card-h"><h2>{label}</h2>'
-                f'<span class="info" data-tip="{_e(tip)}">?</span></div>'
-                f'<p class="note">{desc} <b>{n} file(s).</b> Click any to open it.</p>'
-                f'<ul class="files">{items or "<li class=empty>None yet.</li>"}</ul></section>')
-
-    def link(path, label, desc):
-        return (f'<li><a href="{BLOB}{path}" target="_blank" class="mono">{path}</a>'
-                f'<span class="sub">{desc}</span></li>')
-
+    files = _collect()
+    groups = []
+    for f in files:
+        if not groups or groups[-1][0] != f["g"]:
+            groups.append((f["g"], f["gb"], []))
+        groups[-1][2].append(f)
+    nav = "".join(
+        f'<div class="fgroup"><div class="fgname">{_e(g)}</div>'
+        + "".join(f'<button class="fitem" data-i="{files.index(f)}">'
+                  f'<span class="fn">{_e(f["n"].split("/")[-1])}</span>'
+                  f'<span class="fp">{_e("/".join(f["n"].split("/")[:-1]) or "·")}</span>'
+                  f'</button>' for f in items) + '</div>'
+        for g, _b, items in groups)
+    payload = json.dumps(files, separators=(",", ":"))
+    total = sum(f["sz"] for f in files)
     return f"""
 <section class="card">
-  <div class="card-h"><h2>Where everything lives</h2></div>
-  <p class="note">Nothing here is a screenshot. Every link opens the actual file the
-  machine wrote or reads.</p>
-  <div class="two">
-    <div><h3>Input — replace these with yours</h3><ul class="files">
-      {link('inbox/dormant.sample.csv', '', 'the list: name, email, mobile. Drop inbox/dormant.csv beside it and it wins')}
-      {link('inbox/suppress.sample.csv', '', 'never contacted, no exceptions')}
-      {link('inbox/peers.sample.csv', '', 'consenting peers for the human queue')}
-      {link('inbox/returns.sample.csv', '', 'clinicians who came back — stands in for a billing webhook')}
-    </ul></div>
-    <div><h3>Memory — committed back by the workflow</h3><ul class="files">
-      {link('state/state.json', '', 'run count, roster, angle weights, attributed returns')}
-      {link('state/registry_snapshot.json', '', 'what the registry said last run')}
-      {link('state/registry_history.jsonl', '', 'every change ever observed')}
-      {link('out/ledger.jsonl', '', 'append-only record of every decision')}
-    </ul></div>
-  </div>
-  <div class="two" style="margin-top:22px">
-    <div><h3>Rules — change behaviour without touching code</h3><ul class="files">
-      {link('config/guardrails.yaml', '', 'thresholds, banned claims, tier permissions')}
-      {link('config/fact_pack.md', '', 'the only things it may assert about JotPsych')}
-      {link('config/brand.md', '', 'how JotPsych sounds, and the one rule above all others')}
-    </ul></div>
-    <div><h3>Read these</h3><ul class="files">
-      {link('RECOMMENDATION.md', '', 'what I chose to build and why — one page')}
-      {link('PROOF.md', '', 'one full pass, with what it rejected')}
-      <li><a href="human_queue.md" target="_blank" class="mono">out/human_queue.md</a>
-        <span class="sub">this cycle's hour of human work — {m['queued']} intro(s)</span></li>
-    </ul></div>
+  <div class="card-h"><h2>Everything the machine reads and writes</h2>
+    <span class="info" data-tip="Every input, rule, memory file and output, with its actual contents, served from this page. No repository access and no account needed.">?</span></div>
+  <p class="note">{len(files)} files, {total / 1024:.0f} KB. Click one to read it here —
+  nothing below opens GitHub. Inputs are what you replace with your own data; rules are
+  what you edit to change behaviour; memory is what makes the machine able to notice
+  anything at all.</p>
+  <div class="fbrowse">
+    <div class="fnav">{nav}</div>
+    <div class="fview">
+      <div class="fhead"><div><b id="fname">Select a file</b>
+        <div class="sub" id="fdesc">Its contents appear here.</div></div>
+        <button class="pgbtn" id="fcopy" hidden>Copy</button></div>
+      <pre id="fbody" class="fbody">Pick a file on the left.</pre>
+    </div>
   </div>
 </section>
-{listing('outbox', '*.eml', 'Messages that left the program', 'Real RFC-822 email files. With DRY_RUN=1 these are written instead of calling Resend — same code path, same content.', 'An output that leaves the program. Open one and you are reading exactly what a clinician would receive, headers and all, including the header that declares it simulated.')}
-{listing('outbox', '*.sms.txt', 'Simulated SMS', 'The decision to reserve SMS for clinicians who engaged first is real; delivery writes a labeled file rather than calling a carrier.', 'A mobile number collected at signup is not consent to text it. SMS unlocks only after a clinician replies or clicks.')}
-{listing('quarantine', '*.json', 'Quarantined drafts', 'Every draft the machine refused to send, with the full text and the exact reason.', 'This is the evidence behind the quality control claim. Each file holds the draft as written, the verdict, and the recipient record it was judged against.')}"""
+<script id="filedata" type="application/json">{payload}</script>"""
 
 
 _CSS = """
@@ -721,6 +808,32 @@ tr:last-child td{border-bottom:0}
 .scalegrid div{border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;background:#FBFCFD}
 .scalegrid b{display:block;font-family:Archivo,sans-serif;font-size:21px;margin-bottom:2px}
 .scalegrid span{font-size:12.5px;color:var(--ink-3)}
+.mail{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-top:12px;background:#fff}
+.mail-h{display:flex;justify-content:space-between;align-items:center;gap:12px;
+ padding:8px 12px;background:#F3F3FE;border-bottom:1px solid var(--line);
+ font-size:12px;font-weight:600;color:var(--brand)}
+.mail-s{display:flex;gap:10px;align-items:baseline;padding:10px 12px 6px;font-size:13.5px}
+.mail-s span{color:var(--ink-3);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.mail-b{padding:4px 12px 14px;margin:0;white-space:pre-wrap;font:14px/1.6 Inter,sans-serif;
+ color:var(--ink)}
+.fbrowse{display:grid;grid-template-columns:270px 1fr;gap:16px;margin-top:6px}
+.fnav{max-height:640px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:8px}
+.fgroup{margin-bottom:10px}
+.fgname{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
+ font-weight:650;padding:6px 8px}
+.fitem{display:block;width:100%;text-align:left;border:0;background:none;font:inherit;
+ padding:6px 8px;border-radius:7px;cursor:pointer;color:var(--ink)}
+.fitem:hover{background:#F3F4F8}
+.fitem[aria-current="true"]{background:#EEF0FF;color:var(--brand);font-weight:600}
+.fn{display:block;font-size:13px}
+.fp{display:block;font-size:11px;color:var(--ink-3);font-family:ui-monospace,monospace}
+.fview{border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;
+ min-height:420px;max-height:640px;overflow:hidden}
+.fhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+ padding:12px 14px;border-bottom:1px solid var(--line);background:#FBFCFD}
+.fbody{flex:1;overflow:auto;margin:0;padding:14px;font-family:ui-monospace,SFMono-Regular,
+ Menlo,monospace;font-size:12.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+@media(max-width:860px){.fbrowse{grid-template-columns:1fr}.fnav{max-height:220px}}
 .pager{display:flex;align-items:center;gap:12px;margin-top:14px}
 .pgbtn{font:inherit;font-size:13px;font-weight:550;padding:7px 14px;border:1px solid var(--line);
  border-radius:8px;background:var(--surface);cursor:pointer;color:var(--ink)}
@@ -730,6 +843,8 @@ tr:last-child td{border-bottom:0}
 .t-probable{color:#0E7490;border-color:#B6E0EA;background:#F1FAFC}
 .t-unresolved{color:var(--ink-3);background:#F7F8FA}
 .a-sent{color:var(--pos);border-color:#B7E4C7;background:#F2FBF5}
+.a-staged{color:var(--brand);border-color:#C9CBF2;background:#F3F3FE}
+.a-digest{color:var(--ink-3);background:#F7F8FA}
 .a-blocked{color:var(--neg);border-color:#F3C3BF;background:#FEF4F3}
 .a-silence{color:var(--ink-3);background:#F7F8FA}
 .a-human_call{color:var(--warn);border-color:#F5D9B0;background:#FFF8EF}
@@ -808,11 +923,14 @@ _TEMPLATE = """<!doctype html><html lang="en"><head>
   <div class="panel" id="files" hidden>%%FILES%%</div>
 </main>
 
-<footer>Case-study prototype built for JotPsych by Josh — not an official JotPsych property.
+<footer><b>Nothing here is delivered to a clinician.</b> Approved messages are staged as
+real email files and wait for a person; the only message the machine sends on its own is a
+report to whoever operates it. Writing to clinicians is a separate switch
+(<span class="mono">SEND_TO_CLINICIANS</span>) a company turns on once, deliberately.
+<br><br>Case-study prototype built for JotPsych by Josh — not an official JotPsych property.
 Clinician names, emails and mobile numbers are invented, as the brief requires; registry
 records are real public NPPES data for same-named clinicians and are used only to exercise
-identity resolution. No message is delivered to any real clinician: every send is redirected
-to the operator's own address.</footer>
+identity resolution.</footer>
 
 <script>
 document.querySelectorAll('.tab').forEach(function(t){
@@ -879,6 +997,43 @@ function draw(){
   document.getElementById('next').disabled=(PAGE+1)>=pages;
 }
 build();
+
+// ---- copy buttons (queue drafts) ----
+document.querySelectorAll('.copy').forEach(function(b){
+  b.onclick=function(){
+    var el=document.getElementById(b.dataset.copy); if(!el) return;
+    navigator.clipboard.writeText(el.textContent).then(function(){
+      var t=b.textContent; b.textContent='Copied'; setTimeout(function(){b.textContent=t;},1400);
+    });
+  };
+});
+
+// ---- file browser ----
+(function(){
+  var el=document.getElementById('filedata'); if(!el) return;
+  var FILES=JSON.parse(el.textContent), cur=null;
+  var name=document.getElementById('fname'), desc=document.getElementById('fdesc'),
+      body=document.getElementById('fbody'), copy=document.getElementById('fcopy');
+  function show(i){
+    var f=FILES[i]; cur=f;
+    name.textContent=f.n;
+    desc.textContent=f.d+' · '+f.sz.toLocaleString()+' bytes'+(f.tr?' · showing part of it':'');
+    body.textContent=f.t;
+    copy.hidden=false;
+    document.querySelectorAll('.fitem').forEach(function(b){
+      b.setAttribute('aria-current', b.dataset.i===String(i)?'true':'false');});
+    body.scrollTop=0;
+  }
+  document.querySelectorAll('.fitem').forEach(function(b){
+    b.onclick=function(){show(+b.dataset.i);};
+  });
+  copy.onclick=function(){
+    if(!cur) return;
+    navigator.clipboard.writeText(cur.t).then(function(){
+      copy.textContent='Copied'; setTimeout(function(){copy.textContent='Copy';},1400);});
+  };
+  show(0);
+})();
 </script>
 </body></html>"""
 

@@ -38,6 +38,16 @@ MAIL_TO_OVERRIDE   = _s("MAIL_TO_OVERRIDE")
 DRY_RUN            = _b("DRY_RUN", True)          # fail safe: unset means simulate
 MAX_SENDS_PER_RUN  = _i("MAX_SENDS_PER_RUN", 5)
 
+# Two different questions, deliberately separated.
+#   SEND_TO_CLINICIANS  may a drafted message reach the clinician it was written
+#                       for? Off by default. Off means every approved draft is
+#                       staged as a real .eml and waits for a person.
+#   SEND_DIGEST         may the machine email its operator a summary of the run?
+#                       That is the output that leaves on every cycle.
+SEND_TO_CLINICIANS = _b("SEND_TO_CLINICIANS", False)
+SEND_DIGEST        = _b("SEND_DIGEST", True)
+DIGEST_TO          = _s("DIGEST_TO") or MAIL_TO_OVERRIDE
+
 # Every outbound HTTP call identifies itself. Resend sits behind Cloudflare,
 # whose browser-integrity check bans the default "Python-urllib/3.11" agent
 # with 403 "error code: 1010" before the request ever reaches the API.

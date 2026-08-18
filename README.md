@@ -83,7 +83,7 @@ Three optional inputs, same rule (`X.csv` overrides `X.sample.csv`):
 |---|---|---|
 | **Input** | `inbox/*.csv` + `machine/io_input.py` | A CSV plus live calls to the **NPPES federal NPI registry** — public, free, no key. Nothing pasted into source. |
 | **Decision** | `machine/resolve.py`, `machine/watch.py`, `machine/strategy.py` | Who this person is and how sure we are; what changed since last run; and therefore whether to stay silent, keep warm, write, or hand to a human. |
-| **Output** | `machine/send.py` | Real email through the Resend API. `DRY_RUN=1` writes real `.eml` files to `out/outbox/` instead, labeled simulated in the header. |
+| **Output** | `machine/digest.py`, `machine/send.py` | A run report emailed to the operator every cycle, with every message waiting for a person already written. Approved clinician drafts are staged as real `.eml` files; delivering them is a separate switch. |
 | **Trigger** | `.github/workflows/machine.yml` | Actions cron, weekdays 09:00 ET. Also fires when a file lands in `inbox/`. |
 
 ## How it decides
