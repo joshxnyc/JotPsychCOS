@@ -122,7 +122,7 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
     fresh_cutoff = (datetime.datetime.now(datetime.timezone.utc)
                     - datetime.timedelta(days=RESOLVE_TTL_DAYS)).isoformat()
 
-    resolutions, profiles, reread = {}, {}, 0
+    resolutions, profiles, reread, reused = {}, {}, 0, 0
     for row in due:
         tid = row["target_id"]
         cached = roster.get(tid)
@@ -133,6 +133,7 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
             profiles[tid] = r
             reread += 1
         elif cached:
+            reused += 1
             profiles[tid] = {"tier": cached["tier"], "score": cached["score"],
                              "npi": cached.get("npi", ""), "first": cached.get("first", ""),
                              "registry": cached.get("registry", {}),
@@ -142,10 +143,13 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
         "list_size": len(live), "reread_this_run": reread,
         "budget": RESOLVE_BUDGET, "ttl_days": RESOLVE_TTL_DAYS,
         "runs_for_full_sweep": -(-len(live) // max(RESOLVE_BUDGET, 1)),
-        "profiled": len(profiles),
+        "profiled": len(profiles), "reused": reused,
     }
+    # Counted, not inferred: rows sharing an email are one person, so the
+    # profile count is smaller than the number of rows read and subtracting the
+    # two produced a negative "reused" figure.
     print(f"[resolve] re-read {reread} of {len(live)} from the registry "
-          f"(budget {RESOLVE_BUDGET}); {len(profiles) - reread} reused from memory")
+          f"(budget {RESOLVE_BUDGET}); {reused} reused from memory")
     state.setdefault("resolution_scores", {}).update(
         {t: {"score": r["score"], "tier": r["tier"]} for t, r in profiles.items()})
 
