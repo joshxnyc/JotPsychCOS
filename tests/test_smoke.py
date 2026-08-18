@@ -38,6 +38,10 @@ def test_qc_passes_a_clean_draft():
 def test_output_leaves_the_program():
     r = send.send_email("me@example.com", "Subject", "Body text here.")
     assert r.ok and (r.get("path") or r.get("id"))
+    # out/ is committed back by the workflow as the run record, so the suite
+    # must not leave artifacts in it.
+    if r.get("path"):
+        pathlib.Path(r["path"]).unlink(missing_ok=True)
 
 def test_memory_persists_and_weights_shift():
     s = memory.load()
