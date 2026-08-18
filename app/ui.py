@@ -207,7 +207,34 @@ the rest of the time.</p>
   <tbody>{run_rows}</tbody></table></div></div>"""
 
 
-def review_page(rows, demo: bool = True) -> str:
+def blocked_card(blocked) -> str:
+    if not blocked:
+        return ""
+    rows = []
+    for r in blocked:
+        try:
+            fails = json.loads(r["qc"] or "{}").get("failures", [])
+        except Exception:
+            fails = []
+        rows.append(
+            f'<tr><td><b>{e(r["name"])}</b><div class="sub">{e(r["subject"] or "(no subject)")}'
+            f'</div></td><td class="sub" style="color:var(--neg)">'
+            + ("<br>".join(e(f) for f in fails[:3]) or "—")
+            + f'</td><td class="sub">{e(ago(r["created_at"]))}</td></tr>')
+    return f"""
+<div class="card">
+  <h2>Stopped by checks ({len(blocked)})</h2>
+  <p class="note">Messages the machine wrote and then refused to let out, with the exact
+  check that stopped each one. Nothing here was delivered, and nothing here needs action —
+  unless the same check keeps firing, in which case the fix is a settings or rules change,
+  not a rewrite.</p>
+  <div class="scroll"><table>
+  <thead><tr><th>Clinician / subject</th><th>What stopped it</th><th>When</th></tr></thead>
+  <tbody>{''.join(rows)}</tbody></table></div>
+</div>"""
+
+
+def review_page(rows, blocked=None, demo: bool = True) -> str:
     if not rows:
         body = ('<div class="card"><div class="empty">Your outbox is empty. The next cycle '
                 'will write to anyone whose situation has changed.</div></div>')
@@ -254,7 +281,8 @@ def review_page(rows, demo: bool = True) -> str:
 anything before it goes out. Approving records the decision against you; rejecting leaves
 the clinician alone and says why.</p>
 {banner}
-{body}"""
+{body}
+{blocked_card(blocked or [])}"""
 
 
 def _preview_box(draft_id: int) -> str:

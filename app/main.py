@@ -133,7 +133,8 @@ def review(request: Request):
         return r
     c = db.connect()
     try:
-        body = ui.review_page(db.drafts(c, "staged"), demo=DEMO_MODE)
+        body = ui.review_page(db.drafts(c, "staged"),
+                              blocked=db.drafts(c, "blocked", 25), demo=DEMO_MODE)
     finally:
         c.close()
     return ui.page("Outbox", body, active="/review", badges=badges(), flash=flash(request))
