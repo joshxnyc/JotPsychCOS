@@ -1,0 +1,32 @@
+# Not the machine. A pre-clock check that the secrets are actually correct.
+# Run it from the Actions tab: Preflight -> Run workflow.
+name: preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      send_test_email:
+        description: "Actually send one test email to MAIL_TO_OVERRIDE"
+        type: boolean
+        default: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+
+      - name: Check credentials
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL:   ${{ vars.OPENROUTER_MODEL }}
+          RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
+          MAIL_FROM:          ${{ vars.MAIL_FROM }}
+          MAIL_TO_OVERRIDE:   ${{ secrets.MAIL_TO_OVERRIDE }}
+          DRY_RUN:            ${{ vars.DRY_RUN }}
+          MAX_SENDS_PER_RUN:  ${{ vars.MAX_SENDS_PER_RUN }}
+        run: |
+          python -m machine.preflight ${{ inputs.send_test_email && '--send' || '' }}
