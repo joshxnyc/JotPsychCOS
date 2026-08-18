@@ -104,6 +104,21 @@ CREATE INDEX IF NOT EXISTS idx_prev_ts ON previews(ts);
 -- Settings a person can change from the console. Deployment-level things
 -- (credentials, whether sending is on at all) deliberately stay out of here:
 -- a workspace should not be able to talk itself into sending.
+-- The outcome the whole system exists to produce. A return is attributed only
+-- when the machine had actually written to that clinician first; otherwise it
+-- is recorded and no credit is taken.
+CREATE TABLE IF NOT EXISTS returns (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts           TEXT NOT NULL,
+  clinician_id TEXT NOT NULL,
+  event        TEXT DEFAULT 'came_back',      -- came_back | trial | subscribed
+  attributed   INTEGER NOT NULL,
+  touches      INTEGER DEFAULT 0,
+  last_angle   TEXT DEFAULT '',
+  last_kind    TEXT DEFAULT '',
+  source       TEXT DEFAULT 'manual'          -- manual | webhook
+);
+
 CREATE TABLE IF NOT EXISTS settings (
   key        TEXT PRIMARY KEY,
   value      TEXT NOT NULL,
@@ -250,6 +265,8 @@ def counts(c) -> dict:
         "blocked":    g("SELECT COUNT(*) FROM drafts WHERE status='blocked'"),
         "suppressed": g("SELECT COUNT(*) FROM suppressions"),
         "runs":       g("SELECT COUNT(*) FROM runs"),
+        "returns":    g("SELECT COUNT(*) FROM returns"),
+        "attributed": g("SELECT COUNT(*) FROM returns WHERE attributed=1"),
     }
 
 
@@ -293,3 +310,36 @@ def set_setting(c, key: str, value: str, actor: str = "operator") -> None:
                    updated_at=excluded.updated_at, updated_by=excluded.updated_by""",
               (key, value, now(), actor))
     log(c, "setting_changed", actor=actor, detail=f"{key} = {value}")
+
+
+# ---------------------------------------------------------------- returns ---
+def record_return(c, clinician_id: str, event: str = "came_back",
+                  source: str = "manual", actor: str = "operator") -> dict:
+    """Attribution is a claim, so it is computed from the machine's own record
+    rather than asserted: the return counts as the machine's only if a message
+    to this clinician was actually sent (or approved) before the return."""
+    prior = c.execute(
+        "SELECT COUNT(*) AS n, MAX(id) AS last FROM drafts "
+        "WHERE clinician_id=? AND status IN ('sent','approved')",
+        (clinician_id,)).fetchone()
+    touches = prior["n"]
+    last = draft(c, prior["last"]) if prior["last"] else None
+    attributed = touches > 0
+    c.execute("""INSERT INTO returns (ts, clinician_id, event, attributed,
+                 touches, last_angle, last_kind, source)
+                 VALUES (?,?,?,?,?,?,?,?)""",
+              (now(), clinician_id, event, int(attributed), touches,
+               (last["angle"] if last else ""), (last["kind"] if last else ""), source))
+    log(c, "clinician_returned", actor=actor, clinician_id=clinician_id,
+        detail=(f"{event}; {touches} prior touch(es) — "
+                + ("attributed to the machine" if attributed
+                   else "not attributed: the machine never wrote to them")))
+    return {"attributed": attributed, "touches": touches,
+            "angle": last["angle"] if last else ""}
+
+
+def returns(c, limit: int = 100):
+    return c.execute(
+        "SELECT r.*, c.name, c.email FROM returns r "
+        "JOIN clinicians c ON c.id = r.clinician_id "
+        "ORDER BY r.id DESC LIMIT ?", (limit,)).fetchall()

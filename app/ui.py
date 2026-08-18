@@ -183,7 +183,8 @@ the rest of the time.</p>
   {kpi("In the outbox", counts["awaiting"], "written and checked, awaiting approval")}
   {kpi("Audience", f'{counts["clinicians"]:,}', "clinicians being watched")}
   {kpi("New practices", f'{counts["prospects"]:,}', "registered in the last 90 days")}
-  {kpi("Approved", counts["sent"], f'{counts["rejected"]} rejected')}
+  {kpi("Came back", counts.get("returns", 0),
+       f'{counts.get("attributed", 0)} attributed to the machine')}
   {kpi("Stopped by checks", counts["blocked"], "never reached the outbox")}
   {kpi("Do not contact", counts["suppressed"], "unsubscribes, bounces, complaints")}
 </div>
@@ -290,10 +291,15 @@ def clinicians_page(rows, q: str) -> str:
         f'<td>{e(r["specialty"] or "—")}<div class="sub">'
         f'{e(" · ".join(x for x in (r["city"], r["state"]) if x) or "—")}</div></td>'
         f'<td class="mono">{e(r["npi"] or "—")}</td>'
-        f'<td><form method="post" action="/suppress" class="row">'
+        f'<td><div class="row" style="flex-wrap:nowrap">'
+        f'<form method="post" action="/returned">'
+        f'<input type="hidden" name="clinician_id" value="{e(r["id"])}">'
+        f'<button class="btn" style="padding:5px 10px;font-size:12px" '
+        f'title="They signed up or subscribed again. Attribution is worked out from the send history, not assumed.">Came back</button></form>'
+        f'<form method="post" action="/suppress">'
         f'<input type="hidden" name="email" value="{e(r["email"] or "")}">'
         f'<button class="btn danger" style="padding:5px 10px;font-size:12px">Never contact</button>'
-        f'</form></td></tr>' for r in rows)
+        f'</form></div></td></tr>' for r in rows)
     return f"""
 <h1>Audience</h1>
 <p class="lede">Everyone Second Window is watching, and what it established about them from

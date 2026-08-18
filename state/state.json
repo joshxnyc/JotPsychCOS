@@ -1,10 +1,10 @@
 {
-  "run_count": 16,
+  "run_count": 17,
   "first_run": "2026-08-18T19:47:10.897788+00:00",
-  "last_run": "2026-08-18T20:35:00.085157+00:00",
+  "last_run": "2026-08-18T20:37:26.862578+00:00",
   "angles": {
     "denials": {
-      "sent": 5,
+      "sent": 8,
       "replied": 0,
       "blocked": 0
     },
@@ -1426,6 +1426,27 @@
       "last_ts": "2026-08-18T20:13:21.583587+00:00",
       "count": 1,
       "angle": "audit",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "55319365c2df": {
+      "last_ts": "2026-08-18T20:37:26.876207+00:00",
+      "count": 1,
+      "angle": "denials",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "16840369ea0c": {
+      "last_ts": "2026-08-18T20:37:26.880490+00:00",
+      "count": 1,
+      "angle": "denials",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "5bb316f5ea77": {
+      "last_ts": "2026-08-18T20:37:26.884464+00:00",
+      "count": 1,
+      "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     }

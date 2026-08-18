@@ -452,6 +452,55 @@ def unsubscribe_post(t: str = ""):
     return PlainTextResponse("ok")
 
 
+@api.post("/returned")
+def mark_returned(request: Request, clinician_id: str = Form(...),
+                  event: str = Form("came_back")):
+    """A person recording that a clinician came back. Attribution is computed
+    from the machine's own send history, never asserted."""
+    if (r := wall(request)):
+        return r
+    c = db.connect()
+    try:
+        if not c.execute("SELECT 1 FROM clinicians WHERE id=?", (clinician_id,)).fetchone():
+            return back("/clinicians", "err", "Unknown clinician.")
+        res = db.record_return(c, clinician_id, event=event, actor=who(request))
+    finally:
+        c.close()
+    if res["attributed"]:
+        return back("/clinicians", "ok",
+                    f"Recorded — attributed to the machine after {res['touches']} touch(es).")
+    return back("/clinicians", "ok",
+                "Recorded. The machine never wrote to them, so it takes no credit.")
+
+
+@api.post("/webhooks/signup")
+async def signup_webhook(request: Request):
+    """The production path: JotPsych's signup or billing flow posts
+    {"email": ..., "event": "trial"|"subscribed"} here and returns attribute
+    themselves — no person in the loop, which is what makes the Learning row
+    hold at scale. Guarded by a shared secret in the URL or header."""
+    supplied = (request.query_params.get("key")
+                or request.headers.get("x-webhook-key") or "")
+    if supplied != (os.getenv("WEBHOOK_KEY") or APP_SECRET):
+        return JSONResponse({"ok": False, "error": "bad key"}, status_code=403)
+    payload = await request.json()
+    email = str(payload.get("email") or "").strip().lower()
+    event = str(payload.get("event") or "came_back")[:24]
+    if "@" not in email:
+        return JSONResponse({"ok": False, "error": "no email"}, status_code=400)
+    c = db.connect()
+    try:
+        row = c.execute("SELECT id FROM clinicians WHERE email=?", (email,)).fetchone()
+        if not row:
+            return JSONResponse({"ok": True, "known": False,
+                                 "note": "not in the audience; nothing recorded"})
+        res = db.record_return(c, row["id"], event=event, source="webhook",
+                               actor="signup-webhook")
+    finally:
+        c.close()
+    return JSONResponse({"ok": True, "known": True, **res})
+
+
 @api.post("/webhooks/resend")
 async def resend_webhook(request: Request):
     """Bounces and complaints suppress automatically. A complaint rate above
