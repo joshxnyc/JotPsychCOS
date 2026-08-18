@@ -1,0 +1,46 @@
+# Everything the machine is not allowed to say, and the shape it must stay in.
+# Edit this file to change the machine's behaviour - no code change needed.
+
+subject_max_chars: 62
+body_min_words: 45
+body_max_words: 140
+
+require_verified_source: false   # set true to refuse anything not backed by NPPES
+
+# Phrases that give away unread AI output.
+ai_tells:
+  - "as an ai"
+  - "i hope this email finds you well"
+  - "i wanted to reach out"
+  - "in today's fast-paced"
+  - "delve"
+  - "leverage our cutting-edge"
+  - "revolutionize"
+  - "game-changer"
+  - "unlock the power"
+  - "seamlessly integrate"
+  - "certainly!"
+  - "here is the email"
+
+# Claims this company must never make in outbound.
+banned_phrases:
+  - "guaranteed reimbursement"
+  - "guarantees payment"
+  - "will not be denied"
+  - "hipaa certified"
+  - "fda approved"
+  - "clinically proven"
+  - "replaces your clinical judgment"
+  - "diagnoses patients"
+  - "no risk"
+  - "100% accurate"
+  - "eliminates audits"
+  - "free forever"
+
+# regex -> why it's banned
+banned_patterns:
+  "\\b(cure|treat|diagnose)s?\\b\\s+(patients|clients)": "implies the software practices medicine"
+  "\\b\\d+%\\s+(guarantee|accuracy)": "unqualified accuracy guarantee"
+  "\\bact now\\b|\\blimited time\\b|\\bonly \\d+ (spots|seats)": "fake urgency"
+  "\\bDr\\.?\\s+[A-Z][a-z]+ (said|told us|says)\\b": "quotes a named clinician - must be sourced"
+  "\\bunsubscribe\\b.*\\bcannot\\b": "broken opt-out"

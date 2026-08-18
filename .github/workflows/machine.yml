@@ -1,0 +1,65 @@
+# THE TRIGGER. Not a person pressing run.
+# Runs on a schedule, commits its own results back, and publishes the report.
+name: machine
+
+on:
+  schedule:
+    - cron: "0 13 * * 1-5"     # 09:00 America/New_York, weekdays
+  workflow_dispatch:            # manual re-run button, for the reviewer
+  push:
+    paths: ["inbox/**"]         # dropping a new input file also fires it
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: machine
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+
+      - name: Run one pass
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL:   ${{ vars.OPENROUTER_MODEL }}
+          RESEND_API_KEY:     ${{ secrets.RESEND_API_KEY }}
+          MAIL_FROM:          ${{ vars.MAIL_FROM }}
+          MAIL_TO_OVERRIDE:   ${{ secrets.MAIL_TO_OVERRIDE }}
+          DRY_RUN:            ${{ vars.DRY_RUN }}
+          MAX_SENDS_PER_RUN:  ${{ vars.MAX_SENDS_PER_RUN }}
+        run: python -m machine.run
+
+      - name: Commit results back (this is the memory)
+        run: |
+          git config user.name  "machine"
+          git config user.email "machine@users.noreply.github.com"
+          git add -A out state
+          git diff --staged --quiet || git commit -m "run $(date -u +%FT%TZ)"
+          git push
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: run-report
+          path: out/
+
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: out }
+
+  publish:
+    needs: run
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
