@@ -81,7 +81,10 @@ def compose(state: dict, queue: list) -> tuple[str, str, str]:
               f"out/outbox/ and NOT delivered to anyone.",
               "Nothing reaches a clinician until SEND_TO_CLINICIANS is turned on.", ""]
 
-    L += ["-" * 62, "", f"Full report: {DASHBOARD}",
+    L += ["-" * 62, "",
+          "This workspace runs on sample data: clinician and peer details are",
+          "invented, and nothing in it is delivered to any real clinician.", "",
+          f"Full report: {DASHBOARD}",
           "Change what it says or when: config/brand.md and config/guardrails.yaml.",
           "", "— Second Window"]
     text = "\n".join(L)

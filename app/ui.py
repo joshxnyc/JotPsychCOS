@@ -114,6 +114,37 @@ label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em
 @media(max-width:820px){.two{grid-template-columns:1fr}}
 footer{max-width:1140px;margin:0 auto;padding:0 24px 50px;color:var(--ink3);font-size:12.5px;max-width:88ch}
 .login{max-width:380px;margin:12vh auto;padding:0 24px}
+.sgrid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.sgrid{grid-template-columns:1fr}}
+.hint{font-size:12px;color:var(--ink3);margin-top:5px;text-transform:none;letter-spacing:0}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.suffixed{display:flex;align-items:center;gap:0;border:1px solid var(--line);
+ border-radius:9px;background:#fff;overflow:hidden}
+.suffixed input{border:0;border-radius:0;width:100%}
+.suffixed input:focus{outline:none}
+.suffixed:focus-within{outline:2px solid #DDE0FA;border-color:var(--brand2)}
+.suffixed span{padding:0 12px;font-size:12.5px;color:var(--ink3);white-space:nowrap;
+ border-left:1px solid var(--line2);align-self:stretch;display:flex;align-items:center;
+ background:#FBFCFD}
+.radios{display:grid;gap:10px}
+.radio{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);
+ border-radius:11px;padding:14px 16px;cursor:pointer;background:#fff;
+ text-transform:none;letter-spacing:0;font-size:14px;font-weight:400;color:var(--ink);
+ margin-bottom:0}
+.radio b{font-size:14px}
+.radio:hover{border-color:var(--brand2)}
+.radio.sel{border-color:var(--brand);background:#F7F7FE;box-shadow:0 0 0 1px var(--brand)}
+.radio input{margin-top:3px;accent-color:var(--brand)}
+.radio p{font-size:13px;color:var(--ink2);margin-top:4px;font-weight:400}
+.ladder{margin-top:14px;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.ladder div{display:flex;align-items:center;gap:10px;padding:9px 13px;font-size:13px;
+ border-bottom:1px solid var(--line2);background:#FBFCFD}
+.ladder div:last-child{border-bottom:0}
+.ladder i{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+.ladder b{min-width:64px;font-family:Archivo,sans-serif}
+.ladder span{color:var(--ink2)}
+.savebar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ flex-wrap:wrap;border-color:#C9CBF2;background:#F9F9FF}
 .preview{display:flex;justify-content:space-between;align-items:center;gap:16px;
  flex-wrap:wrap;margin-top:16px;padding:14px 16px;background:#F3F3FE;
  border:1px solid #C9CBF2;border-radius:10px}
@@ -393,65 +424,144 @@ afterwards.</p>
 </table></div></div>"""
 
 
+def _num(key, values, schema, suffix) -> str:
+    label, _d, help_, _k = schema[key]
+    return (f'<div class="field"><label>{e(label)}</label>'
+            f'<div class="suffixed"><input type="number" min="0" name="{e(key)}" '
+            f'value="{e(values.get(key, ""))}"><span>{e(suffix)}</span></div>'
+            f'<p class="hint">{e(help_)}</p></div>')
+
+
+def _txt(key, values, schema, itype="text", placeholder="") -> str:
+    label, _d, help_, _k = schema[key]
+    return (f'<div class="field"><label>{e(label)}</label>'
+            f'<input type="{itype}" name="{e(key)}" value="{e(values.get(key, ""))}" '
+            f'placeholder="{e(placeholder)}">'
+            f'<p class="hint">{e(help_)}</p></div>')
+
+
 def settings_page(suppressions, values, schema) -> str:
     sup = "".join(
         f'<tr><td class="mono">{e(s["email"])}</td><td>{e(s["reason"])}</td>'
         f'<td><span class="pill">{e(s["source"])}</span></td>'
         f'<td class="sub">{e(ago(s["created_at"]))}</td></tr>' for s in suppressions)
-
-    fields = []
-    for key, (label, _default, help_, kind) in schema.items():
-        val = values.get(key, "")
-        if kind.startswith("choice:"):
-            opts = "".join(
-                f'<option value="{e(o)}" {"selected" if o == val else ""}>{e(o)}</option>'
-                for o in kind.split(":")[1].split(","))
-            control = f'<select name="{e(key)}">{opts}</select>'
-        else:
-            itype = "email" if kind == "email" else "text"
-            control = f'<input type="{itype}" name="{e(key)}" value="{e(val)}">'
-        fields.append(
-            f'<div class="field"><label>{e(label)}</label>{control}'
-            f'<p class="sub" style="margin-top:5px">{e(help_)}</p></div>')
+    mode = values.get("approval_mode", "autopilot")
+    v_conf = e(values.get("confidence_verified", "70"))
+    v_prob = e(values.get("confidence_probable", "40"))
 
     return f"""
 <h1>Settings</h1>
-<p class="lede">How the workspace behaves — cadence, confidence thresholds, where samples
-go. Changes apply from the next cycle and every change is recorded in Activity.
-Credentials and the sending switch live on the deployment, not here, so a workspace
-cannot be talked into sending by anyone who can reach it.</p>
-<div class="two">
-  <div class="card">
-    <h2>Workspace</h2>
-    <form method="post" action="/settings">
-      {''.join(fields)}
-      <div class="field" style="border-top:1px solid var(--line2);padding-top:14px">
-        <label>Settings password</label>
-        <input type="password" name="settings_password" placeholder="Required to save" required>
-        <p class="sub" style="margin-top:5px">Browsing is open; changing how the machine
-        behaves is not.</p></div>
-      <button class="btn primary">Save changes</button>
-    </form>
+<p class="lede">How this workspace behaves. Changes apply from the next cycle and every
+change is recorded in Activity. Credentials and the sending switch live on the deployment,
+not here — a workspace cannot be talked into sending by anyone who can reach it.</p>
+
+<form method="post" action="/settings">
+<div class="sgrid">
+  <div>
+    <div class="card">
+      <h2>How it sends</h2>
+      <p class="note">The one setting that decides where your time goes.</p>
+      <div class="radios">
+        <label class="radio {'sel' if mode == 'autopilot' else ''}">
+          <input type="radio" name="approval_mode" value="autopilot"
+            {'checked' if mode == 'autopilot' else ''}>
+          <div><b>Autopilot</b><span class="pill p-sent" style="margin-left:8px">recommended</span>
+          <p>Messages that pass every check send on their own. Only introductions that
+          need a person wait for you — about ten a month, two minutes each.</p></div>
+        </label>
+        <label class="radio {'sel' if mode == 'review' else ''}">
+          <input type="radio" name="approval_mode" value="review"
+            {'checked' if mode == 'review' else ''}>
+          <div><b>Review everything</b>
+          <p>Every message waits for approval. Your time then grows with the audience —
+          a deliberate trade, and yours to make.</p></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Cadence</h2>
+      <p class="note">When a quiet clinician hears from you, and how long the machine
+      waits after writing before it may write again.</p>
+      <div class="pair">
+        {_num("keep_warm_days", values, schema, "days")}
+        {_num("moment_cooldown_days", values, schema, "days")}
+      </div>
+      {_num("max_sends_per_run", values, schema, "per cycle")}
+    </div>
+
+    <div class="card">
+      <h2>Identity confidence</h2>
+      <p class="note">What a message may say about someone depends on how sure the match
+      is. Raise the bars and messages get safer and more generic; lower them and they get
+      more specific and riskier.</p>
+      <div class="pair">
+        {_num("confidence_verified", values, schema, "of 100")}
+        {_num("confidence_probable", values, schema, "of 100")}
+      </div>
+      <div class="ladder">
+        <div><i style="background:#0B7A6E"></i><b>{v_conf}+</b><span>may name specialty, state and city</span></div>
+        <div><i style="background:#3FB8A6"></i><b>{v_prob}–{v_conf}</b><span>specialty and state only</span></div>
+        <div><i style="background:#BFD9D4"></i><b>below {v_prob}</b><span>nothing about them at all</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>New practices</h2>
+      <p class="note">Where and how far back to look in the federal register for
+      practices being formed.</p>
+      {_txt("prospect_states", values, schema, placeholder="NY,CA,TX")}
+      {_num("prospect_window_days", values, schema, "days")}
+    </div>
+
+    <div class="card">
+      <h2>Delivery details</h2>
+      {_txt("test_recipient", values, schema, itype="email", placeholder="you@company.com")}
+      {_txt("postal_address", values, schema)}
+    </div>
+
+    <div class="card savebar">
+      <div><b>Save changes</b>
+        <p class="hint" style="margin-top:3px">Browsing is open; changing how the machine
+        behaves needs the settings password.</p></div>
+      <div class="row" style="flex-wrap:nowrap">
+        <input type="password" name="settings_password" placeholder="Settings password"
+          required style="min-width:200px">
+        <button class="btn primary">Save</button>
+      </div>
+    </div>
   </div>
+
   <div>
     <div class="card"><h2>Audience</h2>
       <p class="note">Where the three fields come from — a file you upload, or a system
       read directly.</p>
-      <a class="btn primary" href="/sources">Manage data sources</a></div>
-    <div class="card"><h2>Do not contact</h2>
+      <a class="btn" href="/sources">Manage data sources</a></div>
+    <div class="card">
+      <h2>Do not contact <span class="sub" style="font-weight:400">({len(suppressions)})</span></h2>
       <p class="note">Checked when a message is written and again the moment before it is
       sent. Unsubscribes, bounces and spam complaints arrive here on their own.</p>
-      <form method="post" action="/suppress" class="row">
-        <input type="email" name="email" placeholder="clinician@example.com" required
-          style="max-width:260px">
-        <button class="btn">Add</button></form></div>
-    <div class="card"><h2>Do not contact ({len(suppressions)})</h2>
+      <div class="row" style="margin-bottom:14px" id="dnc">
+        <input type="email" form="dncform" name="email" placeholder="clinician@example.com"
+          required style="max-width:250px">
+        <button class="btn" form="dncform">Add</button>
+      </div>
       <div class="scroll"><table>
       <thead><tr><th>Email</th><th>Reason</th><th>Source</th><th>When</th></tr></thead>
       <tbody>{sup or '<tr><td colspan=4 class="empty">Nobody yet.</td></tr>'}</tbody>
       </table></div></div>
   </div>
-</div>"""
+</div>
+</form>
+<form method="post" action="/suppress" id="dncform"></form>
+<script>
+document.querySelectorAll('.radio input').forEach(function(r){{
+  r.addEventListener('change', function(){{
+    document.querySelectorAll('.radio').forEach(function(l){{l.classList.remove('sel')}});
+    r.closest('.radio').classList.add('sel');
+  }});
+}});
+</script>"""
 
 
 def login_page(err: str = "") -> str:
