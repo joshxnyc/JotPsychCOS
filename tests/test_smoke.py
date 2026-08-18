@@ -71,7 +71,10 @@ def test_the_watch_needs_memory_to_see_anything():
     from machine import watch
     res = {"t1": {"npi": "1234567893", "registry": {"city": "BOSTON", "state": "MA",
                                                     "taxonomy": "Psychiatry"}}}
+    # observe() appends to the real history, which the dashboard publishes as
+    # observed registry changes. A test must not leave fabricated rows in it.
     before = watch.load_snapshot()
+    hist_before = watch.HISTORY.read_text() if watch.HISTORY.exists() else None
     try:
         watch.save_snapshot({})
         assert watch.observe(res, "test") == {}          # first sighting: nothing to compare
@@ -81,6 +84,10 @@ def test_the_watch_needs_memory_to_see_anything():
         assert trig["t1"][0]["type"] == "practice_move"
     finally:
         watch.save_snapshot(before)
+        if hist_before is None:
+            watch.HISTORY.unlink(missing_ok=True)
+        else:
+            watch.HISTORY.write_text(hist_before)
 
 def test_nppes_is_a_live_api():
     hits = io_input.nppes_lookup(taxonomy="Psychiatry", state="NY", limit=1)
