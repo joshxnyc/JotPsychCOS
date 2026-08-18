@@ -1,99 +1,303 @@
-"""REPORTING. What it did, what it caught, what improved, and the short list of
-things a human should spend their 1-2 hours a month on."""
-import json, html, datetime, collections
-from . import config, ledger
+"""THE REPORT. What the machine did, what it caught, and whether it is working.
 
-def build(state: dict) -> None:
+Two outputs:
+  out/index.html      - the dashboard, published to GitHub Pages
+  out/human_queue.md  - the 1-2 hours of human time, as instructions not data
+
+Styled to JotPsych's own brand: Archivo/Inter, teal #128276, indigo #1c1e85.
+"""
+import html, json, shutil, datetime, collections
+from . import config, ledger, memory, watch
+
+BRAND = {"teal": "#128276", "teal_lift": "#16a394", "indigo": "#1c1e85",
+         "ink": "#0b1220", "panel": "#121a2a", "line": "#22304a",
+         "text": "#e8edf6", "muted": "#93a3bd",
+         "good": "#22c55e", "bad": "#ef4444", "warn": "#f59e0b"}
+
+
+# ------------------------------------------------------------------ maths ---
+def metrics(state: dict) -> dict:
     recs = ledger.all_records()
-    sent    = [r for r in recs if r.get("action") == "sent"]
-    blocked = [r for r in recs if r.get("action") == "blocked"]
-    skipped = [r for r in recs if r.get("action") == "skipped"]
-    by_angle = collections.defaultdict(lambda: {"sent": 0, "blocked": 0})
-    for r in recs:
-        a = r.get("angle") or "-"
-        if r.get("action") in ("sent", "blocked"):
-            by_angle[a][r["action"]] += 1
-    reasons = collections.Counter(f for r in blocked for f in r.get("failures", []))
+    by = collections.Counter(r.get("action") for r in recs)
+    sent    = by.get("sent", 0)
+    blocked = by.get("blocked", 0)
+    silent  = by.get("silence", 0)
+    queued  = by.get("human_call", 0)
+    drafted = sent + blocked
+    considered = sent + blocked + silent + queued + by.get("deferred", 0) + by.get("skipped", 0)
 
-    _human_queue(state, blocked, sent, reasons)
-    _dashboard(state, recs, sent, blocked, skipped, by_angle, reasons)
+    returns = state.get("returns", {})
+    attributed = [r for r in returns.values() if r.get("attributed")]
+    touches = sum(r.get("touches", 0) for r in attributed)
 
-def _human_queue(state, blocked, sent, reasons):
-    lines = ["# Human queue",
-             f"_generated {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M UTC} "
-             f"- run #{state.get('run_count')}_", "",
-             "The machine handles the rest. These are the only items that need a person.", ""]
-    top = reasons.most_common(3)
-    if top:
-        lines += ["## 1. Fix the top block reason", ""]
-        for why, n in top:
-            lines.append(f"- **{n}x** - {why}")
-        lines += ["", "_Each of these is a one-line edit to `config/guardrails.yaml` "
-                  "or `config/fact_pack.md`._", ""]
-    weak = [a for a, s in state.get("angles", {}).items()
-            if s.get("sent", 0) >= 5 and s.get("replied", 0) / max(s["sent"], 1) < 0.05]
-    if weak:
-        lines += ["## 2. Retire or rewrite these angles", ""] + \
-                 [f"- `{a}` - under 5% reply after {state['angles'][a]['sent']} sends" for a in weak] + [""]
-    lines += ["## 3. Refresh the roster", "",
-              "- Add any clinician who replied positively to `inbox/advocates.csv` "
-              "so the machine can quote them next cycle.",
-              "- Drop anyone who asked to be left alone into `inbox/suppress.csv`.", ""]
-    config.HUMANQ.write_text("\n".join(lines))
+    tiers = collections.Counter(v["tier"] for v in state.get("resolution_scores", {}).values())
+    triggers = collections.Counter(
+        (r.get("reason") or "").split(":")[0] for r in recs
+        if r.get("action") in ("sent", "human_call", "blocked")
+        and ":" in (r.get("reason") or ""))
 
-def _dashboard(state, recs, sent, blocked, skipped, by_angle, reasons):
-    def row(cells, tag="td"):
-        return "<tr>" + "".join(f"<{tag}>{html.escape(str(c))}</{tag}>" for c in cells) + "</tr>"
-    angle_rows = "".join(
-        row([a, s["sent"], s["blocked"],
-             f"{state.get('angles',{}).get(a,{}).get('replied',0)}",
-             f"{(state.get('angles',{}).get(a,{}).get('replied',0)/max(s['sent'],1)):.0%}"])
-        for a, s in sorted(by_angle.items()))
-    block_rows = "".join(row([why, n]) for why, n in reasons.most_common(12))
-    recent = "".join(
-        row([r.get("ts", "")[:19], r.get("action"), r.get("angle", "-"),
-             (r.get("subject") or "-")[:70],
-             "; ".join(r.get("failures", []))[:90] or "-"])
-        for r in recs[-25:][::-1])
-    caught_rate = len(blocked) / max(len(blocked) + len(sent), 1)
-    hq = config.HUMANQ.read_text() if config.HUMANQ.exists() else ""
+    return {
+        "runs": state.get("run_count", 0),
+        "considered": considered, "sent": sent, "blocked": blocked,
+        "silent": silent, "queued": queued, "drafted": drafted,
+        "silence_rate": (silent / considered * 100) if considered else 0,
+        "catch_rate": (blocked / drafted * 100) if drafted else 0,
+        "returns_total": len(returns),
+        "returns_attributed": len(attributed),
+        "touches_per_return": (touches / len(attributed)) if attributed else 0,
+        "human_minutes": queued * 12,      # 12 min per warm intro, the whole job
+        "tiers": tiers, "triggers": triggers,
+        "changes_seen": len(watch.history()),
+    }
 
-    config.DASH.write_text(f"""<!doctype html><meta charset="utf-8">
-<title>Machine run report</title>
+
+# ---------------------------------------------------------------- helpers ---
+def _e(x) -> str:
+    return html.escape(str(x if x is not None else ""))
+
+def _tile(label, value, sub="", tone="") -> str:
+    color = {"good": BRAND["good"], "bad": BRAND["bad"], "warn": BRAND["warn"]}.get(tone, BRAND["teal_lift"])
+    return (f'<div class="tile"><div class="tile-l">{_e(label)}</div>'
+            f'<div class="tile-v" style="color:{color}">{_e(value)}</div>'
+            f'<div class="tile-s">{_e(sub)}</div></div>')
+
+def _bar(label, n, total, tone="teal_lift") -> str:
+    pct = (n / total * 100) if total else 0
+    return (f'<div class="bar"><div class="bar-h"><span>{_e(label)}</span>'
+            f'<b>{n}</b></div><div class="bar-t">'
+            f'<div class="bar-f" style="width:{pct:.1f}%;background:{BRAND[tone]}"></div></div></div>')
+
+
+# ------------------------------------------------------------------ build ---
+def build(state: dict) -> None:
+    m = metrics(state)
+    recs = ledger.all_records()
+
+    # the logo travels with the published site
+    src = config.ROOT / "assets" / "jotpsych-logo.svg"
+    if src.exists():
+        shutil.copy(src, config.OUT / "jotpsych-logo.svg")
+
+    blocked_rows = [r for r in recs if r.get("action") == "blocked"][-12:][::-1]
+    decision_rows = [r for r in recs if r.get("action") in
+                     ("sent", "human_call", "silence", "blocked")][-30:][::-1]
+    angle_rows = sorted(state.get("angles", {}).items(),
+                        key=lambda kv: kv[1].get("sent", 0), reverse=True)
+
+    qc_table = "".join(
+        f"<tr><td class='mono'>{_e(r.get('target_id'))}</td>"
+        f"<td>{_e(r.get('subject') or '—')}</td>"
+        f"<td class='bad'>{_e((r.get('failures') or ['—'])[0])}</td>"
+        f"<td class='mono dim'>{_e(r.get('quarantine'))}</td></tr>"
+        for r in blocked_rows) or "<tr><td colspan=4 class='dim'>Nothing blocked yet.</td></tr>"
+
+    dec_table = "".join(
+        f"<tr><td><span class='pill pill-{_e(r.get('action'))}'>{_e(r.get('action'))}</span></td>"
+        f"<td class='mono'>{_e(r.get('target_id'))}</td>"
+        f"<td class='reason'>{_e(r.get('reason'))}</td></tr>"
+        for r in decision_rows)
+
+    angle_table = "".join(
+        f"<tr><td>{_e(a)}</td><td>{v.get('sent',0)}</td><td>{v.get('blocked',0)}</td>"
+        f"<td class='good'>{v.get('replied',0)}</td>"
+        f"<td class='mono'>{memory.angle_weights(state,[a])[a]:.3f}</td></tr>"
+        for a, v in angle_rows) or "<tr><td colspan=5 class='dim'>No angles used yet.</td></tr>"
+
+    hist = watch.history()[-10:][::-1]
+    hist_table = "".join(
+        f"<tr><td class='mono'>{_e(h.get('npi'))}</td><td>{_e(h.get('field'))}</td>"
+        f"<td class='dim'>{_e(h.get('before'))}</td><td class='good'>{_e(h.get('after'))}</td>"
+        f"<td><span class='pill pill-trigger'>{_e(h.get('trigger'))}</span></td></tr>"
+        for h in hist) or "<tr><td colspan=5 class='dim'>No registry changes observed yet.</td></tr>"
+
+    tier_bars = "".join(_bar(t, m["tiers"].get(t, 0), sum(m["tiers"].values()) or 1,
+                             {"verified": "good", "probable": "teal_lift", "unresolved": "muted"}[t])
+                        for t in ("verified", "probable", "unresolved"))
+
+    now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    dry = "SIMULATED SEND" if config.DRY_RUN else "LIVE SEND"
+
+    tiles = "".join([
+        _tile("Clinicians considered", m["considered"], f"across {m['runs']} runs"),
+        _tile("Stayed silent", f"{m['silence_rate']:.0f}%",
+              f"{m['silent']} deliberately not contacted", "good"),
+        _tile("Messages sent", m["sent"], "after passing every check"),
+        _tile("QC catch rate", f"{m['catch_rate']:.0f}%",
+              f"{m['blocked']} of {m['drafted']} drafts blocked",
+              "bad" if m["blocked"] else ""),
+        _tile("Registry changes seen", m["changes_seen"], "the readiness signal"),
+        _tile("Returns attributed", m["returns_attributed"],
+              f"of {m['returns_total']} total returns", "good"),
+        _tile("Touches per return", f"{m['touches_per_return']:.1f}"
+              if m["returns_attributed"] else "—", "lower is better"),
+        _tile("Human time this cycle", f"{m['human_minutes']//60}h {m['human_minutes']%60}m",
+              f"{m['queued']} warm intros to make", "warn"),
+    ])
+    config.DASH.write_text(_PAGE.format(
+        b=BRAND, now=now, dry=dry, m=m, tiles=tiles,
+        dry_cls="live" if not config.DRY_RUN else "",
+        tier_bars=tier_bars, qc_table=qc_table, dec_table=dec_table,
+        angle_table=angle_table, hist_table=hist_table,
+    ), encoding="utf-8")
+
+
+def write_human_queue(plans: list, state: dict) -> None:
+    """Not a list of people. A list of instructions, each one a warm
+    introduction between two real clinicians — the thing a machine cannot do."""
+    lines = ["# The human hour", "",
+             f"_Generated {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M UTC} "
+             f"· run {state.get('run_count', 0)}_", "",
+             "These are the only clinicians this cycle where a person beats a message.",
+             "Each one hit the strongest class of signal **and** has a consenting peer",
+             "in their specialty and state. Twelve minutes each. Nothing else needs you.", ""]
+    if not plans:
+        lines += ["_Nothing this cycle. The machine handled everything it detected._", ""]
+    for i, p in enumerate(plans, 1):
+        c = p.context
+        peer, trig = c.get("peer") or {}, c.get("trigger") or {}
+        lines += [
+            f"## {i}. {c.get('name', 'Unknown')}",
+            f"- **Why now:** {trig.get('detail', 'n/a')}",
+            f"- **Identity confidence:** {c.get('tier')} ({c.get('score')})",
+            f"- **Peer to offer:** {peer.get('name', '—')}, {peer.get('credential', '')} "
+            f"— {peer.get('specialty', '')} in {peer.get('state', '')}, "
+            f"{peer.get('months_using', '?')} months on JotPsych",
+            f"- **Open with:** \"{peer.get('attestation', '')}\"",
+            f"- **Do not say:** that anything was looked up. You are offering an "
+            f"introduction, not reporting on their practice.", ""]
+    lines += ["---", "", "**Also worth your time this month:**",
+              "- Skim `out/quarantine/` — if the machine is blocking the same thing "
+              "repeatedly, the fix is a line in `config/guardrails.yaml`, not a rewrite.",
+              "- Check the angle table on the dashboard. Retire anything with sends "
+              "and no returns after two cycles."]
+    config.HUMANQ.write_text("\n".join(lines), encoding="utf-8")
+
+
+_PAGE = """<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Second Window — JotPsych</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{{color-scheme:light dark}}
-body{{font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-max-width:900px;margin:2rem auto;padding:0 1rem}}
-h1{{font-size:1.5rem;margin:0 0 .25rem}} h2{{font-size:1.05rem;margin:2rem 0 .5rem}}
-.sub{{opacity:.6;margin:0 0 1.5rem}}
-.k{{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}}
-.kpi{{flex:1 1 120px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);
-border-radius:10px;padding:.7rem .9rem}}
-.kpi b{{display:block;font-size:1.6rem;line-height:1.1}}
-.kpi span{{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;opacity:.6}}
-table{{border-collapse:collapse;width:100%;font-size:.85rem}}
-th,td{{text-align:left;padding:.4rem .5rem;border-bottom:1px solid
-color-mix(in srgb,currentColor 12%,transparent);vertical-align:top}}
-th{{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;opacity:.6}}
-pre{{white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace;
-background:color-mix(in srgb,currentColor 5%,transparent);padding:1rem;border-radius:10px}}
-</style>
-<h1>Machine run report</h1>
-<p class="sub">Run #{state.get('run_count')} &middot; last run {state.get('last_run','')[:19]} UTC
-&middot; first run {(state.get('first_run') or '')[:19]} UTC</p>
-<div class="k">
-  <div class="kpi"><b>{len(sent)}</b><span>sent</span></div>
-  <div class="kpi"><b>{len(blocked)}</b><span>blocked by QC</span></div>
-  <div class="kpi"><b>{caught_rate:.0%}</b><span>catch rate</span></div>
-  <div class="kpi"><b>{len(skipped)}</b><span>skipped</span></div>
-  <div class="kpi"><b>{state.get('run_count',0)}</b><span>runs</span></div>
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{background:{b[ink]};color:{b[text]};font-family:Inter,system-ui,sans-serif;
+ font-size:15px;line-height:1.55;padding:32px 20px 80px}}
+.wrap{{max-width:1080px;margin:0 auto}}
+h1,h2,h3,.tile-v{{font-family:Archivo,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em}}
+header{{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:6px}}
+header img{{height:30px;width:auto}}
+.tag{{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:{b[muted]};
+ border:1px solid {b[line]};border-radius:999px;padding:4px 11px}}
+.tag.live{{color:{b[warn]};border-color:{b[warn]}}}
+h1{{font-size:30px;margin:16px 0 6px}}
+.sub{{color:{b[muted]};max-width:70ch;margin-bottom:28px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:14px}}
+.tile{{background:{b[panel]};border:1px solid {b[line]};border-radius:12px;padding:14px 16px}}
+.tile-l{{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:{b[muted]}}}
+.tile-v{{font-size:27px;line-height:1.25;margin:3px 0}}
+.tile-s{{font-size:12px;color:{b[muted]}}}
+section{{background:{b[panel]};border:1px solid {b[line]};border-radius:14px;
+ padding:20px 22px;margin-top:20px}}
+h2{{font-size:17px;margin-bottom:4px}}
+.note{{color:{b[muted]};font-size:13px;margin-bottom:14px;max-width:80ch}}
+table{{width:100%;border-collapse:collapse;font-size:13px}}
+th{{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;
+ color:{b[muted]};font-weight:600;padding:7px 10px;border-bottom:1px solid {b[line]}}}
+td{{padding:8px 10px;border-bottom:1px solid {b[line]};vertical-align:top}}
+tr:last-child td{{border-bottom:none}}
+.scroll{{overflow-x:auto}}
+.mono{{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}}
+.dim{{color:{b[muted]}}} .good{{color:{b[good]}}} .bad{{color:{b[bad]}}}
+.reason{{color:{b[muted]};max-width:62ch}}
+.pill{{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;
+ border:1px solid {b[line]};white-space:nowrap}}
+.pill-sent{{color:{b[good]};border-color:{b[good]}}}
+.pill-blocked{{color:{b[bad]};border-color:{b[bad]}}}
+.pill-silence{{color:{b[muted]}}}
+.pill-human_call{{color:{b[warn]};border-color:{b[warn]}}}
+.pill-trigger{{color:{b[teal_lift]};border-color:{b[teal_lift]}}}
+.bar{{margin-bottom:11px}}
+.bar-h{{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}}
+.bar-t{{height:7px;background:{b[ink]};border-radius:999px;overflow:hidden}}
+.bar-f{{height:100%;border-radius:999px}}
+.cols{{display:grid;grid-template-columns:1fr 1fr;gap:20px}}
+@media(max-width:760px){{.cols{{grid-template-columns:1fr}}}}
+footer{{color:{b[muted]};font-size:12px;margin-top:34px;border-top:1px solid {b[line]};
+ padding-top:16px;max-width:80ch}}
+a{{color:{b[teal_lift]}}}
+</style></head><body><div class="wrap">
+
+<header>
+  <img src="jotpsych-logo.svg" alt="JotPsych">
+  <span class="tag">Second Window</span>
+  <span class="tag {dry_cls}">{dry}</span>
+  <span class="tag">run {m[runs]} · {now}</span>
+</header>
+
+<h1>Bringing dormant clinicians back</h1>
+<p class="sub">Three fields — name, email, mobile — become a verified practice profile from
+the federal NPI registry. The machine watches that registry for the practice changes that
+reopen a software decision, and writes only at that moment. Everyone else gets silence.</p>
+
+<div class="grid">
+  {tiles}
 </div>
-<h2>Performance by angle</h2>
-<table><tr><th>Angle<th>Sent<th>Blocked<th>Replied<th>Reply rate</tr>{angle_rows or row(['no data','','','',''])}</table>
-<h2>What QC caught</h2>
-<table><tr><th>Reason<th>Count</tr>{block_rows or row(['nothing blocked yet',''])}</table>
-<h2>Last 25 decisions</h2>
-<table><tr><th>When<th>Action<th>Angle<th>Subject<th>QC failures</tr>{recent}</table>
-<h2>Human queue</h2>
-<pre>{html.escape(hq)}</pre>
-""")
+
+<section>
+  <h2>What QC caught</h2>
+  <p class="note">Nothing leaves without passing both a deterministic gate and an LLM judge
+  that reads the draft against the fact pack. If the judge cannot return a verdict, the draft
+  is blocked, not sent. Every blocked draft is on disk in <span class="mono">out/quarantine/</span>.</p>
+  <div class="scroll"><table>
+    <tr><th>Clinician</th><th>Subject</th><th>Why it was blocked</th><th>File</th></tr>
+    {qc_table}
+  </table></div>
+</section>
+
+<div class="cols">
+  <section>
+    <h2>Identity confidence</h2>
+    <p class="note">How sure the machine is that it found the right clinician. Below the
+    threshold it refuses to personalise rather than guess.</p>
+    {tier_bars}
+  </section>
+  <section>
+    <h2>Angle performance</h2>
+    <p class="note">The machine leans toward the angle that has produced returns. This table
+    is what changes its behaviour next cycle — no one rewrites it.</p>
+    <div class="scroll"><table>
+      <tr><th>Angle</th><th>Sent</th><th>Blocked</th><th>Returned</th><th>Weight</th></tr>
+      {angle_table}
+    </table></div>
+  </section>
+</div>
+
+<section>
+  <h2>Registry changes observed</h2>
+  <p class="note">The readiness detector. Each row is a real difference between what the
+  federal registry said last run and what it says now — the machine cannot see these without
+  its own memory of the previous run.</p>
+  <div class="scroll"><table>
+    <tr><th>NPI</th><th>Field</th><th>Was</th><th>Now</th><th>Trigger</th></tr>
+    {hist_table}
+  </table></div>
+</section>
+
+<section>
+  <h2>Every decision, with its reason</h2>
+  <p class="note">Including the ones where it chose to stay quiet. Silence is logged so the
+  silence rate is measured rather than claimed.</p>
+  <div class="scroll"><table>
+    <tr><th>Action</th><th>Clinician</th><th>Why</th></tr>
+    {dec_table}
+  </table></div>
+</section>
+
+<footer>
+Case-study prototype built for JotPsych by Josh. Not an official JotPsych property.
+Sample clinician names, emails and mobile numbers are invented; registry records are real
+public NPPES data. No message is delivered to any real clinician — every send is redirected
+to the operator's own address.
+</footer>
+</div></body></html>"""

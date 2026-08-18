@@ -76,3 +76,27 @@ def explain_http_error(e) -> str:
     if e.code == 422 and "from" in body:
         return f"{body}  <- MAIL_FROM must be a verified domain, or onboarding@resend.dev."
     return body
+
+
+def deliver(draft: dict, channel: str) -> SendResult:
+    """One door for every channel, so the ledger records what actually happened.
+
+    SMS is simulated: we were given a mobile number at signup, not consent to
+    text it, and the decision to reserve SMS for clinicians who engaged first is
+    the real part. Delivery writes a labeled file instead of calling a carrier.
+    """
+    if channel == "sms":
+        return _write_sms(draft)
+    return send_email(draft["to"], draft["subject"], draft["body"])
+
+
+def _write_sms(draft: dict) -> SendResult:
+    to = config.MAIL_TO_OVERRIDE or draft.get("to", "")
+    body = draft.get("body", "")
+    ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S")
+    slug = re.sub(r"\W+", "-", to)[:40]
+    p = config.OUT / "outbox" / f"{ts}-{slug}.sms.txt"
+    p.write_text(f"[SIMULATED SMS - no carrier configured]\nTo: {to}\n\n{body[:320]}\n",
+                 encoding="utf-8")
+    return SendResult(ok=True, channel="sms(simulated)", path=str(p), to=to,
+                      reason="no SMS provider wired; decision path is real")

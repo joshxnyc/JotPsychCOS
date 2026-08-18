@@ -97,9 +97,32 @@ def complete_json(system: str, user: str, *, max_tokens: int = 1200, **kw) -> di
     raise LLMError("could not obtain JSON from the model — " + " | ".join(attempts))
 
 def _stub(system: str, user: str, json_mode: bool) -> str:
-    """No key? Return something structurally valid so the pipeline is provable."""
-    if json_mode:
-        return json.dumps({"_stub": True, "verdict": "pass", "score": 3,
-                           "reasons": ["LLM stub: no OPENROUTER_API_KEY set"]})
-    return ("[LLM STUB - no OPENROUTER_API_KEY set]\n"
-            "Subject: Placeholder\n\nThis is stub output so the loop runs end to end.")
+    """No key? Return something structurally valid, so the whole loop is
+    provable by anyone who clones the repo without credentials.
+
+    The stub is shaped by what the caller asked for. A draft request gets a
+    real, on-brand, QC-passing message; a judge request gets a verdict. Both
+    are labeled as stub output in the payload."""
+    if not json_mode:
+        return "[LLM STUB - no OPENROUTER_API_KEY set]"
+    if '"subject"' in system:
+        return json.dumps({
+            "_stub": True,
+            "subject": "Running JotPsych beside what you already use",
+            "body": (
+                "You looked at JotPsych a while back and stayed where you were. "
+                "That is usually the right call mid-contract.\n\n"
+                "Worth knowing: you do not have to move anything. JotPsych runs "
+                "alongside the system you are on today, and it takes about five "
+                "minutes to set up. Notes and claims get checked against payer "
+                "rules before they go out, which is where most denials start.\n\n"
+                "If it is useful later, it will still be here. If you would rather "
+                "not hear from us again, reply with the word stop and I will take "
+                "you off the list.\n\n"
+                "— Josh, JotPsych"),
+            "claims": [
+                "JotPsych runs alongside an existing EHR",
+                "setup takes about five minutes",
+                "notes and claims are checked against payer rules"]})
+    return json.dumps({"_stub": True, "verdict": "pass", "score": 3,
+                       "reasons": ["LLM stub: no OPENROUTER_API_KEY set"]})

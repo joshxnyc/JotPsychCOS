@@ -71,6 +71,26 @@ def check(draft: dict, context: dict | None = None) -> Verdict:
         if re.search(pat, blob, re.I):
             v.fail(f"possible PHI: {why}")
 
+    # --- never say how we knew ---
+    # The machine may use the public registry to decide who to write to and
+    # when. Saying so turns a well-timed message into surveillance, and a
+    # clinician who feels watched is lost permanently.
+    for tell in RULES.get("surveillance_tells", []):
+        if tell.lower() in low:
+            v.fail(f"reveals how we knew: {tell!r}")
+
+    # --- a weak identity match may not buy specific claims ---
+    # Enforced against the draft itself, not against what the drafter was told.
+    if context:
+        for label, value in (context.get("forbidden_facts") or {}).items():
+            if value and len(str(value)) > 3 and str(value).lower() in low:
+                v.fail(f"states the recipient's {label} ({value!r}) but identity is "
+                       f"only {context.get('tier')} at score {context.get('score')}")
+        trig = context.get("trigger") or {}
+        for leak in (trig.get("before"), trig.get("after")):
+            if leak and len(str(leak)) > 3 and str(leak).lower() in low:
+                v.fail(f"echoes the registry change that triggered this message ({leak!r})")
+
     # --- personalisation must be real, not asserted ---
     if context is not None:
         if context.get("registry_verified") is False and RULES["require_verified_source"]:

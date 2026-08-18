@@ -60,7 +60,12 @@ def _norm(rec: dict) -> dict:
         "state": loc.get("state", ""),
         "city": loc.get("city", ""),
         "phone": loc.get("telephone_number", ""),
+        "address_1": loc.get("address_1", ""),
+        "postal_code": (loc.get("postal_code", "") or "")[:5],
         "enumerated": basic.get("enumeration_date", ""),
+        # CMS's own change stamp. Independent of our diff, so a change we do not
+        # model still leaves a trace.
+        "last_updated": basic.get("last_updated", ""),
         "source": "NPPES",
     }
 

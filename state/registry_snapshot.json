@@ -1,0 +1,202 @@
+{
+  "0d99fce07bda": {
+    "address_1": "9370 W STOCKTON BLVD STE 100",
+    "city": "ELK GROVE",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2019-04-17",
+    "name": "JORDAN BLAKE",
+    "state": "CA",
+    "taxonomy": "Behavior Technician"
+  },
+  "15c5c1861afb": {
+    "address_1": "1508 W ARTESIA SQ APT B",
+    "city": "GARDENA",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2019-03-21",
+    "name": "JENNIFER NGUYEN",
+    "state": "CA",
+    "taxonomy": "Behavior Technician"
+  },
+  "19ef84aecb5c": {
+    "address_1": "570 BELLEVILLE AVE",
+    "city": "BELLEVILLE",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2012-01-06",
+    "name": "LISA JOHNSON",
+    "state": "NJ",
+    "taxonomy": "Social Worker, Clinical"
+  },
+  "3a8f99227848": {
+    "address_1": "6 OLDE HICKORY PATH",
+    "city": "WESTBOROUGH",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2024-01-29",
+    "name": "DAVID COHEN",
+    "state": "MA",
+    "taxonomy": "Counselor, School"
+  },
+  "522f104b8680": {
+    "address_1": "11937 US HIGHWAY 271",
+    "city": "TYLER",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2026-06-15",
+    "name": "MICHAEL CHEN",
+    "state": "TX",
+    "taxonomy": "Psychiatry & Neurology, Psychiatry"
+  },
+  "525b41f206ae": {
+    "address_1": "1508 W ARTESIA SQ APT B",
+    "city": "GARDENA",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2019-03-21",
+    "name": "JENNIFER NGUYEN",
+    "state": "CA",
+    "taxonomy": "Behavior Technician"
+  },
+  "528c6335794a": {
+    "address_1": "5060 CALIFORNIA AVE STE 610",
+    "city": "BAKERSFIELD",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2021-11-02",
+    "name": "MARIA GARCIA",
+    "state": "CA",
+    "taxonomy": "Behavior Analyst"
+  },
+  "55319365c2df": {
+    "address_1": "122 S MICHIGAN AVE # 1305B",
+    "city": "CHICAGO",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2015-02-19",
+    "name": "SARAH GOLDBERG",
+    "state": "IL",
+    "taxonomy": "Social Worker, Clinical"
+  },
+  "7a717a4e6354": {
+    "address_1": "8724 ETIWANDA AVE APT 108",
+    "city": "NORTHRIDGE",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2015-06-02",
+    "name": "YUKI TANAKA",
+    "state": "CA",
+    "taxonomy": "Social Worker, Clinical"
+  },
+  "81be1545b9cc": {
+    "address_1": "11937 US HIGHWAY 271",
+    "city": "TYLER",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2026-06-15",
+    "name": "MICHAEL CHEN",
+    "state": "TX",
+    "taxonomy": "Psychiatry & Neurology, Psychiatry"
+  },
+  "a154f7d0e704": {
+    "address_1": "8535 WURZBACH RD",
+    "city": "SAN ANTONIO",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2007-07-08",
+    "name": "REBECCA CUNNINGHAM",
+    "state": "TX",
+    "taxonomy": "Counselor, Professional"
+  },
+  "ab4049cd39fc": {
+    "address_1": "11937 US HIGHWAY 271",
+    "city": "TYLER",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2026-06-15",
+    "name": "MICHAEL CHEN",
+    "state": "TX",
+    "taxonomy": "Psychiatry & Neurology, Psychiatry"
+  },
+  "af4a8f4ddbb3": {
+    "address_1": "12630 BROOKHURST ST STE D",
+    "city": "GARDEN GROVE",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2019-03-26",
+    "name": "DANIEL RIVERA",
+    "state": "CA",
+    "taxonomy": "Behavior Analyst"
+  },
+  "cc6572038101": {
+    "address_1": "39201 STATE ST",
+    "city": "FREMONT",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2026-04-07",
+    "name": "SOPHIA DUARTE",
+    "state": "CA",
+    "taxonomy": "Behavior Technician"
+  },
+  "cef1d963df80": {
+    "address_1": "10400 NORTH COUNCIL ROAD",
+    "city": "OKLAHOMA CITY",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2018-09-12",
+    "name": "K. WILLIAMS",
+    "state": "OK",
+    "taxonomy": "Case Manager/Care Coordinator"
+  },
+  "d0acc777b443": {
+    "address_1": "12630 BROOKHURST ST STE D",
+    "city": "GARDEN GROVE",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2019-03-26",
+    "name": "DANIEL RIVERA",
+    "state": "CA",
+    "taxonomy": "Behavior Analyst"
+  },
+  "d1e9aa8166af": {
+    "address_1": "122 S MICHIGAN AVE # 1305B",
+    "city": "CHICAGO",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2015-02-19",
+    "name": "SARAH GOLDBERG",
+    "state": "IL",
+    "taxonomy": "Social Worker, Clinical"
+  },
+  "da9ae0d3ea4f": {
+    "address_1": "1301 E ORANGEWOOD AVE",
+    "city": "ANAHEIM",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2024-10-04",
+    "name": "GABRIEL SANTOS",
+    "state": "CA",
+    "taxonomy": "Behavior Technician"
+  },
+  "e0f36a8ceef4": {
+    "address_1": "4689 NW 9TH ST APT 103",
+    "city": "MIAMI",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2024-07-23",
+    "name": "MARCO DELGADO",
+    "state": "FL",
+    "taxonomy": "Behavior Technician"
+  },
+  "fe700ae60016": {
+    "address_1": "5060 CALIFORNIA AVE STE 610",
+    "city": "BAKERSFIELD",
+    "entity": "NPI-1",
+    "enumeration_date": "",
+    "last_updated": "2021-11-02",
+    "name": "MARIA GARCIA",
+    "state": "CA",
+    "taxonomy": "Behavior Analyst"
+  }
+}

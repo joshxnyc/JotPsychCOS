@@ -1,0 +1,224 @@
+{
+  "run_count": 2,
+  "first_run": "2026-08-18T18:38:21.799728+00:00",
+  "last_run": "2026-08-18T18:38:21.977262+00:00",
+  "angles": {
+    "denials": {
+      "sent": 3,
+      "replied": 0,
+      "blocked": 0
+    },
+    "no_migration": {
+      "sent": 1,
+      "replied": 0,
+      "blocked": 0
+    }
+  },
+  "notes": [],
+  "resolution_scores": {
+    "522f104b8680": {
+      "score": 33,
+      "tier": "unresolved"
+    },
+    "fe700ae60016": {
+      "score": 50,
+      "tier": "probable"
+    },
+    "19ef84aecb5c": {
+      "score": 25,
+      "tier": "unresolved"
+    },
+    "55319365c2df": {
+      "score": 25,
+      "tier": "unresolved"
+    },
+    "af4a8f4ddbb3": {
+      "score": 50,
+      "tier": "probable"
+    },
+    "e0f36a8ceef4": {
+      "score": 72,
+      "tier": "verified"
+    },
+    "15c5c1861afb": {
+      "score": 50,
+      "tier": "probable"
+    },
+    "3a8f99227848": {
+      "score": 75,
+      "tier": "verified"
+    },
+    "ab4049cd39fc": {
+      "score": 23,
+      "tier": "unresolved"
+    },
+    "528c6335794a": {
+      "score": 25,
+      "tier": "unresolved"
+    },
+    "d0acc777b443": {
+      "score": 40,
+      "tier": "probable"
+    },
+    "d1e9aa8166af": {
+      "score": 15,
+      "tier": "unresolved"
+    },
+    "525b41f206ae": {
+      "score": 25,
+      "tier": "unresolved"
+    },
+    "abd5782a5b72": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "9f71be493610": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "5142d0b8b578": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "068067bd51bc": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "6fc9ad566634": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "67a326797b8d": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "16840369ea0c": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "f315de559c48": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "81be1545b9cc": {
+      "score": 33,
+      "tier": "unresolved"
+    },
+    "76862dd33866": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "cef1d963df80": {
+      "score": 55,
+      "tier": "probable"
+    },
+    "0d99fce07bda": {
+      "score": 57,
+      "tier": "probable"
+    },
+    "0aab33fd9faf": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "90a78c7fd4a7": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "a154f7d0e704": {
+      "score": 65,
+      "tier": "probable"
+    },
+    "417074ba96c3": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "d7850ecf9582": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "da9ae0d3ea4f": {
+      "score": 105,
+      "tier": "verified"
+    },
+    "5bb316f5ea77": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "4a1355d9dcee": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "7a717a4e6354": {
+      "score": 107,
+      "tier": "verified"
+    },
+    "ee1e332cc2c6": {
+      "score": 0,
+      "tier": "unresolved"
+    },
+    "cc6572038101": {
+      "score": 85,
+      "tier": "verified"
+    },
+    "a0eaa7b5a560": {
+      "score": 0,
+      "tier": "unresolved"
+    }
+  },
+  "returns": {
+    "3a8f99227848": {
+      "event": "trial_restarted",
+      "date": "2026-08-14",
+      "attributed": false,
+      "angle": "",
+      "trigger": "",
+      "touches": 0
+    },
+    "e0f36a8ceef4": {
+      "event": "demo_booked",
+      "date": "2026-08-16",
+      "attributed": false,
+      "angle": "",
+      "trigger": "",
+      "touches": 0
+    },
+    "fe700ae60016": {
+      "event": "subscribed",
+      "date": "2026-08-17",
+      "attributed": false,
+      "angle": "",
+      "trigger": "",
+      "touches": 0
+    }
+  },
+  "contacted": {
+    "d1e9aa8166af": {
+      "last_ts": "2026-08-18T18:38:21.814049+00:00",
+      "count": 1,
+      "angle": "denials",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "068067bd51bc": {
+      "last_ts": "2026-08-18T18:38:21.815775+00:00",
+      "count": 1,
+      "angle": "denials",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "f315de559c48": {
+      "last_ts": "2026-08-18T18:38:21.817220+00:00",
+      "count": 1,
+      "angle": "denials",
+      "channel": "email",
+      "trigger": "keep_warm"
+    },
+    "15c5c1861afb": {
+      "last_ts": "2026-08-18T18:38:21.990540+00:00",
+      "count": 1,
+      "angle": "no_migration",
+      "channel": "email",
+      "trigger": "practice_move"
+    }
+  }
+}

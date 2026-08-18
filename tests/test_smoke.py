@@ -6,8 +6,81 @@ os.environ.setdefault("DRY_RUN", "1")
 from machine import qc, send, io_input, memory, strategy
 
 def test_input_is_real_and_not_hardcoded():
-    rows = io_input.read_csv("prospects.sample.csv")
-    assert rows and "email" in rows[0]
+    """The contract is three columns. Replacing the file must be the only step."""
+    rows = io_input.read_csv("dormant.sample.csv")
+    assert rows, "no input rows read from inbox/"
+    assert set(rows[0]) >= {"name", "email", "mobile"}
+
+
+def test_confidence_bands_are_config_not_code():
+    """Retuning the threshold must not require touching Python."""
+    import yaml, pathlib as _p
+    from machine import config as _c
+    rules = yaml.safe_load((_c.CONFIG / "guardrails.yaml").read_text())
+    assert rules["confidence"]["verified"] > rules["confidence"]["probable"] > 0
+    src = (_p.Path(__file__).resolve().parent.parent / "machine" / "resolve.py").read_text()
+    for band in ("verified", "probable"):
+        assert f'rules["confidence"]["{band}"]' in src, f"{band} band not read from config"
+    import re as _re
+    assert not _re.search(r">=\s*(70|40)\b", src), "a threshold is hardcoded in resolve.py"
+
+
+def test_resolution_refuses_to_guess():
+    """An invented name has no federal record. The machine must say so rather
+    than attach itself to the nearest plausible stranger."""
+    import yaml
+    from machine import resolve, config as _c
+    rules = yaml.safe_load((_c.CONFIG / "guardrails.yaml").read_text())
+    r = resolve.resolve({"name": "Zephyrina Quackenbush-Ostrowski",
+                         "email": "z@nowhere-practice.example", "mobile": ""}, rules)
+    assert r["tier"] == "unresolved"
+    assert r["registry"] == {} or r["score"] < rules["confidence"]["probable"]
+
+
+def test_qc_blocks_saying_how_we_knew():
+    """The registry decides timing. Saying so turns timing into surveillance."""
+    body = ("I noticed you recently moved your practice. JotPsych runs alongside "
+            "the system you already use and takes about five minutes to set up. "
+            "Reply stop to be removed. ") * 3
+    v = qc.check({"to": "a@b.c", "subject": "About your move", "body": body})
+    assert not v.ok
+    assert any("how we knew" in f for f in v.failures)
+
+
+def test_qc_blocks_claims_a_weak_match_has_not_earned():
+    """Tier permissions are enforced against the draft, not against the prompt."""
+    body = ("Practices in Brooklyn tend to hit this. JotPsych runs alongside the "
+            "system you already use and takes five minutes. Reply stop to opt out. ") * 3
+    v = qc.check({"to": "a@b.c", "subject": "A note", "body": body},
+                 {"tier": "probable", "score": 50, "forbidden_facts": {"city": "Brooklyn"}})
+    assert not v.ok
+    assert any("identity is only probable" in f for f in v.failures)
+
+
+def test_a_registry_change_needs_a_confident_identity():
+    """Acting on a change we cannot attribute would mean writing to someone
+    about a stranger's practice."""
+    import inspect
+    from machine import strategy
+    src = inspect.getsource(strategy.decide)
+    assert 'res["tier"] in ("verified", "probable")' in src
+
+
+def test_the_watch_needs_memory_to_see_anything():
+    """No prior snapshot, no diff. Memory is load-bearing, not decorative."""
+    from machine import watch
+    res = {"t1": {"npi": "1234567893", "registry": {"city": "BOSTON", "state": "MA",
+                                                    "taxonomy": "Psychiatry"}}}
+    before = watch.load_snapshot()
+    try:
+        watch.save_snapshot({})
+        assert watch.observe(res, "test") == {}          # first sighting: nothing to compare
+        res2 = {"t1": {"npi": "1234567893", "registry": {"city": "CAMBRIDGE", "state": "MA",
+                                                         "taxonomy": "Psychiatry"}}}
+        trig = watch.observe(res2, "test")
+        assert trig["t1"][0]["type"] == "practice_move"
+    finally:
+        watch.save_snapshot(before)
 
 def test_nppes_is_a_live_api():
     hits = io_input.nppes_lookup(taxonomy="Psychiatry", state="NY", limit=1)

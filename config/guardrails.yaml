@@ -44,3 +44,42 @@ banned_patterns:
   "\\bact now\\b|\\blimited time\\b|\\bonly \\d+ (spots|seats)": "fake urgency"
   "\\bDr\\.?\\s+[A-Z][a-z]+ (said|told us|says)\\b": "quotes a named clinician - must be sourced"
   "\\bunsubscribe\\b.*\\bcannot\\b": "broken opt-out"
+
+# --- Identity resolution -------------------------------------------------
+# How sure the machine must be before it is allowed to say specific things.
+# Starting values, calibrated not derived. The dashboard reports outcome by
+# band; move these on that evidence, not on instinct.
+confidence:
+  verified: 70      # full personalisation: specialty, city, practice context
+  probable: 40      # specialty and state only. Never a practice name or city.
+                    # below 40 -> unresolved. No personalisation at all.
+
+# What each tier is allowed to put in a message. QC enforces this against the
+# draft independently of what the drafter was told, so a model that over-reaches
+# is caught rather than trusted.
+tier_permissions:
+  verified:   [specialty, state, city, practice_type]
+  probable:   [specialty, state]
+  unresolved: []
+
+# The machine may use the registry to decide. It may never say it looked.
+surveillance_tells:
+  - "i noticed"
+  - "i saw that"
+  - "i see that you"
+  - "our records show"
+  - "according to our records"
+  - "it looks like you recently"
+  - "i came across your"
+  - "your npi"
+  - "the npi registry"
+  - "public records"
+  - "congratulations on your new"
+  - "i noticed that you recently"
+  - "we found your"
+  - "your listing"
+
+# SMS is not a cold channel. We were given a mobile number, not permission.
+sms:
+  requires_prior_engagement: true   # they must have replied or clicked first
+  max_per_clinician_per_quarter: 1
