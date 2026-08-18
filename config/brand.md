@@ -45,7 +45,7 @@ Verbatim from jotpsych.com — match this register:
 8. If we have nothing specific and true to say, say nothing. Silence is a valid
    output and the machine should use it often.
 9. Sign as a person at JotPsych, not as "the JotPsych team".
-10. An unsubscribe instruction, in plain words, on every message.
+10. Never write your own unsubscribe or 'reply STOP' line. The message footer carries the opt-out and it is added automatically — a second one reads as nervousness.
 
 ## Register we never use
 "revolutionize", "game-changer", "unlock", "seamless", "cutting-edge",

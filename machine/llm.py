@@ -116,9 +116,7 @@ def _stub(system: str, user: str, json_mode: bool) -> str:
                 "alongside the system you are on today, and it takes about five "
                 "minutes to set up. Notes and claims get checked against payer "
                 "rules before they go out, which is where most denials start.\n\n"
-                "If it is useful later, it will still be here. If you would rather "
-                "not hear from us again, reply with the word stop and I will take "
-                "you off the list.\n\n"
+                "If it is useful later, it will still be here.\n\n"
                 "— Josh, JotPsych"),
             "claims": [
                 "JotPsych runs alongside an existing EHR",

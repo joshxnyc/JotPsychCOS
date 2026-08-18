@@ -18,7 +18,8 @@ def send_email(to: str, subject: str, body: str, *, reply_to: str = "") -> SendR
     to = config.MAIL_TO_OVERRIDE or to
     if config.DRY_RUN or not config.RESEND_API_KEY:
         return _write_eml(to, subject, body, reason="DRY_RUN" if config.DRY_RUN else "no RESEND_API_KEY")
-    payload = {"from": config.MAIL_FROM, "to": [to], "subject": subject, "text": body}
+    payload = {"from": config.MAIL_FROM, "to": [to], "subject": subject,
+               "text": body, "html": _as_html(to, body)}
     if reply_to:
         payload["reply_to"] = reply_to
     hdrs = compliance.headers(to)
@@ -39,12 +40,27 @@ def send_email(to: str, subject: str, body: str, *, reply_to: str = "") -> SendR
     except Exception as e:
         return SendResult(ok=False, channel="resend", to=to, error=str(e))
 
+def _as_html(to: str, body: str) -> str:
+    """The message as simple HTML: the writing untouched, the compliance footer
+    rendered with 'Unsubscribe' as the link. Split on the footer marker so the
+    footer is never double-rendered."""
+    import html as _h
+    text = body or ""
+    head, sep, _tail = text.partition("\n\n--\n")
+    paras = "".join(f"<p style='margin:0 0 14px'>{_h.escape(p).replace(chr(10), '<br>')}</p>"
+                    for p in head.split("\n\n") if p.strip())
+    foot = compliance.footer_html(to) if sep else ""
+    return (f"<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;"
+            f"font-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px\">{paras}{foot}</div>")
+
+
 def _write_eml(to, subject, body, reason="") -> SendResult:
     m = EmailMessage()
     m["From"], m["To"], m["Subject"] = config.MAIL_FROM, to, subject
     m["Date"] = datetime.datetime.now(datetime.timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     m["X-Machine-Simulated"] = reason or "1"
     m.set_content(body)
+    m.add_alternative(_as_html(to, body), subtype="html")
     ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S")
     slug = re.sub(r"\W+", "-", to)[:40]
     p = config.OUT / "outbox" / f"{ts}-{slug}.eml"

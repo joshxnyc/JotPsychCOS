@@ -430,7 +430,7 @@ Absolute rules:
 - No clinical, reimbursement or audit-outcome guarantees.
 - It is signed by a real person and sent from their mailbox, so it may read
   slightly warmer than an automated message — but it still follows the VOICE spec.
-- End with a plain way to decline.
+- End with a plain way to decline the introduction itself. Do NOT write an unsubscribe line; the footer carries it.
 
 Return JSON only: {"subject": string, "body": string, "claims": [string]}"""
 
@@ -453,7 +453,7 @@ Absolute rules:
   registries, listings, or that you noticed anything. Write to the situation.
 - No clinical, reimbursement or audit-outcome guarantees.
 - Follow the VOICE spec exactly, including the banned register.
-- End with a plain-language way to stop hearing from us.
+- Do NOT write an unsubscribe or opt-out line. The footer carries it.
 
 Return JSON only:
 {"subject": string, "body": string, "claims": [string]}

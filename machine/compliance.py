@@ -45,6 +45,19 @@ def unsubscribe_url(email: str) -> str:
     return f"{APP_URL}/unsubscribe?t={token(email)}"
 
 
+def footer_html(email: str) -> str:
+    """The same footer for the HTML part, with the opt-out as a real link on the
+    word itself. The plain-text part keeps the bare URL — text cannot hyperlink,
+    and a working opt-out must exist in both parts."""
+    import html as _h
+    url = unsubscribe_url(email)
+    opt = (f'<a href="{_h.escape(url)}" style="color:#545B6E">Unsubscribe</a>'
+           if url else "Reply STOP to opt out.")
+    return (f'<div style="margin-top:28px;padding-top:14px;border-top:1px solid #E4E7EE;'
+            f'font-size:12px;line-height:1.6;color:#878EA0">'
+            f'{_h.escape(MARKER)}<br>{opt}<br>{_h.escape(postal_address())}</div>')
+
+
 def footer(email: str) -> str:
     url = unsubscribe_url(email)
     opt_out = (f"Unsubscribe: {url}" if url else
