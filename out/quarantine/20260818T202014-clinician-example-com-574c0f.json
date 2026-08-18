@@ -1,0 +1,23 @@
+{
+  "draft": {
+    "subject": "Guaranteed reimbursement on every claim",
+    "body": "We guarantee reimbursement and your claims will not be denied. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list.\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "to": "clinician@example.com",
+    "angle": "no_migration",
+    "claims": []
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "banned claim: 'guaranteed reimbursement'",
+      "banned claim: 'will not be denied'"
+    ],
+    "warnings": []
+  },
+  "context": {
+    "tier": "verified",
+    "score": 80,
+    "forbidden_facts": {},
+    "trigger": null
+  }
+}

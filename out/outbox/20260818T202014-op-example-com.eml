@@ -1,21 +1,21 @@
 From: JotPsych Machine <onboarding@resend.dev>
 To: op@example.com
 Subject: 1 clinician worth your time this cycle
-Date: Tue, 18 Aug 2026 20:13:21 +0000
+Date: Tue, 18 Aug 2026 20:20:14 +0000
 X-Machine-Simulated: DRY_RUN
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
-Run 9 =C2=B7 18 Aug 2026 20:13 UTC
+Run 12 =C2=B7 18 Aug 2026 20:20 UTC
 
 Looked at 38 clinicians. Re-read 6 from the federal registry; the rest were s=
 till fresh.
 
     5  practice changes detected
-    3  messages staged
+    0  messages staged
     0  drafts stopped by quality control
-   33  clinicians deliberately left alone
+   36  clinicians deliberately left alone
     1  waiting for you (~12 minutes)
 
 --------------------------------------------------------------
@@ -45,15 +45,10 @@ and claims get checked against payer rules before they go out, which is where=
    --
    You are receiving this because you signed up for JotPsych.
    To stop receiving these, reply with the word STOP.
-   JotPsych, 228 Park Ave S, New York, NY 10003
+   JotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205
 
    (Do not mention that anything was looked up. You are offering
     an introduction, not reporting on their practice.)
-
---------------------------------------------------------------
-
-3 approved messages are staged in out/outbox/ and NOT delivered to anyone.
-Nothing reaches a clinician until SEND_TO_CLINICIANS is turned on.
 
 --------------------------------------------------------------
 

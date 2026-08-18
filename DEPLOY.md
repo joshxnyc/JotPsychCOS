@@ -19,9 +19,10 @@ Six things. Everything else has a working default.
 
 Also useful, both optional:
 
-- `POSTAL_ADDRESS` — JotPsych's real mailing address. It goes in every message
-  and CAN-SPAM requires it to be genuine. It currently defaults to a placeholder,
-  which is fine while nothing is being sent and **must be corrected before it is**.
+- `POSTAL_ADDRESS` — defaults to JotPsych's real address (Brooklyn Navy Yard,
+  Dock 72, 7th Floor, Brooklyn, NY 11205). Override it only if mail should carry
+  a different one. CAN-SPAM requires it to be genuine, so never set it to a
+  placeholder.
 - `DIGEST_TO` — who receives the run report each cycle.
 
 ## Deploy
@@ -45,7 +46,6 @@ fly secrets set \
   RESEND_API_KEY="…" \
   MAIL_FROM="Josh at JotPsych <josh@jotpsych.com>" \
   DIGEST_TO="you@jotpsych.com" \
-  POSTAL_ADDRESS="JotPsych, <real address>" \
   APP_URL="https://second-window.fly.dev"
 
 fly deploy

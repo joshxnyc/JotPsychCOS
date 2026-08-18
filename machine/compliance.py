@@ -11,8 +11,11 @@ cannot omit it, reword it, or be talked out of it. QC then verifies it survived.
 import hashlib, hmac, os
 from . import config
 
+# CAN-SPAM requires a genuine physical address in every commercial message, so
+# this default is JotPsych's real one rather than a plausible-looking stand-in.
 POSTAL_ADDRESS = (os.getenv("POSTAL_ADDRESS") or
-                  "JotPsych, 228 Park Ave S, New York, NY 10003").strip()
+                  "JotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, "
+                  "Brooklyn, NY 11205").strip()
 APP_URL = (os.getenv("APP_URL") or "").strip().rstrip("/")
 SECRET = (os.getenv("APP_SECRET") or "dev-secret-not-for-production").encode()
 

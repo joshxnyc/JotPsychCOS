@@ -8,3 +8,8 @@
 {"ts": "2026-08-18T20:13:21.567646+00:00", "run_id": "run9", "target_id": "15c5c1861afb", "npi": "1912467457", "field": "city", "before": "BROOKLYN", "after": "GARDENA", "trigger": "practice_move"}
 {"ts": "2026-08-18T20:13:21.567646+00:00", "run_id": "run9", "target_id": "3a8f99227848", "npi": "1033694476", "field": "address_1", "before": "100 MAIN ST STE 2", "after": "6 OLDE HICKORY PATH", "trigger": "practice_move"}
 {"ts": "2026-08-18T20:13:21.567646+00:00", "run_id": "run9", "target_id": "0d99fce07bda", "npi": "1396308086", "field": "state", "before": "NJ", "after": "CA", "trigger": "practice_move_state"}
+{"ts": "2026-08-18T20:20:14.026421+00:00", "run_id": "run12", "target_id": "522f104b8680", "npi": "1992448997", "field": "name", "before": "MICHAEL SOLO PRACTICE", "after": "MICHAEL CHEN", "trigger": "practice_renamed"}
+{"ts": "2026-08-18T20:20:14.026421+00:00", "run_id": "run12", "target_id": "19ef84aecb5c", "npi": "1770853798", "field": "taxonomy", "before": "Counselor, Professional", "after": "Social Worker, Clinical", "trigger": "taxonomy_change"}
+{"ts": "2026-08-18T20:20:14.026421+00:00", "run_id": "run12", "target_id": "15c5c1861afb", "npi": "1912467457", "field": "city", "before": "BROOKLYN", "after": "GARDENA", "trigger": "practice_move"}
+{"ts": "2026-08-18T20:20:14.026421+00:00", "run_id": "run12", "target_id": "3a8f99227848", "npi": "1033694476", "field": "address_1", "before": "100 MAIN ST STE 2", "after": "6 OLDE HICKORY PATH", "trigger": "practice_move"}
+{"ts": "2026-08-18T20:20:14.026421+00:00", "run_id": "run12", "target_id": "0d99fce07bda", "npi": "1396308086", "field": "state", "before": "NJ", "after": "CA", "trigger": "practice_move_state"}
