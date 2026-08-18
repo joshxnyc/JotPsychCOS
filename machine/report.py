@@ -12,7 +12,8 @@ from . import config, ledger, memory, watch
 BRAND = {"teal": "#128276", "teal_lift": "#16a394", "indigo": "#1c1e85",
          "ink": "#0b1220", "panel": "#121a2a", "line": "#22304a",
          "text": "#e8edf6", "muted": "#93a3bd",
-         "good": "#22c55e", "bad": "#ef4444", "warn": "#f59e0b"}
+         "good": "#22c55e", "bad": "#ef4444", "warn": "#f59e0b",
+         "indigo_lift": "#7c7ff5"}
 
 
 # ------------------------------------------------------------------ maths ---
@@ -78,18 +79,20 @@ def build(state: dict) -> None:
     if src.exists():
         shutil.copy(src, config.OUT / "jotpsych-logo.svg")
 
-    blocked_rows = [r for r in recs if r.get("action") == "blocked"][-12:][::-1]
+    blocked_rows = [r for r in recs
+                    if r.get("action") in ("blocked", "red_team_blocked")][-14:][::-1]
     decision_rows = [r for r in recs if r.get("action") in
                      ("sent", "human_call", "silence", "blocked")][-30:][::-1]
     angle_rows = sorted(state.get("angles", {}).items(),
                         key=lambda kv: kv[1].get("sent", 0), reverse=True)
 
     qc_table = "".join(
-        f"<tr><td class='mono'>{_e(r.get('target_id'))}</td>"
-        f"<td>{_e(r.get('subject') or '—')}</td>"
-        f"<td class='bad'>{_e((r.get('failures') or ['—'])[0])}</td>"
+        f"<tr><td>{'<span class=pill pill-redteam>red team</span>' if r.get('action')=='red_team_blocked' else '<span class=pill pill-blocked>live</span>'}</td>"
+        f"<td>{_e(r.get('case') or r.get('subject') or '—')}</td>"
+        f"<td class='bad'>" + "<br>".join(_e(f) for f in (r.get("failures") or ["—"])) + "</td>"
+        f"<td class='reason'>{_e(r.get('why_it_matters') or '')}</td>"
         f"<td class='mono dim'>{_e(r.get('quarantine'))}</td></tr>"
-        for r in blocked_rows) or "<tr><td colspan=4 class='dim'>Nothing blocked yet.</td></tr>"
+        for r in blocked_rows) or "<tr><td colspan=5 class='dim'>Nothing blocked yet.</td></tr>"
 
     dec_table = "".join(
         f"<tr><td><span class='pill pill-{_e(r.get('action'))}'>{_e(r.get('action'))}</span></td>"
@@ -217,6 +220,7 @@ tr:last-child td{{border-bottom:none}}
 .pill-silence{{color:{b[muted]}}}
 .pill-human_call{{color:{b[warn]};border-color:{b[warn]}}}
 .pill-trigger{{color:{b[teal_lift]};border-color:{b[teal_lift]}}}
+.pill-redteam{{color:{b[indigo_lift]};border-color:{b[indigo_lift]}}}
 .bar{{margin-bottom:11px}}
 .bar-h{{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}}
 .bar-t{{height:7px;background:{b[ink]};border-radius:999px;overflow:hidden}}
@@ -250,7 +254,7 @@ reopen a software decision, and writes only at that moment. Everyone else gets s
   that reads the draft against the fact pack. If the judge cannot return a verdict, the draft
   is blocked, not sent. Every blocked draft is on disk in <span class="mono">out/quarantine/</span>.</p>
   <div class="scroll"><table>
-    <tr><th>Clinician</th><th>Subject</th><th>Why it was blocked</th><th>File</th></tr>
+    <tr><th>Source</th><th>Draft</th><th>What the check caught</th><th>Why it matters</th><th>File</th></tr>
     {qc_table}
   </table></div>
 </section>

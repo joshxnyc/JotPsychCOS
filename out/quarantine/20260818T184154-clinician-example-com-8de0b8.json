@@ -1,0 +1,26 @@
+{
+  "draft": {
+    "subject": "Quick question about your practice",
+    "body": "I hope this email finds you well. I wanted to reach out to delve into how we can leverage our cutting-edge platform to revolutionize your workflow. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list. JotPsych runs alongside the system you already use and takes about five minutes to set up. Notes and claims are checked against payer rules before they go out. Reply stop and I will take you off the list. ",
+    "to": "clinician@example.com",
+    "angle": "no_migration",
+    "claims": []
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "AI tell present: 'i hope this email finds you well'",
+      "AI tell present: 'i wanted to reach out'",
+      "AI tell present: 'delve'",
+      "AI tell present: 'leverage our cutting-edge'",
+      "AI tell present: 'revolutionize'"
+    ],
+    "warnings": []
+  },
+  "context": {
+    "tier": "verified",
+    "score": 80,
+    "forbidden_facts": {},
+    "trigger": null
+  }
+}

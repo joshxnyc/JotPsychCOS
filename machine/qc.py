@@ -152,7 +152,11 @@ def _llm_judge(draft: dict, context: dict) -> dict:
 def quarantine(draft: dict, verdict: Verdict, context: dict | None = None) -> pathlib.Path:
     ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S")
     tag = re.sub(r"\W+", "-", (draft.get("to") or "unknown"))[:40]
-    p = config.OUT / "quarantine" / f"{ts}-{tag}.json"
+    # Several drafts can fail inside the same second for the same recipient;
+    # without this the evidence overwrites itself.
+    import hashlib as _h
+    sig = _h.sha1(f"{draft.get('subject')}{draft.get('body')}".encode()).hexdigest()[:6]
+    p = config.OUT / "quarantine" / f"{ts}-{tag}-{sig}.json"
     p.write_text(json.dumps({"draft": draft, "verdict": verdict.as_dict(),
                              "context": context}, indent=2, default=str))
     return p

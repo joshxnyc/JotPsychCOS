@@ -1,7 +1,7 @@
 {
   "run_count": 2,
-  "first_run": "2026-08-18T18:38:21.799728+00:00",
-  "last_run": "2026-08-18T18:38:21.977262+00:00",
+  "first_run": "2026-08-18T18:41:43.366154+00:00",
+  "last_run": "2026-08-18T18:41:43.536235+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -193,28 +193,28 @@
   },
   "contacted": {
     "d1e9aa8166af": {
-      "last_ts": "2026-08-18T18:38:21.814049+00:00",
+      "last_ts": "2026-08-18T18:41:43.380684+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "068067bd51bc": {
-      "last_ts": "2026-08-18T18:38:21.815775+00:00",
+      "last_ts": "2026-08-18T18:41:43.382267+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "f315de559c48": {
-      "last_ts": "2026-08-18T18:38:21.817220+00:00",
+      "last_ts": "2026-08-18T18:41:43.383686+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "15c5c1861afb": {
-      "last_ts": "2026-08-18T18:38:21.990540+00:00",
+      "last_ts": "2026-08-18T18:41:43.549852+00:00",
       "count": 1,
       "angle": "no_migration",
       "channel": "email",
