@@ -44,7 +44,13 @@ jobs:
           git config user.email "machine@users.noreply.github.com"
           git add -A out state
           git diff --staged --quiet || git commit -m "run $(date -u +%FT%TZ)"
-          git push
+          # A human may have pushed while this run was in flight. Rebase rather
+          # than fail, so the machine never needs rescuing to keep its memory.
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push && exit 0
+            sleep $((i * 5))
+          done
+          echo "could not push run state after 3 attempts" >&2; exit 1
 
       - uses: actions/upload-artifact@v4
         with:
