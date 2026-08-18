@@ -55,7 +55,6 @@ ANGLE_FOR_TRIGGER = {
     "_keep_warm":           ["denials", "audit", "time_back"],
 }
 
-KEEP_WARM_DAYS = 90        # how long before a quiet clinician hears from us again
 RUNS_PER_CYCLE = 20        # keep-warm is spread evenly across this many runs
 
 # At 15,000 clinicians, resolving everyone every run would mean 15,000 federal
@@ -65,8 +64,17 @@ RUNS_PER_CYCLE = 20        # keep-warm is spread evenly across this many runs
 # a rolling basis, and the cost per run is flat no matter how long the list is.
 RESOLVE_BUDGET = int(os.getenv("RESOLVE_BUDGET_PER_RUN") or 400)
 RESOLVE_TTL_DAYS = int(os.getenv("RESOLVE_TTL_DAYS") or 14)
-MOMENT_COOLDOWN_DAYS = 30  # never two moment-messages inside a month
 HUMAN_QUEUE_MAX = 10       # the human's month, capped so it stays 1-2 hours
+
+
+def _rules() -> dict:
+    """Guardrails from the file, with the console's edits layered on top. Read
+    per cycle so a change does not wait for a restart."""
+    from . import settings
+    r = {k: (dict(v) if isinstance(v, dict) else v) for k, v in RULES.items()}
+    r["confidence"] = {"verified": settings.get_int("confidence_verified"),
+                       "probable": settings.get_int("confidence_probable")}
+    return r
 
 
 TIER_WORD = {"verified": "we are confident who they are",
@@ -155,6 +163,11 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
     # 1. Three fields -> a verified practice profile, or an honest refusal.
     #    Only the staleest slice is re-read from the registry this run; the rest
     #    reuse the stored profile, so cost per run does not grow with the list.
+    from . import settings
+    rules = _rules()
+    keep_warm_days = settings.get_int("keep_warm_days")
+    cooldown_days = settings.get_int("moment_cooldown_days")
+
     roster = state.setdefault("roster", {})
     live = [r for r in inputs["dormant"]
             if r.get("email", "").strip().lower() not in blocked]
@@ -168,7 +181,7 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
         cached = roster.get(tid)
         stale = not cached or (cached.get("resolved_at") or "") < fresh_cutoff
         if stale and reread < RESOLVE_BUDGET:
-            r = resolve.resolve(row, RULES)
+            r = resolve.resolve(row, rules)
             resolutions[tid] = r          # only fresh reads can reveal a change
             profiles[tid] = r
             reread += 1
@@ -242,10 +255,10 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
                 f"with the same name, so we act on nothing."))
             continue
 
-        if trig and days is not None and days < MOMENT_COOLDOWN_DAYS:
+        if trig and days is not None and days < cooldown_days:
             plans.append(_silence(tid, row,
                 f"Their practice changed, but we wrote to them {days} days ago. "
-                f"Waiting out the {MOMENT_COOLDOWN_DAYS}-day cooldown before writing again."))
+                f"Waiting out the {cooldown_days}-day cooldown before writing again."))
             continue
 
         if trig:
@@ -264,7 +277,7 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
                 context=_context(row, res, trig, peer)))
             continue
 
-        if days is None or days >= KEEP_WARM_DAYS:
+        if days is None or days >= keep_warm_days:
             # Due is not the same as due today. Each clinician gets a fixed slot
             # in the cycle, derived from their own id, so the quarterly touch is
             # spread evenly instead of arriving as one blast. At 15,000 names

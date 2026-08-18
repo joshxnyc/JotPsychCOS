@@ -28,12 +28,13 @@ DEFAULT_STATES = ["NY", "CA", "TX", "FL", "IL", "MA", "WA", "CO", "GA", "NC"]
 
 
 def _states() -> list[str]:
-    raw = (os.getenv("PROSPECT_STATES") or "").strip()
-    return [s.strip().upper() for s in raw.split(",") if s.strip()] or DEFAULT_STATES
+    from . import settings
+    return settings.get_list("prospect_states") or DEFAULT_STATES
 
 
 def _days() -> int:
-    return int(os.getenv("PROSPECT_WINDOW_DAYS") or 90)
+    from . import settings
+    return settings.get_int("prospect_window_days")
 
 
 def _recent(date_str: str, days: int) -> bool:

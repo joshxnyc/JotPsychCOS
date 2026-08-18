@@ -359,41 +359,65 @@ afterwards.</p>
 </table></div></div>"""
 
 
-def settings_page(suppressions, cfg) -> str:
+def settings_page(suppressions, values, schema) -> str:
     sup = "".join(
         f'<tr><td class="mono">{e(s["email"])}</td><td>{e(s["reason"])}</td>'
         f'<td><span class="pill">{e(s["source"])}</span></td>'
         f'<td class="sub">{e(ago(s["created_at"]))}</td></tr>' for s in suppressions)
-    rows = "".join(
-        f'<tr><td class="mono">{e(k)}</td><td>{e(v[0])}</td>'
-        f'<td class="sub">{e(v[1])}</td></tr>' for k, v in cfg.items())
+
+    fields = []
+    for key, (label, _default, help_, kind) in schema.items():
+        val = values.get(key, "")
+        if kind.startswith("choice:"):
+            opts = "".join(
+                f'<option value="{e(o)}" {"selected" if o == val else ""}>{e(o)}</option>'
+                for o in kind.split(":")[1].split(","))
+            control = f'<select name="{e(key)}">{opts}</select>'
+        else:
+            itype = "email" if kind == "email" else "text"
+            control = f'<input type="{itype}" name="{e(key)}" value="{e(val)}">'
+        fields.append(
+            f'<div class="field"><label>{e(label)}</label>{control}'
+            f'<p class="sub" style="margin-top:5px">{e(help_)}</p></div>')
+
     return f"""
 <h1>Settings</h1>
+<p class="lede">How the workspace behaves — cadence, confidence thresholds, where samples
+go. Changes apply from the next cycle and every change is recorded in Activity.
+Credentials and the sending switch live on the deployment, not here, so a workspace
+cannot be talked into sending by anyone who can reach it.</p>
 <div class="two">
-  <div class="card"><h2>Audience</h2>
-    <p class="note">Where the three fields come from — a file you upload, or a system
-    Second Window reads on its own.</p>
-    <a class="btn primary" href="/sources">Manage data sources</a></div>
-  <div class="card"><h2>Do not contact</h2>
-    <p class="note">Checked when a message is written and again the moment before it is
-    sent. Unsubscribes, bounces and spam complaints arrive here on their own.</p>
-    <form method="post" action="/suppress" class="row">
-      <input type="email" name="email" placeholder="clinician@example.com" required
-        style="max-width:280px">
-      <button class="btn">Add</button></form></div>
-</div>
-<div class="card"><h2>Configuration</h2>
-  <p class="note">Set on the deployment, not in this screen — so a workspace cannot be
-  talked into sending by anyone who can reach it. Sending stays off until it is turned on
-  deliberately.</p>
-  <div class="scroll"><table>
-  <thead><tr><th>Setting</th><th>Value</th><th>What it does</th></tr></thead>
-  <tbody>{rows}</tbody></table></div></div>
-<div class="card"><h2>Do not contact ({len(suppressions)})</h2>
-  <div class="scroll"><table>
-  <thead><tr><th>Email</th><th>Reason</th><th>Source</th><th>When</th></tr></thead>
-  <tbody>{sup or '<tr><td colspan=4 class="empty">Nobody yet.</td></tr>'}</tbody>
-  </table></div></div>"""
+  <div class="card">
+    <h2>Workspace</h2>
+    <form method="post" action="/settings">
+      {''.join(fields)}
+      <div class="field" style="border-top:1px solid var(--line2);padding-top:14px">
+        <label>Settings password</label>
+        <input type="password" name="settings_password" placeholder="Required to save" required>
+        <p class="sub" style="margin-top:5px">Browsing is open; changing how the machine
+        behaves is not.</p></div>
+      <button class="btn primary">Save changes</button>
+    </form>
+  </div>
+  <div>
+    <div class="card"><h2>Audience</h2>
+      <p class="note">Where the three fields come from — a file you upload, or a system
+      read directly.</p>
+      <a class="btn primary" href="/sources">Manage data sources</a></div>
+    <div class="card"><h2>Do not contact</h2>
+      <p class="note">Checked when a message is written and again the moment before it is
+      sent. Unsubscribes, bounces and spam complaints arrive here on their own.</p>
+      <form method="post" action="/suppress" class="row">
+        <input type="email" name="email" placeholder="clinician@example.com" required
+          style="max-width:260px">
+        <button class="btn">Add</button></form></div>
+    <div class="card"><h2>Do not contact ({len(suppressions)})</h2>
+      <div class="scroll"><table>
+      <thead><tr><th>Email</th><th>Reason</th><th>Source</th><th>When</th></tr></thead>
+      <tbody>{sup or '<tr><td colspan=4 class="empty">Nobody yet.</td></tr>'}</tbody>
+      </table></div></div>
+  </div>
+</div>"""
 
 
 def login_page(err: str = "") -> str:

@@ -8,7 +8,9 @@ from . import compliance, config, db, digest, ledger, memory, qc, send, strategy
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--limit", type=int, default=config.MAX_SENDS_PER_RUN)
+    from . import settings as _settings
+    ap.add_argument("--limit", type=int,
+                    default=_settings.get_int("max_sends_per_run"))
     ap.add_argument("--live", action="store_true", help="actually send (overrides DRY_RUN)")
     ap.add_argument("--report-only", action="store_true")
     a = ap.parse_args(argv)
@@ -102,10 +104,25 @@ def main(argv=None) -> int:
             print(f"[QC]     BLOCKED {plan.target_id}: {v.failures[0]}")
             continue
 
+        # Autopilot is the design: a message that passed every check sends on
+        # its own, and the person's hours go to the queue, not to re-reading
+        # what the checks already read. Review mode is the deliberate opt-out.
+        autopilot = _settings.get("approval_mode") != "review"
+        will_send = config.SEND_TO_CLINICIANS and autopilot
         db.add_draft(conn, run_id=run_id, clinician_id=cid, kind=plan.action,
                      channel=plan.channel, angle=d["angle"], subject=d["subject"],
                      body=d["body"], reason=plan.reason,
-                     status="sent" if config.SEND_TO_CLINICIANS else "staged")
+                     status="sent" if will_send else "staged")
+        if not autopilot and config.SEND_TO_CLINICIANS:
+            # review mode with sending on: hold it for a person instead
+            ledger.append({"action": "staged", "target_id": plan.target_id,
+                           "angle": d["angle"], "plan_action": plan.action,
+                           "subject": d["subject"], "reason": plan.reason})
+            memory.record(state, d["angle"], "sent")
+            _mark_contacted(state, plan, d)
+            sent += 1
+            print(f"[hold]   awaiting approval -> {d['subject']}")
+            continue
         r = send.deliver(d, plan.channel)
         ledger.append({"action": ("staged" if not config.SEND_TO_CLINICIANS
                                   else "sent") if r.ok else "send_failed",

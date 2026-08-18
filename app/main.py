@@ -16,6 +16,7 @@ from fastapi.responses import (HTMLResponse, RedirectResponse, PlainTextResponse
 from itsdangerous import URLSafeSerializer, BadSignature
 
 from machine import compliance, config, db, prospect, send
+from machine import settings as msettings
 from app import ui
 
 APP_SECRET = os.getenv("APP_SECRET") or "dev-secret-not-for-production"
@@ -24,6 +25,9 @@ APP_PASSWORD = os.getenv("APP_PASSWORD") or ""
 # on sample data, and making a reviewer create an account to look at it would be
 # the wrong trade. Set DEMO_MODE=0 for a real tenant.
 DEMO_MODE = (os.getenv("DEMO_MODE") or "1").strip().lower() in ("1", "true", "yes")
+# Browsing is open; changing settings is not. One shared password, checked per
+# change rather than per session, so the open-workspace property is kept.
+SETTINGS_PASSWORD = os.getenv("SETTINGS_PASSWORD") or "jotpsych"
 COOKIE = "sw_session"
 signer = URLSafeSerializer(APP_SECRET, salt="sw-session")
 ASSETS = pathlib.Path(__file__).resolve().parent.parent / "assets"
@@ -184,26 +188,44 @@ def activity(request: Request):
 def settings(request: Request):
     if (r := wall(request)):
         return r
-    cfg = {
-        "SEND_TO_CLINICIANS": ("on" if config.SEND_TO_CLINICIANS else "off",
-                               "When off, approving a draft records the decision but sends nothing."),
-        "MAIL_FROM": (config.MAIL_FROM, "The address clinicians see and can reply to."),
-        "MAIL_TO_OVERRIDE": (config.MAIL_TO_OVERRIDE or "(not set)",
-                             "Redirects every message here. The safety catch."),
-        "MAX_SENDS_PER_RUN": (str(config.MAX_SENDS_PER_RUN), "Hard cap per run."),
-        "POSTAL_ADDRESS": (compliance.POSTAL_ADDRESS, "Required in every message by CAN-SPAM."),
-        "APP_URL": (compliance.APP_URL or "(not set)",
-                    "Used to build the one-click unsubscribe link."),
-        "OPENROUTER_MODEL": (config.OPENROUTER_MODEL, "The model that writes drafts."),
-        "PROSPECT_STATES": (", ".join(prospect._states()), "Where to look for new practices."),
-    }
     c = db.connect()
     try:
-        body = ui.settings_page(db.suppressions(c), cfg)
+        stored = db.all_settings(c)
+        values = {k: stored.get(k) or msettings.get(k) for k in msettings.SCHEMA}
+        body = ui.settings_page(db.suppressions(c), values, msettings.SCHEMA)
     finally:
         c.close()
     return ui.page("Settings", body, active="/settings", badges=badges(),
                    flash=flash(request))
+
+
+@api.post("/settings")
+async def save_settings(request: Request):
+    if (r := wall(request)):
+        return r
+    form = await request.form()
+    if (form.get("settings_password") or "") != SETTINGS_PASSWORD:
+        return back("/settings", "err", "That settings password is not right.")
+    c = db.connect()
+    changed = 0
+    try:
+        for key in msettings.SCHEMA:
+            if key not in form:
+                continue
+            value = str(form.get(key) or "").strip()
+            if value == msettings.get(key):
+                continue
+            ok, why = msettings.validate(key, value)
+            if not ok:
+                return back("/settings", "err", why)
+            db.set_setting(c, key, value, actor=who(request))
+            changed += 1
+    finally:
+        c.close()
+    if not changed:
+        return back("/settings", "ok", "Nothing changed.")
+    return back("/settings", "ok",
+                f"{changed} setting(s) saved. They apply from the next cycle.")
 
 
 # ---------------------------------------------------------------- actions ---
@@ -383,7 +405,7 @@ def trigger_run(request: Request):
         try:
             os.environ["RUN_TRIGGER"] = "manual"
             from machine import run as machine_run
-            machine_run.main(["--limit", str(config.MAX_SENDS_PER_RUN)])
+            machine_run.main([])
         except Exception as exc:
             # A cycle that dies silently looks identical to a cycle that found
             # nothing to do. Put the reason somewhere a person will see it.
@@ -473,7 +495,7 @@ def _scheduler():
             try:
                 os.environ["RUN_TRIGGER"] = "schedule"
                 from machine import run as machine_run
-                machine_run.main(["--limit", str(config.MAX_SENDS_PER_RUN)])
+                machine_run.main([])
             except Exception as exc:                      # never kill the thread
                 c = db.connect()
                 try:

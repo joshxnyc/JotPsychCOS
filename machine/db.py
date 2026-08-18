@@ -100,6 +100,16 @@ CREATE TABLE IF NOT EXISTS previews (
   ip       TEXT DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_prev_ts ON previews(ts);
+
+-- Settings a person can change from the console. Deployment-level things
+-- (credentials, whether sending is on at all) deliberately stay out of here:
+-- a workspace should not be able to talk itself into sending.
+CREATE TABLE IF NOT EXISTS settings (
+  key        TEXT PRIMARY KEY,
+  value      TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  updated_by TEXT DEFAULT ''
+);
 """
 
 
@@ -264,3 +274,22 @@ def record_preview(c, email: str, draft_id: int, ip: str = "") -> None:
     c.execute("INSERT INTO previews (ts, email, draft_id, ip) VALUES (?,?,?,?)",
               (now(), email.strip().lower(), draft_id, ip))
     log(c, "sample_sent", actor="visitor", draft_id=draft_id, detail=f"to {email}")
+
+
+# --------------------------------------------------------------- settings ---
+def get_setting(c, key: str, default: str = "") -> str:
+    row = c.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+    return row["value"] if row else default
+
+
+def all_settings(c) -> dict:
+    return {r["key"]: r["value"] for r in c.execute("SELECT key, value FROM settings")}
+
+
+def set_setting(c, key: str, value: str, actor: str = "operator") -> None:
+    c.execute("""INSERT INTO settings (key, value, updated_at, updated_by)
+                 VALUES (?,?,?,?)
+                 ON CONFLICT(key) DO UPDATE SET value=excluded.value,
+                   updated_at=excluded.updated_at, updated_by=excluded.updated_by""",
+              (key, value, now(), actor))
+    log(c, "setting_changed", actor=actor, detail=f"{key} = {value}")

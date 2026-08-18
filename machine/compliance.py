@@ -11,11 +11,12 @@ cannot omit it, reword it, or be talked out of it. QC then verifies it survived.
 import hashlib, hmac, os
 from . import config
 
-# CAN-SPAM requires a genuine physical address in every commercial message, so
-# this default is JotPsych's real one rather than a plausible-looking stand-in.
-POSTAL_ADDRESS = (os.getenv("POSTAL_ADDRESS") or
-                  "JotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, "
-                  "Brooklyn, NY 11205").strip()
+def postal_address() -> str:
+    """Read per message, not at import, so editing it in the console takes
+    effect on the next message rather than the next restart. CAN-SPAM requires
+    a genuine physical address, so the default is JotPsych's real one."""
+    from . import settings
+    return settings.get("postal_address")
 APP_URL = (os.getenv("APP_URL") or "").strip().rstrip("/")
 SECRET = (os.getenv("APP_SECRET") or "dev-secret-not-for-production").encode()
 
@@ -48,7 +49,7 @@ def footer(email: str) -> str:
     url = unsubscribe_url(email)
     opt_out = (f"Unsubscribe: {url}" if url else
                "To stop receiving these, reply with the word STOP.")
-    return (f"\n\n--\n{MARKER}\n{opt_out}\n{POSTAL_ADDRESS}")
+    return (f"\n\n--\n{MARKER}\n{opt_out}\n{postal_address()}")
 
 
 def apply(draft: dict) -> dict:
@@ -71,4 +72,4 @@ def headers(email: str) -> dict:
 
 def present(body: str) -> bool:
     b = body or ""
-    return MARKER in b and (POSTAL_ADDRESS.split(",")[0] in b)
+    return MARKER in b and (postal_address().split(",")[0] in b)
