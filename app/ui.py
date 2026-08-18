@@ -114,10 +114,18 @@ label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em
 @media(max-width:820px){.two{grid-template-columns:1fr}}
 footer{max-width:1140px;margin:0 auto;padding:0 24px 50px;color:var(--ink3);font-size:12.5px;max-width:88ch}
 .login{max-width:380px;margin:12vh auto;padding:0 24px}
+.preview{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ flex-wrap:wrap;margin-top:16px;padding:14px 16px;background:#F3F3FE;
+ border:1px solid #C9CBF2;border-radius:10px}
+.preview b{font-size:14px}
+.conns{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.conn{border:1px solid var(--line2);border-radius:10px;padding:13px 15px;background:#FBFCFD}
+.conn-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
 """
 
-TABS = [("/", "Overview"), ("/review", "Review &amp; send"), ("/clinicians", "Clinicians"),
-        ("/prospects", "New practices"), ("/activity", "Activity"), ("/settings", "Settings")]
+TABS = [("/", "Overview"), ("/review", "Outbox"), ("/clinicians", "Audience"),
+        ("/prospects", "New practices"), ("/sources", "Data sources"),
+        ("/activity", "Activity"), ("/settings", "Settings")]
 
 
 def page(title: str, body: str, *, active: str = "/", badges: str = "",
@@ -136,16 +144,16 @@ def page(title: str, body: str, *, active: str = "/", badges: str = "",
   <img src="/static/jotpsych-logo.svg" alt="JotPsych">
   <span class="sep"></span><span class="logo">Second Window</span>
   <span class="sp"></span>{badges}
-  <form method="post" action="/logout" style="display:inline">
-    <button class="badge" style="cursor:pointer">Sign out</button></form>
 </div></div>
 <div class="tabwrap"><nav class="tabs">{tabs}</nav></div>
 <main>{fl}{body}</main>
-<footer>Second Window re-engages behavioural-health clinicians who tried JotPsych and did
-not subscribe. It watches the federal NPI registry for the practice changes that reopen a
-software decision, drafts what to say, checks it, and holds it for a person.
-Every message carries an unsubscribe link and a postal address, and every approval is
-recorded against the person who made it.</footer>
+<footer><b>Second Window</b> finds the moment a behavioural-health clinician is ready to
+reconsider, and writes to them then. It reads the federal NPI registry, notices when a
+practice changes shape, drafts what to say, checks it against what JotPsych can honestly
+claim, and holds it for a person to approve.
+<br><br>This workspace runs on sample data. Clinician names and contact details are
+invented; registry records are real public NPPES data. Nothing is delivered to anyone
+except the sample messages you ask for.</footer>
 </body></html>"""
 
 
@@ -158,82 +166,111 @@ def kpi(label, value, sub="") -> str:
 def overview_page(counts, runs, staged, prospects, changes) -> str:
     last = runs[0] if runs else None
     run_rows = "".join(
-        f'<tr><td><b>Run {r["id"]}</b><div class="sub">{e(r["trigger"])}</div></td>'
+        f'<tr><td><b>Cycle {r["id"]}</b><div class="sub">{e(r["trigger"])}</div></td>'
         f'<td class="mono">{e(ago(r["started_at"]))}</td>'
         f'<td>{e(json.loads(r["summary"] or "{}").get("staged", 0))}</td>'
         f'<td>{e(json.loads(r["summary"] or "{}").get("blocked", 0))}</td>'
         f'<td>{e(json.loads(r["summary"] or "{}").get("silent", 0))}</td>'
         f'<td>{e(json.loads(r["summary"] or "{}").get("human_queue", 0))}</td></tr>'
-        for r in runs[:8]) or '<tr><td colspan=6 class="empty">No runs yet.</td></tr>'
+        for r in runs[:8]) or '<tr><td colspan=6 class="empty">No cycles yet.</td></tr>'
     return f"""
 <h1>Overview</h1>
-<p class="lede">Second Window keeps clinicians who tried JotPsych in view until their
-situation changes, and tells you the moment it does. Nothing reaches a clinician without
-a person approving it.</p>
+<p class="lede">Thousands of clinicians tried JotPsych and did not subscribe. Most did not
+say no — the timing was wrong. Second Window watches the federal NPI registry for the
+practice changes that reopen that decision, writes to them at that moment, and stays quiet
+the rest of the time.</p>
 <div class="kpis">
-  {kpi("Waiting for you", counts["awaiting"], "drafted, checked, not sent")}
-  {kpi("Clinicians tracked", f'{counts["clinicians"]:,}', "from your list")}
-  {kpi("New practices found", f'{counts["prospects"]:,}', "registered in the last 90 days")}
-  {kpi("Approved and sent", counts["sent"], f'{counts["rejected"]} rejected by a person')}
-  {kpi("Stopped by checks", counts["blocked"], "never reached review")}
+  {kpi("In the outbox", counts["awaiting"], "written and checked, awaiting approval")}
+  {kpi("Audience", f'{counts["clinicians"]:,}', "clinicians being watched")}
+  {kpi("New practices", f'{counts["prospects"]:,}', "registered in the last 90 days")}
+  {kpi("Approved", counts["sent"], f'{counts["rejected"]} rejected')}
+  {kpi("Stopped by checks", counts["blocked"], "never reached the outbox")}
   {kpi("Do not contact", counts["suppressed"], "unsubscribes, bounces, complaints")}
 </div>
 <div class="two">
-  <div class="card"><h2>What needs you now</h2>
-    <p class="note">{counts["awaiting"]} message(s) drafted and checked, waiting for a
-    decision. About {counts["awaiting"] * 2} minutes.</p>
-    <a class="btn primary" href="/review">Open review queue</a></div>
-  <div class="card"><h2>Run the machine</h2>
-    <p class="note">Runs on a schedule. Trigger one now to pick up new list rows, re-read
-    the registry and draft anything the change warrants.</p>
-    <form method="post" action="/run"><button class="btn">Run now</button></form>
-    <p class="note" style="margin:12px 0 0">Last run
-    {e(ago(last["started_at"])) if last else "never"}.</p></div>
+  <div class="card"><h2>Your outbox</h2>
+    <p class="note">{counts["awaiting"]} message(s) written and checked, waiting on a
+    decision. Roughly {counts["awaiting"] * 2} minutes of reading.</p>
+    <a class="btn primary" href="/review">Open the outbox</a></div>
+  <div class="card"><h2>Run a cycle</h2>
+    <p class="note">Cycles run on a schedule. Start one now to pick up new records,
+    re-read the registry, and write to anyone whose situation has changed.</p>
+    <form method="post" action="/run"><button class="btn">Run a cycle now</button></form>
+    <p class="note" style="margin:12px 0 0">Last cycle
+    {e(ago(last["started_at"])) if last else "not yet run"}.</p></div>
 </div>
-<div class="card"><h2>Recent runs</h2>
+<div class="card"><h2>Recent cycles</h2>
   <div class="scroll"><table>
-  <thead><tr><th>Run</th><th>When</th><th>Drafted</th><th>Blocked</th>
-    <th>Left alone</th><th>To a person</th></tr></thead>
+  <thead><tr><th>Cycle</th><th>When</th><th>Written</th><th>Stopped by checks</th>
+    <th>Left alone</th><th>Needs a person</th></tr></thead>
   <tbody>{run_rows}</tbody></table></div></div>"""
 
 
-def review_page(rows) -> str:
+def review_page(rows, demo: bool = True) -> str:
     if not rows:
-        body = ('<div class="card"><div class="empty">Nothing waiting. The machine will '
-                'draft again when something changes.</div></div>')
+        body = ('<div class="card"><div class="empty">Your outbox is empty. The next cycle '
+                'will write to anyone whose situation has changed.</div></div>')
     else:
         body = "".join(f"""
-<form class="draft" method="post" action="/decide">
-  <input type="hidden" name="draft_id" value="{r['id']}">
+<div class="draft">
   <div class="draft-h">
     <div><b>{e(r['name'])}</b>
-      <div class="sub">{e(r['email'])} · {e(r['specialty'] or 'specialty unknown')}
+      <div class="sub">{e(r['email'])} · {e(r['specialty'] or 'specialty not established')}
         {' · ' + e(r['city']) if r['city'] else ''} {e(r['state'])}</div></div>
     <div class="row">
       <span class="pill p-{e(r['tier'])}">{e(r['tier'])} · {r['score']}</span>
       <span class="pill p-staged">{e(r['kind'].replace('_', ' '))}</span></div>
   </div>
   <div class="draft-b">
-    <div class="why"><b>Why the machine drafted this:</b> {e(r['reason'])}</div>
-    <div class="field"><label>Subject</label>
-      <input type="text" name="subject" value="{e(r['subject'])}"></div>
-    <div class="field"><label>Message</label>
-      <textarea name="body" rows="9">{e(_strip_footer(r['body']))}</textarea></div>
-    <div class="compliance">Appended automatically on send, and required by law:
+    <div class="why"><b>Why now:</b> {e(r['reason'])}</div>
+    <form method="post" action="/decide">
+      <input type="hidden" name="draft_id" value="{r['id']}">
+      <div class="field"><label>Subject</label>
+        <input type="text" name="subject" value="{e(r['subject'])}"></div>
+      <div class="field"><label>Message</label>
+        <textarea name="body" rows="9">{e(_strip_footer(r['body']))}</textarea></div>
+      <div class="compliance">Added automatically on send. Required by law, and not editable away.
 {e(_footer_of(r['body']))}</div>
-    <div class="row">
-      <button class="btn primary" name="action" value="approve">Approve &amp; send</button>
-      <button class="btn danger" name="action" value="reject">Reject</button>
-      <button class="btn danger" name="action" value="suppress">Reject &amp; never contact</button>
-    </div>
+      <div class="row">
+        <button class="btn primary" name="action" value="approve">Approve</button>
+        <button class="btn danger" name="action" value="reject">Reject</button>
+        <button class="btn danger" name="action" value="suppress">Reject &amp; never contact</button>
+      </div>
+    </form>
+    {_preview_box(r['id']) if demo else ''}
   </div>
-</form>""" for r in rows)
+</div>""" for r in rows)
+    banner = ('<div class="card" style="border-color:#F5D9B0;background:#FFF8EF">'
+              '<h2>Sending is off in this workspace</h2>'
+              '<p class="note" style="margin:0">The clinicians in this workspace are '
+              'invented, so there is nobody real to write to. But a message only makes '
+              'sense in an inbox — so put your address on any message below and it will '
+              'be sent to you, through the same send path a real one would take.</p></div>'
+              ) if demo else ''
     return f"""
-<h1>Review &amp; send</h1>
-<p class="lede">Every message the machine drafted and its own checks approved. Edit
-anything before it goes. Approving sends it through Resend with an unsubscribe header;
-rejecting records why and leaves the clinician alone.</p>
+<h1>Outbox</h1>
+<p class="lede">Everything the machine has written and its own checks have cleared. Edit
+anything before it goes out. Approving records the decision against you; rejecting leaves
+the clinician alone and says why.</p>
+{banner}
 {body}"""
+
+
+def _preview_box(draft_id: int) -> str:
+    return f"""
+<form method="post" action="/preview" class="preview">
+  <input type="hidden" name="draft_id" value="{draft_id}">
+  <div>
+    <b>See it in your own inbox</b>
+    <div class="sub">Sent through the same path a clinician's message would take,
+    with the same footer. Nobody else receives anything.</div>
+  </div>
+  <div class="row" style="flex-wrap:nowrap">
+    <input type="email" name="email" placeholder="you@company.com" required
+      style="min-width:230px">
+    <button class="btn">Send it to me</button>
+  </div>
+</form>"""
 
 
 def _strip_footer(body: str) -> str:
@@ -258,10 +295,10 @@ def clinicians_page(rows, q: str) -> str:
         f'<button class="btn danger" style="padding:5px 10px;font-size:12px">Never contact</button>'
         f'</form></td></tr>' for r in rows)
     return f"""
-<h1>Clinicians</h1>
-<p class="lede">Everyone on your list, and what the machine worked out about them from the
-three fields a signup leaves behind — name, email, mobile. Everything in the Practice
-column came from the federal NPI registry.</p>
+<h1>Audience</h1>
+<p class="lede">Everyone Second Window is watching, and what it established about them from
+the three fields a signup leaves behind. Everything under Practice came from the federal
+NPI registry, matched on name and email domain and scored for confidence.</p>
 <div class="card">
   <form method="get" class="row" style="margin-bottom:14px">
     <input type="search" name="q" value="{e(q)}" placeholder="Search name, email, specialty…"
@@ -269,7 +306,7 @@ column came from the federal NPI registry.</p>
     <span class="sub" style="margin-left:auto">{len(rows):,} shown</span></form>
   <div class="scroll"><table>
   <thead><tr><th>Clinician</th><th>Identity match</th><th>Practice</th><th>NPI</th><th></th></tr></thead>
-  <tbody>{tr or '<tr><td colspan=5 class="empty">No clinicians yet. Upload a list in Settings.</td></tr>'}</tbody>
+  <tbody>{tr or '<tr><td colspan=5 class="empty">Nobody yet — add an audience under Data sources.</td></tr>'}</tbody>
   </table></div></div>"""
 
 
@@ -287,10 +324,11 @@ def prospects_page(rows, briefs, cfg) -> str:
 </div></div>""" for r in rows)
     return f"""
 <h1>New practices</h1>
-<p class="lede">Behavioural-health NPIs registered in the last {e(cfg['window_days'])} days
-across {e(', '.join(cfg['states']))}. A practice this new has not chosen its systems yet —
-there is no contract to wait out and nothing to migrate. This is the earliest point at
-which JotPsych can be in the conversation.</p>
+<p class="lede">Behavioural-health practices that registered with CMS in the last
+{e(cfg['window_days'])} days across {e(', '.join(cfg['states']))}. A practice this new has
+not chosen its systems yet — no contract to wait out, nothing to migrate. It is the
+earliest point at which JotPsych can be in the conversation, and it needs no list from
+anyone.</p>
 <div class="card">
   <h2>Where this comes from</h2>
   <p class="note"><b>The federal NPI register publishes no email address.</b> It publishes a
@@ -298,7 +336,7 @@ which JotPsych can be in the conversation.</p>
   email — they become a call list. Inventing a contact address for a real clinician is not
   something this machine will do.</p>
   <form method="post" action="/prospects/sync" class="row">
-    <button class="btn primary">Check the register for new practices</button>
+    <button class="btn primary">Check the register now</button>
     <span class="sub">{len(rows):,} found so far</span></form>
 </div>
 {cards or '<div class="card"><div class="empty">None yet. Run a check above.</div></div>'}"""
@@ -312,9 +350,9 @@ def activity_page(events) -> str:
         f'<td class="sub">{e(ev["detail"])}</td></tr>' for ev in events)
     return f"""
 <h1>Activity</h1>
-<p class="lede">Every state change, and who made it. This is the record that makes it
-reasonable to let a machine draft under your name — nothing it or anyone else did is
-invisible after the fact.</p>
+<p class="lede">Every change, and who made it. This is what makes it reasonable to let
+software draft under your name: nothing it did, and nothing anyone did to it, is invisible
+afterwards.</p>
 <div class="card"><div class="scroll"><table>
 <thead><tr><th>When</th><th>Who</th><th>What</th><th>Detail</th></tr></thead>
 <tbody>{tr or '<tr><td colspan=4 class="empty">Nothing yet.</td></tr>'}</tbody>
@@ -332,24 +370,22 @@ def settings_page(suppressions, cfg) -> str:
     return f"""
 <h1>Settings</h1>
 <div class="two">
-  <div class="card"><h2>Add clinicians</h2>
-    <p class="note">CSV with three columns: <span class="mono">name, email, mobile</span>.
-    Rows already present are updated, not duplicated. Anyone on the do-not-contact list is
-    ignored.</p>
-    <form method="post" action="/upload" enctype="multipart/form-data" class="row">
-      <input type="file" name="file" accept=".csv" required>
-      <button class="btn primary">Upload</button></form></div>
-  <div class="card"><h2>Never contact</h2>
-    <p class="note">Enforced when the machine decides and again at send time. Unsubscribes,
-    bounces and spam complaints land here automatically.</p>
+  <div class="card"><h2>Audience</h2>
+    <p class="note">Where the three fields come from — a file you upload, or a system
+    Second Window reads on its own.</p>
+    <a class="btn primary" href="/sources">Manage data sources</a></div>
+  <div class="card"><h2>Do not contact</h2>
+    <p class="note">Checked when a message is written and again the moment before it is
+    sent. Unsubscribes, bounces and spam complaints arrive here on their own.</p>
     <form method="post" action="/suppress" class="row">
       <input type="email" name="email" placeholder="clinician@example.com" required
         style="max-width:280px">
       <button class="btn">Add</button></form></div>
 </div>
 <div class="card"><h2>Configuration</h2>
-  <p class="note">Set as environment variables on the machine. Sending to clinicians is off
-  until someone turns it on deliberately.</p>
+  <p class="note">Set on the deployment, not in this screen — so a workspace cannot be
+  talked into sending by anyone who can reach it. Sending stays off until it is turned on
+  deliberately.</p>
   <div class="scroll"><table>
   <thead><tr><th>Setting</th><th>Value</th><th>What it does</th></tr></thead>
   <tbody>{rows}</tbody></table></div></div>
@@ -389,3 +425,59 @@ def unsubscribe_page(email: str, ok: bool) -> str:
  '<h2>That link is not valid</h2><p class="note">It may have been altered. Reply to any '
  'message from us with the word STOP and we will remove you.</p>'}
 </div></div></body></html>"""
+
+
+def sources_page(counts) -> str:
+    def connector(name, what, state, note):
+        cls = {"live": "p-sent", "soon": "p-prospect"}.get(state, "p-rejected")
+        word = {"live": "Connected", "soon": "Not available yet"}.get(state, "Not available yet")
+        return (f'<div class="conn"><div class="conn-h"><b>{e(name)}</b>'
+                f'<span class="pill {cls}">{e(word)}</span></div>'
+                f'<p class="sub" style="margin:6px 0 0">{e(what)}</p>'
+                f'<p class="sub" style="margin:6px 0 0;color:var(--ink2)">{e(note)}</p></div>')
+    return f"""
+<h1>Data sources</h1>
+<p class="lede">Second Window needs three fields per clinician — name, email and mobile —
+which is what a signup leaves behind. Everything else it works out itself from the federal
+NPI registry. Point it at wherever those three fields already live.</p>
+
+<div class="card">
+  <h2>Upload a file</h2>
+  <p class="note">A CSV with columns <span class="mono">name, email, mobile</span>. Rows
+  already present are updated rather than duplicated, and anyone on the do-not-contact list
+  is skipped on the way in. Currently watching
+  <b>{counts['clinicians']:,}</b> clinician(s).</p>
+  <form method="post" action="/upload" enctype="multipart/form-data" class="row">
+    <input type="file" name="file" accept=".csv" required>
+    <button class="btn primary">Upload</button></form>
+</div>
+
+<div class="card">
+  <h2>Connect a system</h2>
+  <p class="note">A file is a snapshot. A connection keeps the audience current on its own —
+  a clinician who signs up on Tuesday is being watched by Wednesday, and one who
+  unsubscribes anywhere stops being written to everywhere. None of these are wired up yet;
+  each is an ingest adapter against the same three fields.</p>
+  <div class="conns">
+    {connector("CSV upload", "A file you export and upload yourself.", "live",
+               "Available now, above.")}
+    {connector("Google Sheets", "A sheet published to the web as CSV, re-read every cycle.",
+               "soon", "The adapter exists in the batch runner (DORMANT_URL) and needs a UI to hold the link.")}
+    {connector("HubSpot", "Contacts from a list or a saved view.", "soon",
+               "Needs an OAuth app and a property mapping to name, email and mobile.")}
+    {connector("Salesforce", "Leads or Contacts from a report.", "soon",
+               "Same shape as HubSpot. Report export, then the same three fields.")}
+    {connector("Segment / warehouse", "Whatever your signup writes to, read directly.",
+               "soon", "The most durable option: no export step and no drift between systems.")}
+    {connector("Webhook", "Your signup posts each new clinician as it happens.", "soon",
+               "The lowest-latency route, and the least work on your side once it exists.")}
+  </div>
+</div>
+
+<div class="card">
+  <h2>The register, which needs no list at all</h2>
+  <p class="note">CMS publishes every newly enumerated NPI. Second Window reads it directly
+  to find practices being formed right now — nobody has to send it anything. That source is
+  live today under <a href="/prospects">New practices</a>, with
+  <b>{counts['prospects']:,}</b> found so far.</p>
+</div>"""

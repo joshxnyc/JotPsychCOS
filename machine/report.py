@@ -224,10 +224,10 @@ def _overview(m, state, recs) -> str:
 <section class="hero">
   <div>
     <h1>Second Window</h1>
-    <p class="lede">Thousands of clinicians tried JotPsych and did not buy. Most did not
-    say no — the timing was wrong. This machine watches the federal NPI registry for the
-    practice changes that reopen that decision, and writes to a clinician only at that
-    moment. Everyone else gets silence.</p>
+    <p class="lede">Thousands of clinicians tried JotPsych and did not subscribe. Most did
+    not say no — the timing was wrong. Second Window watches the federal NPI registry for
+    the practice changes that reopen that decision, writes to those clinicians at that
+    moment, and stays quiet the rest of the time.</p>
   </div>
 </section>
 
@@ -259,7 +259,7 @@ def _overview(m, state, recs) -> str:
 </section>
 
 <section class="card">
-  <div class="card-h"><h2>Built for the whole list, not the sample</h2>
+  <div class="card-h"><h2>Built for the whole audience, not the sample</h2>
     <span class="info" data-tip="Resolving every clinician every run would mean one federal API call per person per run. A practice does not move twice a week, so each run re-reads only the staleest slice and reuses the stored profile for everyone else. Cost per run is flat no matter how long the list is.">?</span></div>
   <div class="scalegrid">
     <div><b>{cov.get('list_size', 0):,}</b><span>clinicians on the list</span></div>
@@ -336,7 +336,7 @@ def _people(state, recs) -> str:
 
     return f"""
 <section class="card">
-  <div class="card-h"><h2>Everyone the machine knows</h2>
+  <div class="card-h"><h2>The audience</h2>
     <span class="info" data-tip="This is the database. Every clinician read from your list, what three fields became after matching the federal NPI registry, and the decision most recently made about them.">?</span></div>
   <p class="note"><b>{total:,} clinicians</b>, three fields each — name, email, mobile.
   Everything under <b>Practice</b> was worked out from those three fields alone. Rows sharing
@@ -462,10 +462,10 @@ def _runs(recs, state) -> str:
         for h in hist) or '<tr><td colspan=6 class="empty">No registry changes observed yet.</td></tr>'
     return f"""
 <section class="card">
-  <div class="card-h"><h2>Run history</h2>
+  <div class="card-h"><h2>Cycle history</h2>
     <span class="info" data-tip="Reconstructed from out/ledger.jsonl, where every row carries the run that wrote it. The workflow commits this file back to the repository after each run, so the git history is an independent record nobody here can edit.">?</span></div>
-  <p class="note">Every row is one scheduled pass. The machine has run
-  <b>{state.get('run_count', 0)}</b> times.
+  <p class="note">Every row is one scheduled cycle. There have been
+  <b>{state.get('run_count', 0)}</b>.
   <a href="{REPO}/actions" target="_blank">Open the Actions tab →</a></p>
   <div class="scroll"><table>
     <thead><tr><th>Run</th><th>Finished</th><th>Decisions</th><th>Sent</th>
@@ -649,10 +649,10 @@ def _files(m) -> str:
     total = sum(f["sz"] for f in files)
     return f"""
 <section class="card">
-  <div class="card-h"><h2>Everything the machine reads and writes</h2>
+  <div class="card-h"><h2>Everything it reads and writes</h2>
     <span class="info" data-tip="Every input, rule, memory file and output, with its actual contents, served from this page. No repository access and no account needed.">?</span></div>
-  <p class="note">{len(files)} files, {total / 1024:.0f} KB. Click one to read it here —
-  nothing below opens GitHub. Inputs are what you replace with your own data; rules are
+  <p class="note">{len(files)} files, {total / 1024:.0f} KB, served from this page.
+  Click one to read it here — nothing below leaves for another site. Inputs are what you replace with your own data; rules are
   what you edit to change behaviour; memory is what makes the machine able to notice
   anything at all.</p>
   <div class="fbrowse">
@@ -907,8 +907,8 @@ _TEMPLATE = """<!doctype html><html lang="en"><head>
 <nav class="tabs" role="tablist">
   <button class="tab" role="tab" aria-selected="true"  data-p="overview">Overview</button>
   <button class="tab" role="tab" aria-selected="false" data-p="queue">Your queue</button>
-  <button class="tab" role="tab" aria-selected="false" data-p="people">Clinicians</button>
-  <button class="tab" role="tab" aria-selected="false" data-p="runs">Runs &amp; changes</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="people">Audience</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="runs">Cycles &amp; changes</button>
   <button class="tab" role="tab" aria-selected="false" data-p="quality">Quality control</button>
   <button class="tab" role="tab" aria-selected="false" data-p="files">Files</button>
 </nav>
@@ -923,14 +923,14 @@ _TEMPLATE = """<!doctype html><html lang="en"><head>
   <div class="panel" id="files" hidden>%%FILES%%</div>
 </main>
 
-<footer><b>Nothing here is delivered to a clinician.</b> Approved messages are staged as
-real email files and wait for a person; the only message the machine sends on its own is a
-report to whoever operates it. Writing to clinicians is a separate switch
-(<span class="mono">SEND_TO_CLINICIANS</span>) a company turns on once, deliberately.
-<br><br>Case-study prototype built for JotPsych by Josh — not an official JotPsych property.
-Clinician names, emails and mobile numbers are invented, as the brief requires; registry
-records are real public NPPES data for same-named clinicians and are used only to exercise
-identity resolution.</footer>
+<footer><b>Nothing here is delivered to a clinician.</b> Approved messages wait for a
+person; the only message that leaves on its own is a report to whoever operates the
+workspace. Writing to clinicians is a separate switch a company turns on once,
+deliberately.
+<br><br>This workspace runs on sample data. Clinician names, emails and mobile numbers are
+invented; registry records are real public NPPES data for same-named clinicians and are
+used only to exercise identity matching. No real clinician is a JotPsych user and none has
+been contacted.</footer>
 
 <script>
 document.querySelectorAll('.tab').forEach(function(t){

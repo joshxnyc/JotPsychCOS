@@ -1,12 +1,17 @@
 # The human hour
 
-_Generated 2026-08-18 20:04 UTC · run 3_
+_Generated 2026-08-18 20:13 UTC · run 9_
 
 These are the only clinicians this cycle where a person beats a message.
 Each one hit the strongest class of signal **and** has a consenting peer
 in their specialty and state. Twelve minutes each. Nothing else needs you.
 
-_Nothing this cycle. The machine handled everything it detected._
+## 1. Jordan Blake
+- **Why now:** their practice moved to another state
+- **Identity confidence:** probable (57)
+- **Peer to offer:** Tessa Nolan, LMHC — Behavior Technician in CA, 4 months on JotPsych
+- **Open with:** "Supervision notes and session notes finally live in the same place."
+- **Do not say:** that anything was looked up. You are offering an introduction, not reporting on their practice.
 
 ---
 

@@ -20,6 +20,10 @@ from app import ui
 
 APP_SECRET = os.getenv("APP_SECRET") or "dev-secret-not-for-production"
 APP_PASSWORD = os.getenv("APP_PASSWORD") or ""
+# Demo mode: open to anyone, no account, no password. The evaluation copy runs
+# on sample data, and making a reviewer create an account to look at it would be
+# the wrong trade. Set DEMO_MODE=0 for a real tenant.
+DEMO_MODE = (os.getenv("DEMO_MODE") or "1").strip().lower() in ("1", "true", "yes")
 COOKIE = "sw_session"
 signer = URLSafeSerializer(APP_SECRET, salt="sw-session")
 ASSETS = pathlib.Path(__file__).resolve().parent.parent / "assets"
@@ -32,6 +36,8 @@ _run_lock = threading.Lock()
 def who(request: Request) -> str:
     """Returns the signed-in identity, or '' — deliberately one shared password
     for now. Workspace SSO is the next step and changes only this function."""
+    if DEMO_MODE:
+        return "visitor"            # open evaluation copy; actions attributed honestly
     if not APP_PASSWORD:
         return "operator"           # no password configured: local development
     raw = request.cookies.get(COOKIE, "")
@@ -46,10 +52,12 @@ def wall(request: Request):
 
 
 def badges() -> str:
+    if DEMO_MODE:
+        return ('<span class="badge warn">Demo workspace · sample data</span>'
+                '<span class="badge">Nothing reaches a real clinician</span>')
     live = config.SEND_TO_CLINICIANS
-    cls = "live" if live else ""
-    txt = "Sending to clinicians" if live else "Approval required before anything sends"
-    return f'<span class="badge {cls}">{txt}</span>'
+    txt = "Sending live" if live else "Approval required before anything sends"
+    return f'<span class="badge {"live" if live else ""}">{txt}</span>'
 
 
 def back(path: str, kind: str = "ok", msg: str = "") -> RedirectResponse:
@@ -121,10 +129,10 @@ def review(request: Request):
         return r
     c = db.connect()
     try:
-        body = ui.review_page(db.drafts(c, "staged"))
+        body = ui.review_page(db.drafts(c, "staged"), demo=DEMO_MODE)
     finally:
         c.close()
-    return ui.page("Review", body, active="/review", badges=badges(), flash=flash(request))
+    return ui.page("Outbox", body, active="/review", badges=badges(), flash=flash(request))
 
 
 @api.get("/clinicians", response_class=HTMLResponse)
@@ -257,6 +265,56 @@ def decide(request: Request, draft_id: int = Form(...), action: str = Form(...),
         return back("/review", "err", f"Could not send: {res.get('error')}")
     finally:
         c.close()
+
+
+@api.post("/preview")
+def preview(request: Request, draft_id: int = Form(...), email: str = Form(...)):
+    """Send a drafted message to whoever is evaluating the platform.
+
+    Sending to clinicians is off on sample data — the names in this workspace are
+    invented, and there is nobody real to write to. But the whole point of a
+    message is how it reads in an inbox, so anyone can have one sent to their own
+    address. It goes through the same send path, with the same compliance footer.
+    """
+    email = (email or "").strip().lower()
+    if "@" not in email or len(email) < 6:
+        return back("/review", "err", "That does not look like an email address.")
+    c = db.connect()
+    try:
+        d = db.draft(c, draft_id)
+        if not d:
+            return back("/review", "err", "That draft no longer exists.")
+        ok, why = db.preview_allowed(c, email)
+        if not ok:
+            return back("/review", "err", why)
+
+        note = ("[This is a sample from the Second Window demo workspace. It was written "
+                "for an invented clinician on sample data and sent to you because you "
+                "asked to see one. Nothing was sent to anyone else.]\n\n")
+        body = note + compliance.apply({"to": email, "subject": d["subject"],
+                                        "body": ui._strip_footer(d["body"])})["body"]
+        res = send.send_email(email, f"[Sample] {d['subject']}", body)
+        if not res.ok:
+            return back("/review", "err", f"Could not send: {res.get('error')}")
+        db.record_preview(c, email, draft_id,
+                          ip=(request.client.host if request.client else ""))
+        return back("/review", "ok",
+                    f"Sent to {email}. That is exactly what a clinician would receive.")
+    finally:
+        c.close()
+
+
+@api.get("/sources", response_class=HTMLResponse)
+def sources(request: Request):
+    if (r := wall(request)):
+        return r
+    c = db.connect()
+    try:
+        counts = db.counts(c)
+    finally:
+        c.close()
+    return ui.page("Data sources", ui.sources_page(counts), active="/sources",
+                   badges=badges(), flash=flash(request))
 
 
 @api.post("/suppress")

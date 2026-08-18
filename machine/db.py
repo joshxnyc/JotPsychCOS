@@ -88,7 +88,23 @@ CREATE TABLE IF NOT EXISTS events (
   detail       TEXT DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_events_ts ON events(ts);
+
+-- Anyone evaluating the platform can have a drafted message sent to their own
+-- address. Recorded so it can be rate limited and so the sending domain is
+-- never an open relay.
+CREATE TABLE IF NOT EXISTS previews (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts       TEXT NOT NULL,
+  email    TEXT NOT NULL,
+  draft_id INTEGER,
+  ip       TEXT DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_prev_ts ON previews(ts);
 """
+
+
+PREVIEW_PER_HOUR_TOTAL = 30      # across everyone
+PREVIEW_PER_EMAIL_HOUR = 3       # per address
 
 
 def now() -> str:
@@ -225,3 +241,26 @@ def counts(c) -> dict:
         "suppressed": g("SELECT COUNT(*) FROM suppressions"),
         "runs":       g("SELECT COUNT(*) FROM runs"),
     }
+
+
+# --------------------------------------------------------------- previews ---
+def preview_allowed(c, email: str) -> tuple[bool, str]:
+    """Two limits. Without them a public page with an email box is an open
+    relay wearing someone else's sending domain."""
+    import datetime as _dt
+    hour_ago = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=1)).isoformat()
+    total = c.execute("SELECT COUNT(*) FROM previews WHERE ts > ?", (hour_ago,)).fetchone()[0]
+    if total >= PREVIEW_PER_HOUR_TOTAL:
+        return False, ("The demo has sent its hourly limit of sample messages. "
+                       "Try again shortly.")
+    mine = c.execute("SELECT COUNT(*) FROM previews WHERE ts > ? AND email = ?",
+                     (hour_ago, email.strip().lower())).fetchone()[0]
+    if mine >= PREVIEW_PER_EMAIL_HOUR:
+        return False, "That address has already been sent a few samples this hour."
+    return True, ""
+
+
+def record_preview(c, email: str, draft_id: int, ip: str = "") -> None:
+    c.execute("INSERT INTO previews (ts, email, draft_id, ip) VALUES (?,?,?,?)",
+              (now(), email.strip().lower(), draft_id, ip))
+    log(c, "sample_sent", actor="visitor", draft_id=draft_id, detail=f"to {email}")

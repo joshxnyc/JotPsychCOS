@@ -11,7 +11,7 @@ Six things. Everything else has a working default.
 | # | What | Where to get it | Notes |
 |---|---|---|---|
 | 1 | **A Fly account and `flyctl`** | `fly auth signup`, then `fly auth login` | The free allowance covers this: one shared-cpu-1x, 512MB, 1GB volume. |
-| 2 | **An app name** | you choose | `second-window` is in `fly.toml`; change it if it is taken. |
+| 2 | **An app name** | you choose | Globally unique across all of Fly. Create it with `fly apps create <name>` **before** anything else, and put the same name in `fly.toml`. |
 | 3 | `APP_PASSWORD` | you choose | The sign-in password for the console. One shared password for now — see *Next* below. |
 | 4 | `APP_SECRET` | `openssl rand -hex 32` | Signs session cookies **and** unsubscribe tokens. Change it and every outstanding unsubscribe link stops working, so set it once. |
 | 5 | `OPENROUTER_API_KEY` | openrouter.ai | Writes the drafts. |
@@ -26,9 +26,17 @@ Also useful, both optional:
 
 ## Deploy
 
+**Create the app first.** Fly app names are globally unique across all of Fly,
+not just your account — `second-window` is almost certainly taken, and every
+later command fails with `Could not find App` because there is nothing to attach
+them to. Pick a name nobody has, and put the same name in `fly.toml`.
+
 ```bash
-fly launch --no-deploy                       # reads fly.toml, creates the app
-fly volumes create second_window_data --size 1 --region ewr
+fly apps create jotpsych-second-window       # or any name that is free
+# then set app = "<that name>" in fly.toml
+
+fly volumes create second_window_data --size 1 --region ewr \
+  --app jotpsych-second-window
 
 fly secrets set \
   APP_PASSWORD="…" \
@@ -43,6 +51,10 @@ fly secrets set \
 fly deploy
 fly open
 ```
+
+If a command still reports **`Could not find App`**, it means the name in
+`fly.toml` and the app that actually exists do not match. `fly apps list` shows
+what you have; make `fly.toml` agree with it.
 
 `APP_URL` is what the unsubscribe links point at. Set it to the real hostname
 before anything is sent, or those links will not resolve.
@@ -85,6 +97,18 @@ problem, and a human maintaining a list is not a control.
 | Back up the database | `fly ssh console -C "cat /data/app.db" > backup.db` |
 | Change the schedule | `RUN_INTERVAL_HOURS` in `fly.toml`, then `fly deploy` |
 | Health | `https://<app>.fly.dev/healthz` returns live counts |
+
+## The demo workspace
+
+It ships with `DEMO_MODE = "1"`: no account, no password, every page open. That
+is deliberate — anyone evaluating it should be able to open a link and use it,
+and sending is off anyway, so there is nothing to protect. In that mode the
+outbox offers "send it to me" instead of sending to a clinician: a real message
+through the real send path, to whoever asks for it, rate limited to 30 an hour
+across everyone and 3 per address so the sending domain can never be used as a
+relay.
+
+For a real tenant set `DEMO_MODE=0` and `APP_PASSWORD`, and sign-in comes back.
 
 ## What this deliberately does not have yet
 

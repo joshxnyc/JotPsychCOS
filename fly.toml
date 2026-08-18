@@ -1,6 +1,8 @@
 # Second Window — one machine, one volume.
 # Deploy:  fly launch --no-deploy  then  fly deploy
-app = "second-window"
+# Fly app names are globally unique across all of Fly, not just your account.
+# Change this to something nobody else has taken before the first deploy.
+app = "jotpsych-second-window"
 primary_region = "ewr"          # Newark: closest to the New York office
 
 [build]

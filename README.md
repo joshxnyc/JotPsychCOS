@@ -1,16 +1,25 @@
 # Second Window
 
-**A machine that watches the federal NPI registry for the practice changes that
-reopen a software decision, and writes to a dormant clinician only at that
-moment. Everyone else gets silence.**
+**Behavioural-health re-engagement.** Thousands of clinicians try a product and
+do not subscribe. Most did not say no — the timing was wrong. Second Window
+watches the federal NPI registry for the practice changes that reopen that
+decision, writes to those clinicians at that moment, checks what it wrote against
+what the company can honestly claim, and holds it for a person to approve.
 
-Built for the JotPsych Chief of Staff case study.
-Live dashboard → **https://joshxnyc.github.io/JotPsychCOS/**
-It runs itself → **[Actions](https://github.com/joshxnyc/JotPsychCOS/actions)**
+It needs three fields per clinician: **name, email, mobile.** Everything else it
+establishes itself from public federal data.
 
-- **[SETUP.md](SETUP.md)** — run it yourself: your own fork, your own keys, your own list. Nothing depends on my accounts.
-- **[RECOMMENDATION.md](RECOMMENDATION.md)** — what I chose to build and why, in one page.
-- **[PROOF.md](PROOF.md)** — one full pass end to end, including what QC rejected.
+| | |
+|---|---|
+| **Console** | the operator workspace — outbox, audience, data sources, activity ([DEPLOY.md](DEPLOY.md)) |
+| **Live report** | https://joshxnyc.github.io/JotPsychCOS/ |
+| **Scheduled runs** | [Actions](https://github.com/joshxnyc/JotPsychCOS/actions) |
+
+- **[SETUP.md](SETUP.md)** — run it on your own infrastructure, keys and audience.
+- **[DEPLOY.md](DEPLOY.md)** — deploy the console to Fly: one machine, one volume.
+- **[PLATFORM.md](PLATFORM.md)** — what still stands between this and a product.
+- **[RECOMMENDATION.md](RECOMMENDATION.md)** — why it was built this way, in one page.
+- **[PROOF.md](PROOF.md)** — one full cycle end to end, including what it refused to send.
 
 ---
 
@@ -38,14 +47,14 @@ Other commands:
 ```bash
 python -m machine.preflight --send   # prove the credentials work
 python tools/red_team.py             # push bad drafts through QC on purpose
-python -m pytest -q                  # 16 tests
+python -m pytest -q                  # 19 tests
 ```
 
 ---
 
-## Replace our data with yours
+## Point it at your audience
 
-**Drop your list at `inbox/dormant.csv`. That is the entire change.**
+**Drop your audience at `inbox/dormant.csv`. That is the entire change.**
 
 Or point it at a **Google Sheet, an Airtable view, or a CRM export** — set
 `DORMANT_URL` to any URL that returns CSV and the sheet becomes the list. See
@@ -171,7 +180,7 @@ Everything below is simulated. Everything not listed here is real.
 ## Tests
 
 ```bash
-python -m pytest -q     # 16 passed
+python -m pytest -q     # 19 passed
 ```
 
 Covering: the input contract is three columns; thresholds live in config not
