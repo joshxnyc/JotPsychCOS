@@ -1,40 +1,15 @@
-<<<<<<< HEAD
 # The human hour
 
-_Generated 2026-08-18 18:38 UTC · run 2_
+_Generated 2026-08-18 18:41 UTC · run 3_
 
 These are the only clinicians this cycle where a person beats a message.
 Each one hit the strongest class of signal **and** has a consenting peer
 in their specialty and state. Twelve minutes each. Nothing else needs you.
 
-## 1. Jordan Blake
-- **Why now:** their practice moved to another state
-- **Identity confidence:** probable (57)
-- **Peer to offer:** Tessa Nolan, LMHC — Behavior Technician in CA, 4 months on JotPsych
-- **Open with:** "Supervision notes and session notes finally live in the same place."
-- **Do not say:** that anything was looked up. You are offering an introduction, not reporting on their practice.
+_Nothing this cycle. The machine handled everything it detected._
 
 ---
 
 **Also worth your time this month:**
 - Skim `out/quarantine/` — if the machine is blocking the same thing repeatedly, the fix is a line in `config/guardrails.yaml`, not a rewrite.
 - Check the angle table on the dashboard. Retire anything with sends and no returns after two cycles.
-=======
-# Human queue
-_generated 2026-08-18 18:06 UTC - run #1_
-
-The machine handles the rest. These are the only items that need a person.
-
-## 1. Fix the top block reason
-
-- **2x** - empty subject
-- **2x** - empty body
-- **2x** - body too short (0 words)
-
-_Each of these is a one-line edit to `config/guardrails.yaml` or `config/fact_pack.md`._
-
-## 3. Refresh the roster
-
-- Add any clinician who replied positively to `inbox/advocates.csv` so the machine can quote them next cycle.
-- Drop anyone who asked to be left alone into `inbox/suppress.csv`.
->>>>>>> origin/main

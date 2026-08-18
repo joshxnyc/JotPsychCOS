@@ -1,0 +1,59 @@
+{
+  "draft": {
+    "to": "kwilliams@gmail.com",
+    "subject": "Notes that survive a payer audit",
+    "body": "K.,\n\nCase management documentation gets reviewed hard. Payers want to see medical necessity for every authorization, and if the note doesn't line up with the service code, they take the money back.\n\nJotPsych checks every note against 150+ payer rules before you close it. It flags audit risk in real time and surfaces the CPT and ICD codes that match what you documented. The goal is notes that stand up when someone asks for them.\n\nWorks with any EHR. Or replaces it entirely. No migration required\u2014up in 5 minutes.\n\nWorth another look?\n\nReply STOP and I'll take you off the list.\n\nAlex\nJotPsych",
+    "angle": "audit",
+    "claims": [
+      "JotPsych checks every note against 150+ payer rules",
+      "It flags audit risk in real time",
+      "Surfaces the CPT and ICD codes that match what you documented",
+      "Works with any EHR or replaces it entirely",
+      "No migration required",
+      "Up in 5 minutes"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The draft addresses the recipient as 'K.' using only a first initial, which creates an inappropriately casual tone for a licensed professional and suggests incomplete data rather than respectful formality.",
+      "judge: The opening line 'Case management documentation gets reviewed hard' makes a clinical/reimbursement claim about case management specifically that is not supported in the FACT PACK. The fact pack discusses behavioral health documentation broadly but does not contain specific statements about case management documentation review practices.",
+      "judge: The phrase 'they take the money back' is inappropriately casual for professional communication with a licensed clinician and borders on fear-based urgency tactics.",
+      "judge: The recipient's specialty is 'Case Manager/Care Coordinator' but JotPsych is described in the FACT PACK as serving 'PMHNPs, psychiatrists, psychologists, therapists, LCSWs and other behavioral health providers.' Case managers are not listed as a target user group, making this outreach potentially off-target.",
+      "judge: The draft implies JotPsych will help notes 'survive' and 'stand up' to audits, which comes close to an audit guarantee. While the FACT PACK allows discussion of 'audit defensibility' and that JotPsych 'flags risk,' the framing here is too close to promising an outcome."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "K. Williams",
+    "tier": "probable",
+    "score": 55,
+    "forbidden_facts": {
+      "city": "OKLAHOMA CITY",
+      "practice_name": "K. WILLIAMS"
+    },
+    "npi": "1487109062",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 email local-part matches the name"
+    ],
+    "allowed_facts": {
+      "specialty": "Case Manager/Care Coordinator",
+      "state": "OK"
+    },
+    "tier_permissions": [
+      "specialty",
+      "state"
+    ],
+    "registry_verified": true,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
