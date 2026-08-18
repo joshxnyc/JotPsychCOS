@@ -1,0 +1,55 @@
+<!doctype html><meta charset="utf-8">
+<title>Machine run report</title>
+<style>
+:root{color-scheme:light dark}
+body{font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+max-width:900px;margin:2rem auto;padding:0 1rem}
+h1{font-size:1.5rem;margin:0 0 .25rem} h2{font-size:1.05rem;margin:2rem 0 .5rem}
+.sub{opacity:.6;margin:0 0 1.5rem}
+.k{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}
+.kpi{flex:1 1 120px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);
+border-radius:10px;padding:.7rem .9rem}
+.kpi b{display:block;font-size:1.6rem;line-height:1.1}
+.kpi span{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;opacity:.6}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid
+color-mix(in srgb,currentColor 12%,transparent);vertical-align:top}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;opacity:.6}
+pre{white-space:pre-wrap;font:13px/1.5 ui-monospace,monospace;
+background:color-mix(in srgb,currentColor 5%,transparent);padding:1rem;border-radius:10px}
+</style>
+<h1>Machine run report</h1>
+<p class="sub">Run #1 &middot; last run 2026-08-18T18:05:37 UTC
+&middot; first run 2026-08-18T18:05:37 UTC</p>
+<div class="k">
+  <div class="kpi"><b>0</b><span>sent</span></div>
+  <div class="kpi"><b>3</b><span>blocked by QC</span></div>
+  <div class="kpi"><b>100%</b><span>catch rate</span></div>
+  <div class="kpi"><b>0</b><span>skipped</span></div>
+  <div class="kpi"><b>1</b><span>runs</span></div>
+</div>
+<h2>Performance by angle</h2>
+<table><tr><th>Angle<th>Sent<th>Blocked<th>Replied<th>Reply rate</tr><tr><td>peer_proof</td><td>0</td><td>3</td><td>0</td><td>0%</td></tr></table>
+<h2>What QC caught</h2>
+<table><tr><th>Reason<th>Count</tr><tr><td>empty subject</td><td>2</td></tr><tr><td>empty body</td><td>2</td></tr><tr><td>body too short (0 words)</td><td>2</td></tr><tr><td>judge: No subject line provided - draft is incomplete</td><td>2</td></tr><tr><td>judge: No email body provided - cannot evaluate compliance with fact pack, recipient record, or company standards</td><td>1</td></tr><tr><td>judge: No email body provided - cannot evaluate content against fact pack and recipient record</td><td>1</td></tr><tr><td>judge: Cannot verify compliance with requirements when draft contains no actual content to review</td><td>1</td></tr><tr><td>judge: The draft states &#x27;I saw you tried JotPsych a few weeks back&#x27; but the RECIPIENT RECORD shows stage &#x27;trial_expired&#x27; with no date information. &#x27;A few weeks back&#x27; is a fabricated timeframe not present in the record.</td><td>1</td></tr><tr><td>judge: The draft paraphrases Dr. Okoro as saying &#x27;their denial rate improved&#x27; but her actual attestation is &#x27;Our denial rate dropped once the notes stopped missing payer language.&#x27; The draft changes &#x27;dropped&#x27; to &#x27;improved&#x27; and omits the critical qualifier about what caused it (notes stopping missing payer language), making it sound closer to a reimbursement guarantee.</td><td>1</td></tr><tr><td>judge: The phrase &#x27;made it stick&#x27; implies Dr. Okoro&#x27;s team had adoption challenges they overcame, but nothing in her peer record supports this narrative. This is fabricated context.</td><td>1</td></tr></table>
+<h2>Last 25 decisions</h2>
+<table><tr><th>When<th>Action<th>Angle<th>Subject<th>QC failures</tr><tr><td>2026-08-18T18:06:29</td><td>blocked</td><td>peer_proof</td><td>Priya – quick question from another TX group practice</td><td>judge: The draft states &#x27;I saw you tried JotPsych a few weeks back&#x27; but the RECIPIENT RECO</td></tr><tr><td>2026-08-18T18:06:15</td><td>blocked</td><td>peer_proof</td><td>-</td><td>empty subject; empty body; body too short (0 words); judge: No subject line provided - dra</td></tr><tr><td>2026-08-18T18:05:56</td><td>blocked</td><td>peer_proof</td><td>-</td><td>empty subject; empty body; body too short (0 words); judge: No subject line provided - dra</td></tr></table>
+<h2>Human queue</h2>
+<pre># Human queue
+_generated 2026-08-18 18:06 UTC - run #1_
+
+The machine handles the rest. These are the only items that need a person.
+
+## 1. Fix the top block reason
+
+- **2x** - empty subject
+- **2x** - empty body
+- **2x** - body too short (0 words)
+
+_Each of these is a one-line edit to `config/guardrails.yaml` or `config/fact_pack.md`._
+
+## 3. Refresh the roster
+
+- Add any clinician who replied positively to `inbox/advocates.csv` so the machine can quote them next cycle.
+- Drop anyone who asked to be left alone into `inbox/suppress.csv`.
+</pre>
