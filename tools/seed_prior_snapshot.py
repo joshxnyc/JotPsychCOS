@@ -48,6 +48,20 @@ def main() -> int:
         snap[tid]["last_updated"] = "2026-02-01"
         touched.append((tid, field, snap[tid][field], now))
     watch.save_snapshot(snap)
+
+    # Rolling back the snapshot is only half of "a few months passed". The
+    # machine refreshes each profile on a TTL, so a record it read minutes ago
+    # is considered fresh and will not be re-read — and without a fresh read
+    # there is nothing to diff against. Mark exactly these records stale so the
+    # next run re-reads them through the ordinary code path.
+    sf = pathlib.Path("state/state.json")
+    if sf.exists():
+        st = json.loads(sf.read_text())
+        for tid, *_ in touched:
+            if tid in st.get("roster", {}):
+                st["roster"][tid]["resolved_at"] = "2026-01-01T00:00:00+00:00"
+        sf.write_text(json.dumps(st, indent=2, ensure_ascii=False))
+        print(f"  marked {len(touched)} profiles stale so the next run re-reads them")
     print(f"Rolled back {len(touched)} of {len(snap)} records to a simulated prior state:")
     for tid, field, was, now in touched:
         print(f"  {tid}  {field}: {was!r} -> (next run will see) {now!r}")

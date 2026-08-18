@@ -14,7 +14,7 @@ this clinician's software question genuinely reopened.
     decide(inputs, state)  -> a plan per clinician, each with a one-line reason
     draft(plan, state)     -> the message itself
 """
-import csv, datetime, hashlib, re
+import csv, datetime, hashlib, os, re
 from dataclasses import dataclass, field, asdict
 
 import yaml
@@ -26,6 +26,14 @@ FACTS = (config.CONFIG / "fact_pack.md").read_text()
 BRAND = (config.CONFIG / "brand.md").read_text()
 
 # What we can honestly say, mapped to the situation that makes it relevant.
+ANGLE_NAME = {
+    "no_migration": "no migration needed",
+    "denials": "payer rules and denials",
+    "audit": "notes that survive an audit",
+    "time_back": "documentation time back",
+    "scaling": "consistency across a growing team",
+}
+
 ANGLES = {
     "no_migration": "You do not have to leave the system you are on. It runs alongside it.",
     "denials":      "Claims and notes are checked against payer rules before they go out.",
@@ -49,8 +57,21 @@ ANGLE_FOR_TRIGGER = {
 
 KEEP_WARM_DAYS = 90        # how long before a quiet clinician hears from us again
 RUNS_PER_CYCLE = 20        # keep-warm is spread evenly across this many runs
+
+# At 15,000 clinicians, resolving everyone every run would mean 15,000 federal
+# API calls per pass. It would also be pointless: a practice does not move twice
+# a week. So each run re-reads the registry for the staleest slice of the list
+# and reuses the stored profile for everyone else. The whole list stays fresh on
+# a rolling basis, and the cost per run is flat no matter how long the list is.
+RESOLVE_BUDGET = int(os.getenv("RESOLVE_BUDGET_PER_RUN") or 400)
+RESOLVE_TTL_DAYS = int(os.getenv("RESOLVE_TTL_DAYS") or 14)
 MOMENT_COOLDOWN_DAYS = 30  # never two moment-messages inside a month
 HUMAN_QUEUE_MAX = 10       # the human's month, capped so it stays 1-2 hours
+
+
+TIER_WORD = {"verified": "we are confident who they are",
+             "probable": "they are likely the right person",
+             "unresolved": "we could not identify them"}
 
 
 @dataclass
@@ -74,10 +95,10 @@ def load_inputs() -> dict:
 
     Swap the real list in by dropping inbox/dormant.csv next to the sample.
     Columns are the contract: name, email, mobile. Nothing else is required."""
-    dormant = io_input.read_csv("dormant.csv") or io_input.read_csv("dormant.sample.csv")
-    peers   = io_input.read_csv("peers.csv")   or io_input.read_csv("peers.sample.csv")
-    returns = io_input.read_csv("returns.csv") or io_input.read_csv("returns.sample.csv")
-    suppress= io_input.read_csv("suppress.csv")or io_input.read_csv("suppress.sample.csv")
+    dormant  = io_input.read_source("dormant",  "DORMANT_URL")
+    peers    = io_input.read_source("peers",    "PEERS_URL")
+    returns  = io_input.read_source("returns",  "RETURNS_URL")
+    suppress = io_input.read_source("suppress", "SUPPRESS_URL")
     for r in dormant:
         r["target_id"] = _tid(r.get("email", ""))
     return {"dormant": dormant, "peers": peers, "returns": returns,
@@ -92,17 +113,45 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
     by_email_all = {r["target_id"]: r for r in inputs["dormant"]}
 
     # 1. Three fields -> a verified practice profile, or an honest refusal.
-    resolutions = {}
-    for row in inputs["dormant"]:
-        if row.get("email", "").strip().lower() in blocked:
-            continue
-        resolutions[row["target_id"]] = resolve.resolve(row, RULES)
+    #    Only the staleest slice is re-read from the registry this run; the rest
+    #    reuse the stored profile, so cost per run does not grow with the list.
+    roster = state.setdefault("roster", {})
+    live = [r for r in inputs["dormant"]
+            if r.get("email", "").strip().lower() not in blocked]
+    due = sorted(live, key=lambda r: (roster.get(r["target_id"], {}).get("resolved_at") or ""))
+    fresh_cutoff = (datetime.datetime.now(datetime.timezone.utc)
+                    - datetime.timedelta(days=RESOLVE_TTL_DAYS)).isoformat()
+
+    resolutions, profiles, reread = {}, {}, 0
+    for row in due:
+        tid = row["target_id"]
+        cached = roster.get(tid)
+        stale = not cached or (cached.get("resolved_at") or "") < fresh_cutoff
+        if stale and reread < RESOLVE_BUDGET:
+            r = resolve.resolve(row, RULES)
+            resolutions[tid] = r          # only fresh reads can reveal a change
+            profiles[tid] = r
+            reread += 1
+        elif cached:
+            profiles[tid] = {"tier": cached["tier"], "score": cached["score"],
+                             "npi": cached.get("npi", ""), "first": cached.get("first", ""),
+                             "registry": cached.get("registry", {}),
+                             "candidates": cached.get("candidates", 0),
+                             "signals": cached.get("signals", [])}
+    state["resolve_coverage"] = {
+        "list_size": len(live), "reread_this_run": reread,
+        "budget": RESOLVE_BUDGET, "ttl_days": RESOLVE_TTL_DAYS,
+        "runs_for_full_sweep": -(-len(live) // max(RESOLVE_BUDGET, 1)),
+        "profiled": len(profiles),
+    }
+    print(f"[resolve] re-read {reread} of {len(live)} from the registry "
+          f"(budget {RESOLVE_BUDGET}); {len(profiles) - reread} reused from memory")
     state.setdefault("resolution_scores", {}).update(
-        {t: {"score": r["score"], "tier": r["tier"]} for t, r in resolutions.items()})
+        {t: {"score": r["score"], "tier": r["tier"]} for t, r in profiles.items()})
 
     # The roster is what the dashboard shows as "the data": every clinician the
     # machine knows about, what it worked out about them, and how sure it is.
-    roster = state.setdefault("roster", {})
+    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
     for tid, r in resolutions.items():
         row, reg = by_email_all[tid], r.get("registry", {})
         roster[tid] = {
@@ -113,6 +162,8 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
             "city": reg.get("city", ""), "candidates": r.get("candidates", 0),
             "signals": r.get("signals", []),
             "mobile_state": r.get("mobile_state", ""),
+            "first": r.get("first", ""), "registry": r.get("registry", {}),
+            "resolved_at": now_iso,
         }
 
     # 2. What changed since last run. This is the whole readiness detector.
@@ -125,13 +176,14 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
     plans, contacted = [], state.setdefault("contacted", {})
     by_email = {r["target_id"]: r for r in inputs["dormant"]}
 
-    for tid, res in resolutions.items():
+    for tid, res in profiles.items():
         row = by_email[tid]
         hist = contacted.get(tid, {})
         days = _days_since(hist.get("last_ts"))
 
         if tid in returned:
-            plans.append(_silence(tid, row, "already came back — the machine stops here"))
+            plans.append(_silence(tid, row,
+                "They already came back. The machine stops contacting them."))
             continue
 
         # A change in the registry only means something if we are confident the
@@ -141,13 +193,15 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
                 if res["tier"] in ("verified", "probable") else None)
         if triggers.get(tid) and trig is None:
             plans.append(_silence(tid, row,
-                f"registry change seen but identity only {res['tier']} at "
-                f"{res['score']} — cannot attribute the change to this person"))
+                f"Something changed in the registry, but {TIER_WORD[res['tier']]} "
+                f"(score {res['score']}) — the change may belong to someone else "
+                f"with the same name, so we act on nothing."))
             continue
 
         if trig and days is not None and days < MOMENT_COOLDOWN_DAYS:
             plans.append(_silence(tid, row,
-                f"{trig['type']} detected but last contacted {days}d ago — inside cooldown"))
+                f"Their practice changed, but we wrote to them {days} days ago. "
+                f"Waiting out the {MOMENT_COOLDOWN_DAYS}-day cooldown before writing again."))
             continue
 
         if trig:
@@ -159,9 +213,10 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
             plans.append(Plan(
                 target_id=tid, to=row.get("email", ""), angle=angle, action=action,
                 channel=_channel(tid, state),
-                reason=(f"{trig['type']}: {trig['detail']} "
-                        f"({trig['field']} {trig['before']!r} -> {trig['after']!r}); "
-                        f"identity {res['tier']} at {res['score']}; angle {angle}"),
+                reason=(f"{trig['detail'].capitalize()} — "
+                        f"{trig['field']} changed from “{trig['before']}” to "
+                        f"“{trig['after']}”. {TIER_WORD[res['tier']].capitalize()} "
+                        f"(score {res['score']}). Angle: {ANGLE_NAME.get(angle, angle)}."),
                 context=_context(row, res, trig, peer)))
             continue
 
@@ -172,28 +227,31 @@ def decide(inputs: dict, state: dict) -> list[Plan]:
             # that is the difference between a campaign and a machine.
             if not _in_slot(tid, state):
                 plans.append(_silence(tid, row,
-                    "due for keep-warm but not in this run's slot — staggered "
-                    f"across {RUNS_PER_CYCLE} runs to avoid a blast"))
+                    f"Due a quarterly note, but their turn falls on a different run. "
+                    f"The list is spread across {RUNS_PER_CYCLE} runs so it never goes "
+                    f"out as one blast."))
                 continue
             angle = _pick_angle(state, ANGLE_FOR_TRIGGER["_keep_warm"])
             plans.append(Plan(
                 target_id=tid, to=row.get("email", ""), angle=angle, action="keep_warm",
                 channel="email",
-                reason=(f"no registry change; last contact "
-                        f"{'never' if days is None else str(days) + 'd ago'} "
-                        f">= {KEEP_WARM_DAYS}d — quarterly keep-warm; "
-                        f"identity {res['tier']} at {res['score']}; angle {angle}"),
+                reason=(f"Nothing changed in their practice, and they were "
+                        f"{'never contacted' if days is None else f'last contacted {days} days ago'}"
+                        f" — due a quarterly note. {TIER_WORD[res['tier']].capitalize()} "
+                        f"(score {res['score']}). Angle: {ANGLE_NAME.get(angle, angle)}."),
                 context=_context(row, res, None, None)))
             continue
 
         plans.append(_silence(tid, row,
-            f"no registry change and contacted {days}d ago — nothing to say"))
+            f"Nothing changed in their practice and we wrote to them {days} days "
+            f"ago. There is nothing worth saying."))
 
     # Highest-value first, and cap the human's queue so the month stays 1-2 hours.
     plans.sort(key=lambda p: (p.action != "human_call", p.action != "moment"))
     for extra in [p for p in plans if p.action == "human_call"][HUMAN_QUEUE_MAX:]:
         extra.action = "moment"
-        extra.reason += " | human queue full this cycle, downgraded to a message"
+        extra.reason += (" The human queue was already full this cycle, so this "
+                         "becomes a message instead of an introduction.")
     return plans
 
 

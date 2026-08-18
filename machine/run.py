@@ -92,6 +92,17 @@ def main(argv=None) -> int:
         else:
             print(f"[send]   FAILED {r.get('error')}")
 
+    # The queue is state, not just a markdown file, so the dashboard can show
+    # what needs a person without re-deriving it.
+    state["queue"] = [{
+        "target_id": p.target_id, "name": p.context.get("name", ""),
+        "email": p.to, "tier": p.context.get("tier", ""), "score": p.context.get("score", 0),
+        "why": (p.context.get("trigger") or {}).get("detail", ""),
+        "peer": (p.context.get("peer") or {}).get("name", ""),
+        "peer_line": (p.context.get("peer") or {}).get("attestation", ""),
+        "peer_role": " — ".join(x for x in ((p.context.get("peer") or {}).get("specialty", ""),
+                                            (p.context.get("peer") or {}).get("state", "")) if x),
+    } for p in human_queue]
     report.write_human_queue(human_queue, state)
     report.build(state)
     memory.save(state)

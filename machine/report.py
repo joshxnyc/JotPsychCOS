@@ -14,7 +14,9 @@ colour-vision deficiency rather than chosen by eye.
 import html, json, shutil, datetime, collections, pathlib
 from . import config, ledger, memory, watch
 
-REPO = "https://github.com/joshxnyc/JotPsychCOS"
+# Portable: in Actions this comes from the runner, so a fork points at itself.
+REPO = "https://github.com/" + (__import__("os").getenv("GITHUB_REPOSITORY")
+                                or "joshxnyc/JotPsychCOS")
 BLOB = REPO + "/blob/main/"
 
 # Validated categorical series (all six checks pass on a light surface).
@@ -52,6 +54,33 @@ CHECKS = {
     "too long": ("Malformed", "The drafter returned nothing usable, or the draft "
         "is the wrong length for a clinician to read."),
 }
+
+
+# Plain English. The machine's internal names are not the reader's vocabulary.
+ACTION = {
+    "sent":        ("Message sent", "A draft passed every check and left the program as email."),
+    "blocked":     ("Stopped by QC", "A draft was written but a check refused to let it go out. It is in quarantine, not in an inbox."),
+    "silence":     ("Left alone", "The machine deliberately said nothing this cycle — nothing had changed, or it was not confident enough to write."),
+    "human_call":  ("Needs a person", "The strongest kind of signal, plus a peer who fits. A person should make this introduction."),
+    "deferred":    ("Waiting for next run", "Correct to write to, but this run's budget was already spent. First in line next time."),
+    "skipped":     ("Skipped", "No usable email address."),
+    "red_team_blocked": ("Red team", "A deliberately bad draft pushed through the same checks on purpose."),
+    "keep_warm":   ("Keep warm", "No change in their practice, but they are due a quarterly note."),
+    "moment":      ("Their moment", "Something in their practice changed. This is the time to write."),
+}
+TIER = {
+    "verified":   ("Confident", "We are confident this is the right clinician. The message may name their specialty, state and city."),
+    "probable":   ("Likely", "Probably the right clinician. The message may name specialty and state — never a city or practice name."),
+    "unresolved": ("Not identified", "We could not pin down who this is. Nothing about them goes in a message, and registry changes are ignored."),
+}
+
+
+def label(kind: dict, key: str) -> str:
+    return kind.get(key, (key.replace("_", " ").title(), ""))[0]
+
+
+def why(kind: dict, key: str) -> str:
+    return kind.get(key, ("", ""))[1]
 
 
 def _e(x) -> str:
@@ -131,6 +160,7 @@ def build(state: dict) -> None:
     page = page.replace("%%RUNS%%", str(m["runs"]))
     page = page.replace("%%REPO%%", REPO)
     page = page.replace("%%OVERVIEW%%", _overview(m, state, recs))
+    page = page.replace("%%QUEUE%%", _queue(state, recs))
     page = page.replace("%%PEOPLE%%", _people(state, recs))
     page = page.replace("%%RUNSTAB%%", _runs(recs, state))
     page = page.replace("%%QUALITY%%", _quality(recs, m))
@@ -140,6 +170,7 @@ def build(state: dict) -> None:
 
 # ---------------------------------------------------------------- overview --
 def _overview(m, state, recs) -> str:
+    cov = state.get("resolve_coverage", {})
     kpis = "".join([
         _kpi("Stayed silent", f"{m['silence_rate']:.0f}%",
              f"{m['silent']} of {m['considered']} decisions",
@@ -212,16 +243,39 @@ def _overview(m, state, recs) -> str:
 
 <div class="kpis">{kpis}</div>
 
+<section class="card">
+  <div class="card-h"><h2>What the words mean</h2>
+    <span class="info" data-tip="Every clinician gets exactly one status per run.">?</span></div>
+  <div class="grid3">
+    {"".join(f'<div class="check"><b>{_e(v[0])}</b><p>{_e(v[1])}</p></div>' for k, v in ACTION.items() if k in ("sent", "blocked", "silence", "human_call", "deferred", "keep_warm"))}
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-h"><h2>Built for the whole list, not the sample</h2>
+    <span class="info" data-tip="Resolving every clinician every run would mean one federal API call per person per run. A practice does not move twice a week, so each run re-reads only the staleest slice and reuses the stored profile for everyone else. Cost per run is flat no matter how long the list is.">?</span></div>
+  <div class="scalegrid">
+    <div><b>{cov.get('list_size', 0):,}</b><span>clinicians on the list</span></div>
+    <div><b>{cov.get('reread_this_run', 0):,}</b><span>re-read from the registry this run</span></div>
+    <div><b>every {cov.get('ttl_days', 14)} days</b><span>each profile is refreshed</span></div>
+    <div><b>{cov.get('runs_for_full_sweep', 0):,} runs</b><span>for a full sweep of the list</span></div>
+  </div>
+  <p class="note" style="margin-top:14px;margin-bottom:0">Set <span class="mono">RESOLVE_BUDGET_PER_RUN</span>
+  to trade freshness against cost. At production scale the next step is the monthly NPPES
+  bulk file instead of per-clinician lookups — one download and a local join rather than
+  15,000 requests.</p>
+</section>
+
 <div class="two">
   <section class="card">
     <div class="card-h"><h2>What it decided</h2>
       <span class="info" data-tip="Every clinician gets exactly one decision per run, and every decision is logged with a reason — including the silent ones. That is what makes the silence rate a measurement rather than a claim.">?</span></div>
     {_stacked(dec, list(SERIES), SERIES, sum(dec.values()))}
     <dl class="defs">
-      <dt style="color:{SERIES['silence']}">silence</dt><dd>Nothing to say, or not confident enough to say it.</dd>
-      <dt style="color:{SERIES['keep_warm']}">keep warm</dt><dd>A quarterly touch, staggered so it never arrives as a blast.</dd>
-      <dt style="color:{SERIES['moment']}">moment</dt><dd>Their practice changed. Write now.</dd>
-      <dt style="color:{SERIES['human_call']}">human call</dt><dd>Strongest signal plus a matching peer. A person should do this one.</dd>
+      <dt style="color:{SERIES['silence']}">Left alone</dt><dd>Nothing had changed, or the machine was not confident enough about who they are to say anything.</dd>
+      <dt style="color:{SERIES['keep_warm']}">Keep warm</dt><dd>No change, but they are due a quarterly note. Spread across the cycle so it never arrives as one blast.</dd>
+      <dt style="color:{SERIES['moment']}">Their moment</dt><dd>Their practice changed in the registry. This is the time to write.</dd>
+      <dt style="color:{SERIES['human_call']}">Needs a person</dt><dd>Strongest signal plus a peer who fits. A human makes this introduction.</dd>
     </dl>
   </section>
   <section class="card">
@@ -233,55 +287,136 @@ def _overview(m, state, recs) -> str:
 
 
 # --------------------------------------------------------------- clinicians --
+EMBED_MAX = 1500      # keep the page fast; the full roster is in state/state.json
+
+
 def _people(state, recs) -> str:
     latest = {}
     for r in recs:
-        if r.get("target_id") and r.get("action") in ("sent", "blocked", "silence",
-                                                      "human_call", "deferred", "skipped"):
+        if r.get("target_id") and r.get("action") in ACTION:
             latest[r["target_id"]] = r
     roster = state.get("roster", {})
+
+    # Order by what an operator needs to see: anything acted on, then the
+    # confident matches, then everyone else.
+    rank = {"human_call": 0, "sent": 1, "blocked": 2, "deferred": 3}
+    def key(kv):
+        tid, p = kv
+        a = latest.get(tid, {}).get("action", "")
+        return (rank.get(a, 9), -p.get("score", 0))
+
     rows = []
-    for tid, p in sorted(roster.items(), key=lambda kv: -kv[1]["score"]):
+    for tid, p in sorted(roster.items(), key=key)[:EMBED_MAX]:
         r = latest.get(tid, {})
-        act = r.get("action", "—")
-        practice = " · ".join(x for x in (p.get("specialty"), p.get("city"),
-                                          p.get("state_code")) if x) or "—"
-        sig = "<br>".join(_e(s) for s in p.get("signals", [])) or "—"
-        rows.append(
-            f'<tr data-tier="{_e(p["tier"])}" data-act="{_e(act)}" '
-            f'data-q="{_e((p["name"] + " " + p["email"] + " " + practice).lower())}">'
-            f'<td><b>{_e(p["name"])}</b><div class="sub">{_e(p["email"])}</div>'
-            f'<div class="sub">{_e(p["mobile"]) or "—"}</div></td>'
-            f'<td><span class="pill t-{_e(p["tier"])}">{_e(p["tier"])}</span>'
-            f'<div class="sub">score {p["score"]} · {p["candidates"]} candidate(s)</div></td>'
-            f'<td>{_e(practice)}<div class="sub mono">{_e(p["npi"]) or "no NPI matched"}</div></td>'
-            f'<td class="tipcell" data-tip="{sig.replace("<br>", " | ")}">'
-            f'<span class="pill a-{_e(act)}">{_e(act)}</span></td>'
-            f'<td class="reason">{_e(r.get("reason", "—"))}</td></tr>')
+        rows.append({
+            "n": p.get("name", ""), "e": p.get("email", ""), "m": p.get("mobile", ""),
+            "t": p.get("tier", ""), "s": p.get("score", 0), "c": p.get("candidates", 0),
+            "sp": p.get("specialty", ""), "ci": p.get("city", ""),
+            "st": p.get("state_code", ""), "npi": p.get("npi", ""),
+            "a": r.get("action", ""), "w": (r.get("reason") or "")[:240],
+            "sig": p.get("signals", [])[:6],
+        })
+    payload = json.dumps(rows, separators=(",", ":"))
+    lab = json.dumps({k: [v[0], v[1]] for k, v in ACTION.items()})
+    tiers = json.dumps({k: [v[0], v[1]] for k, v in TIER.items()})
+    total = len(roster)
+    shown = len(rows)
+    cap = ("" if shown >= total else
+           f'<p class="warnbox">Showing the {shown:,} most relevant of <b>{total:,}</b> '
+           f'clinicians so the page stays fast. Everyone the machine knows is in '
+           f'<a href="{BLOB}state/state.json" target="_blank">state/state.json</a>; '
+           f'the source list is whatever you put in <span class="mono">inbox/dormant.csv</span>.</p>')
+
     return f"""
 <section class="card">
-  <div class="card-h"><h2>The list</h2>
-    <span class="info" data-tip="This is the entire database. Every clinician the machine has ever read, what it worked out about them from three fields, and the decision it most recently made. Replace inbox/dormant.csv and this table becomes yours.">?</span></div>
-  <p class="note"><b>{len(roster)} clinicians</b>, three fields each — name, email, mobile.
-  Rows sharing an email address are the same person and collapse into one; anyone on the
-  suppression list never appears at all.
-  Everything in the Practice column was derived from those three fields by matching
-  the live federal NPI registry. Hover a decision to see the signals behind the match.</p>
+  <div class="card-h"><h2>Everyone the machine knows</h2>
+    <span class="info" data-tip="This is the database. Every clinician read from your list, what three fields became after matching the federal NPI registry, and the decision most recently made about them.">?</span></div>
+  <p class="note"><b>{total:,} clinicians</b>, three fields each — name, email, mobile.
+  Everything under <b>Practice</b> was worked out from those three fields alone. Rows sharing
+  an email address are the same person and collapse into one; anyone on the suppression list
+  never appears.</p>
+  {cap}
   <div class="controls">
-    <input id="q" type="search" placeholder="Search name, email, specialty…" oninput="flt()">
-    <select id="tier" onchange="flt()">
-      <option value="">All confidence</option><option>verified</option>
-      <option>probable</option><option>unresolved</option></select>
-    <select id="act" onchange="flt()">
-      <option value="">All decisions</option><option>sent</option><option>blocked</option>
-      <option>silence</option><option>human_call</option></select>
+    <input id="q" type="search" placeholder="Search name, email, specialty, city…">
+    <select id="tier"><option value="">Any confidence</option>
+      <option value="verified">Confident</option><option value="probable">Likely</option>
+      <option value="unresolved">Not identified</option></select>
+    <select id="act"><option value="">Any status</option>
+      <option value="human_call">Needs a person</option><option value="sent">Message sent</option>
+      <option value="blocked">Stopped by QC</option><option value="deferred">Waiting for next run</option>
+      <option value="silence">Left alone</option></select>
     <span id="count" class="count"></span>
   </div>
   <div class="scroll"><table id="people">
-    <thead><tr><th>Clinician</th><th>Identity match</th><th>Practice (derived)</th>
-      <th>Latest decision</th><th>Why</th></tr></thead>
-    <tbody>{"".join(rows) or '<tr><td colspan=5 class="empty">No clinicians read yet.</td></tr>'}</tbody>
+    <thead><tr><th>Clinician</th><th>How sure we are</th><th>Practice, worked out from the three fields</th>
+      <th>Status</th><th>Why</th></tr></thead>
+    <tbody id="pbody"></tbody>
   </table></div>
+  <div class="pager"><button id="prev" class="pgbtn">Previous</button>
+    <span id="pginfo" class="count"></span>
+    <button id="next" class="pgbtn">Next</button></div>
+</section>
+<script id="roster" type="application/json">{payload}</script>
+<script id="labels" type="application/json">{lab}</script>
+<script id="tiers" type="application/json">{tiers}</script>"""
+
+
+# ------------------------------------------------------------- action queue --
+def _queue(state, recs) -> str:
+    q = state.get("queue", [])
+    cards = "".join(f"""
+    <div class="qcard">
+      <div class="qhead"><b>{_e(x['name'] or 'Unknown')}</b>
+        <span class="pill p-human">Needs a person</span></div>
+      <div class="qgrid">
+        <span>Why now</span><b>{_e(x['why'] or 'strongest signal')}</b>
+        <span>Confidence</span><b>{_e(label(TIER, x['tier']))} · score {x['score']}</b>
+        <span>Reach them at</span><b class="mono">{_e(x['email'])}</b>
+        <span>Peer to offer</span><b>{_e(x['peer'] or '—')}{(' · ' + _e(x['peer_role'])) if x['peer_role'] else ''}</b>
+      </div>
+      <p class="qline">Open with: &ldquo;{_e(x['peer_line'])}&rdquo;</p>
+      <p class="qwarn">Do not say anything was looked up. You are offering an
+      introduction, not reporting on their practice.</p>
+    </div>""" for x in q)
+
+    sent = [r for r in recs if r.get("action") == "sent"][-12:][::-1]
+    srows = "".join(
+        f'<tr><td class="mono">{_e((r.get("ts") or "")[:16].replace("T", " "))}</td>'
+        f'<td>{_e(r.get("to"))}</td><td><b>{_e(r.get("subject"))}</b></td>'
+        f'<td>{_e(label(ACTION, r.get("plan_action", "")))}</td>'
+        f'<td class="reason">{_e((r.get("reason") or "")[:150])}</td></tr>'
+        for r in sent) or '<tr><td colspan=5 class="empty">Nothing sent yet.</td></tr>'
+
+    blocked = len([r for r in recs if r.get("action") == "blocked"])
+    deferred = len([r for r in recs if r.get("action") == "deferred"])
+    return f"""
+<section class="card">
+  <div class="card-h"><h2>Your work this cycle</h2>
+    <span class="info" data-tip="Everything else the machine handled itself. This is the only list that needs a person, and it is capped at ten so the month stays one to two hours.">?</span></div>
+  <p class="note">{len(q)} clinician(s) — about {len(q) * 12} minutes. Each hit the strongest
+  class of signal <b>and</b> has a consenting peer in their specialty and state. A machine
+  cannot introduce two clinicians to each other; that is the whole job.</p>
+  {cards or '<p class="empty">Nothing needs you this cycle. The machine handled everything it detected.</p>'}
+</section>
+
+<div class="two">
+  <section class="card"><div class="card-h"><h2>Waiting on the machine</h2></div>
+    <div class="qstat"><b>{deferred}</b><span>correct to write to, but this run's budget was spent — first in line next run</span></div>
+    <div class="qstat"><b>{blocked}</b><span>drafts stopped by quality control and quarantined, never sent</span></div>
+  </section>
+  <section class="card"><div class="card-h"><h2>Nothing else needs you</h2></div>
+    <p class="note">The machine does not ask to be supervised. If you want to change
+    what it says or when it says it, edit
+    <a href="{BLOB}config/guardrails.yaml" target="_blank">guardrails.yaml</a> or
+    <a href="{BLOB}config/brand.md" target="_blank">brand.md</a> — no code, no redeploy.</p>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-h"><h2>What it sent, most recent first</h2></div>
+  <div class="scroll"><table>
+    <thead><tr><th>When</th><th>To</th><th>Subject</th><th>Because</th><th>Reason logged</th></tr></thead>
+    <tbody>{srows}</tbody></table></div>
 </section>"""
 
 
@@ -565,8 +700,32 @@ tr:last-child td{border-bottom:0}
 .empty{color:var(--ink-3);padding:14px 12px;font-size:13px}
 
 /* pills + chips */
-.pill{display:inline-block;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:999px;
- border:1px solid var(--line);white-space:nowrap;text-transform:lowercase}
+.pill{display:inline-block;font-size:11.5px;font-weight:650;padding:3px 10px;border-radius:999px;
+ border:1px solid var(--line);white-space:nowrap}
+.p-human{color:var(--warn);border-color:#F5D9B0;background:#FFF8EF}
+.warnbox{background:#FFF8EF;border:1px solid #F5D9B0;border-radius:9px;padding:10px 13px;
+ font-size:13px;color:#7A4A08;margin-bottom:14px}
+.qcard{border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:12px;background:#FCFDFE}
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.qhead b{font-family:Archivo,sans-serif;font-size:16px}
+.qgrid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13.5px}
+.qgrid span{color:var(--ink-3)}
+.qline{margin-top:11px;padding:9px 12px;background:#EFFAF8;border-left:3px solid #0B7A6E;
+ border-radius:0 7px 7px 0;font-size:13.5px;font-style:italic}
+.qwarn{margin-top:8px;font-size:12.5px;color:var(--warn)}
+.qstat{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.qstat:last-child{border-bottom:0}
+.qstat b{font-family:Archivo,sans-serif;font-size:24px;min-width:44px}
+.qstat span{color:var(--ink-2);font-size:13px}
+.scalegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:14px}
+.scalegrid div{border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;background:#FBFCFD}
+.scalegrid b{display:block;font-family:Archivo,sans-serif;font-size:21px;margin-bottom:2px}
+.scalegrid span{font-size:12.5px;color:var(--ink-3)}
+.pager{display:flex;align-items:center;gap:12px;margin-top:14px}
+.pgbtn{font:inherit;font-size:13px;font-weight:550;padding:7px 14px;border:1px solid var(--line);
+ border-radius:8px;background:var(--surface);cursor:pointer;color:var(--ink)}
+.pgbtn:hover:not(:disabled){border-color:var(--brand-2);color:var(--brand-2)}
+.pgbtn:disabled{opacity:.4;cursor:default}
 .t-verified{color:#0B7A6E;border-color:#A8DED6;background:#EFFAF8}
 .t-probable{color:#0E7490;border-color:#B6E0EA;background:#F1FAFC}
 .t-unresolved{color:var(--ink-3);background:#F7F8FA}
@@ -632,6 +791,7 @@ _TEMPLATE = """<!doctype html><html lang="en"><head>
 
 <nav class="tabs" role="tablist">
   <button class="tab" role="tab" aria-selected="true"  data-p="overview">Overview</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="queue">Your queue</button>
   <button class="tab" role="tab" aria-selected="false" data-p="people">Clinicians</button>
   <button class="tab" role="tab" aria-selected="false" data-p="runs">Runs &amp; changes</button>
   <button class="tab" role="tab" aria-selected="false" data-p="quality">Quality control</button>
@@ -641,6 +801,7 @@ _TEMPLATE = """<!doctype html><html lang="en"><head>
 
 <main>
   <div class="panel" id="overview">%%OVERVIEW%%</div>
+  <div class="panel" id="queue" hidden>%%QUEUE%%</div>
   <div class="panel" id="people" hidden>%%PEOPLE%%</div>
   <div class="panel" id="runs" hidden>%%RUNSTAB%%</div>
   <div class="panel" id="quality" hidden>%%QUALITY%%</div>
@@ -667,16 +828,57 @@ if(location.hash){
   var t=document.querySelector('.tab[data-p="'+location.hash.slice(1)+'"]');
   if(t) t.click();
 }
+var ROSTER=[],LAB={},TIERS={},PAGE=0,PER=50,VIEW=[];
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function build(){
+  var el=document.getElementById('roster'); if(!el) return;
+  ROSTER=JSON.parse(el.textContent);
+  LAB=JSON.parse(document.getElementById('labels').textContent);
+  TIERS=JSON.parse(document.getElementById('tiers').textContent);
+  ['q','tier','act'].forEach(function(id){
+    var e=document.getElementById(id); if(e) e.oninput=e.onchange=function(){PAGE=0;flt();};
+  });
+  document.getElementById('prev').onclick=function(){if(PAGE>0){PAGE--;draw();}};
+  document.getElementById('next').onclick=function(){
+    if((PAGE+1)*PER<VIEW.length){PAGE++;draw();}};
+  flt();
+}
 function flt(){
   var q=(document.getElementById('q').value||'').toLowerCase();
-  var tier=document.getElementById('tier').value, act=document.getElementById('act').value, n=0;
-  document.querySelectorAll('#people tbody tr').forEach(function(r){
-    var ok=(!q||(r.dataset.q||'').indexOf(q)>-1)&&(!tier||r.dataset.tier===tier)&&(!act||r.dataset.act===act);
-    r.style.display=ok?'':'none'; if(ok)n++;
+  var tier=document.getElementById('tier').value, act=document.getElementById('act').value;
+  VIEW=ROSTER.filter(function(r){
+    if(tier&&r.t!==tier) return false;
+    if(act&&r.a!==act) return false;
+    if(!q) return true;
+    return (r.n+' '+r.e+' '+r.sp+' '+r.ci+' '+r.st).toLowerCase().indexOf(q)>-1;
   });
-  document.getElementById('count').textContent=n+' shown';
+  draw();
 }
-if(document.getElementById('people')) flt();
+function draw(){
+  var body=document.getElementById('pbody'), out='';
+  var slice=VIEW.slice(PAGE*PER,(PAGE+1)*PER);
+  slice.forEach(function(r){
+    var tl=TIERS[r.t]||[r.t,''], al=LAB[r.a]||[r.a||'—',''];
+    var prac=[r.sp,r.ci,r.st].filter(Boolean).join(' · ')||'—';
+    out+='<tr><td><b>'+esc(r.n)+'</b><div class=sub>'+esc(r.e)+'</div>'
+      +'<div class=sub>'+esc(r.m||'no mobile')+'</div></td>'
+      +'<td><span class="pill t-'+esc(r.t)+'" data-tip="'+esc(tl[1])+'">'+esc(tl[0])+'</span>'
+      +'<div class=sub data-tip="'+esc(r.sig.join(' | ')||'no matching signals')+'">score '
+      +r.s+' · '+(r.c===1?'1 person shares this name':r.c+' people share this name')+'</div></td>'
+      +'<td>'+esc(prac)+'<div class="sub mono">'+esc(r.npi||'no registry match')+'</div></td>'
+      +'<td><span class="pill a-'+esc(r.a)+'" data-tip="'+esc(al[1])+'">'+esc(al[0])+'</span></td>'
+      +'<td class=reason>'+esc(r.w||'—')+'</td></tr>';
+  });
+  body.innerHTML=out||'<tr><td colspan=5 class=empty>Nothing matches those filters.</td></tr>';
+  document.getElementById('count').textContent=VIEW.length.toLocaleString()+' of '
+    +ROSTER.length.toLocaleString()+' shown';
+  var pages=Math.max(1,Math.ceil(VIEW.length/PER));
+  document.getElementById('pginfo').textContent='Page '+(PAGE+1)+' of '+pages;
+  document.getElementById('prev').disabled=PAGE===0;
+  document.getElementById('next').disabled=(PAGE+1)>=pages;
+}
+build();
 </script>
 </body></html>"""
 

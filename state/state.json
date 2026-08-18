@@ -1,7 +1,7 @@
 {
-  "run_count": 7,
-  "first_run": "2026-08-18T18:57:36.570746+00:00",
-  "last_run": "2026-08-18T19:08:11.959852+00:00",
+  "run_count": 3,
+  "first_run": "2026-08-18T19:22:03.555947+00:00",
+  "last_run": "2026-08-18T19:23:21.697887+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -15,6 +15,1106 @@
     }
   },
   "notes": [],
+  "roster": {
+    "522f104b8680": {
+      "name": "dr. michael chen",
+      "email": "M.CHEN@HARBORPOINTBH.COM",
+      "mobile": "(212) 555-0142",
+      "tier": "unresolved",
+      "score": 33,
+      "npi": "1992448997",
+      "specialty": "Psychiatry & Neurology, Psychiatry",
+      "state_code": "TX",
+      "city": "TYLER",
+      "candidates": 5,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "-32 5 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "NY",
+      "first": "Michael",
+      "registry": {
+        "npi": "1992448997",
+        "entity": "NPI-1",
+        "name": "MICHAEL CHEN",
+        "credential": "MD",
+        "taxonomy": "Psychiatry & Neurology, Psychiatry",
+        "specialty_code": "2084P0800X",
+        "state": "TX",
+        "city": "TYLER",
+        "phone": "903-877-7777",
+        "address_1": "11937 US HIGHWAY 271",
+        "postal_code": "75708",
+        "enumerated": "2022-04-18",
+        "last_updated": "2026-06-15",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.739639+00:00"
+    },
+    "fe700ae60016": {
+      "name": "Maria Garcia",
+      "email": "maria.garcia@riverbendcounseling.com",
+      "mobile": "+1 909 555 0188",
+      "tier": "probable",
+      "score": 50,
+      "npi": "1508521725",
+      "specialty": "Behavior Analyst",
+      "state_code": "CA",
+      "city": "BAKERSFIELD",
+      "candidates": 18,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 18 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Maria",
+      "registry": {
+        "npi": "1508521725",
+        "entity": "NPI-1",
+        "name": "MARIA GARCIA",
+        "credential": "",
+        "taxonomy": "Behavior Analyst",
+        "specialty_code": "103K00000X",
+        "state": "CA",
+        "city": "BAKERSFIELD",
+        "phone": "661-258-3240",
+        "address_1": "5060 CALIFORNIA AVE STE 610",
+        "postal_code": "93309",
+        "enumerated": "2021-11-02",
+        "last_updated": "2021-11-02",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "19ef84aecb5c": {
+      "name": "Lisa Johnson",
+      "email": "ljohnson@elderscrossingclinical.com",
+      "mobile": "+1 410 555 0119",
+      "tier": "unresolved",
+      "score": 25,
+      "npi": "1770853798",
+      "specialty": "Social Worker, Clinical",
+      "state_code": "NJ",
+      "city": "BELLEVILLE",
+      "candidates": 16,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "-40 16 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "MD",
+      "first": "Lisa",
+      "registry": {
+        "npi": "1770853798",
+        "entity": "NPI-1",
+        "name": "LISA JOHNSON",
+        "credential": "L.C.S.W.",
+        "taxonomy": "Social Worker, Clinical",
+        "specialty_code": "1041C0700X",
+        "state": "NJ",
+        "city": "BELLEVILLE",
+        "phone": "973-450-3100",
+        "address_1": "570 BELLEVILLE AVE",
+        "postal_code": "07109",
+        "enumerated": "2012-01-06",
+        "last_updated": "2012-01-06",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.739639+00:00"
+    },
+    "55319365c2df": {
+      "name": "Sarah Goldberg",
+      "email": "sgoldberg@westbankpsychotherapy.com",
+      "mobile": "+1 201 555 0173",
+      "tier": "unresolved",
+      "score": 25,
+      "npi": "1538551189",
+      "specialty": "Social Worker, Clinical",
+      "state_code": "IL",
+      "city": "CHICAGO",
+      "candidates": 7,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "-40 7 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "NJ",
+      "first": "Sarah",
+      "registry": {
+        "npi": "1538551189",
+        "entity": "NPI-1",
+        "name": "SARAH GOLDBERG",
+        "credential": "L.C.S.W.",
+        "taxonomy": "Social Worker, Clinical",
+        "specialty_code": "1041C0700X",
+        "state": "IL",
+        "city": "CHICAGO",
+        "phone": "773-791-9571",
+        "address_1": "122 S MICHIGAN AVE # 1305B",
+        "postal_code": "60603",
+        "enumerated": "2015-02-19",
+        "last_updated": "2015-02-19",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "af4a8f4ddbb3": {
+      "name": "Daniel Rivera",
+      "email": "d.rivera@canyonoaksbehavioral.com",
+      "mobile": "+1 818 555 0164",
+      "tier": "probable",
+      "score": 50,
+      "npi": "1467913244",
+      "specialty": "Behavior Analyst",
+      "state_code": "CA",
+      "city": "GARDEN GROVE",
+      "candidates": 14,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 14 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Daniel",
+      "registry": {
+        "npi": "1467913244",
+        "entity": "NPI-1",
+        "name": "DANIEL RIVERA",
+        "credential": "MS, BCBA",
+        "taxonomy": "Behavior Analyst",
+        "specialty_code": "103K00000X",
+        "state": "CA",
+        "city": "GARDEN GROVE",
+        "phone": "909-952-2860",
+        "address_1": "12630 BROOKHURST ST STE D",
+        "postal_code": "92840",
+        "enumerated": "2019-03-26",
+        "last_updated": "2019-03-26",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "e0f36a8ceef4": {
+      "name": "Marcus Delgado",
+      "email": "marcus@delgadobehavioral.com",
+      "mobile": "+1 305 555 0155",
+      "tier": "verified",
+      "score": 72,
+      "npi": "1760210579",
+      "specialty": "Behavior Technician",
+      "state_code": "FL",
+      "city": "MIAMI",
+      "candidates": 2,
+      "signals": [
+        "+20 surname matches",
+        "+15 behavioral-health taxonomy",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record",
+        "+10 mobile area code agrees with practice state (FL)",
+        "-8 2 plausible candidates, not one"
+      ],
+      "mobile_state": "FL",
+      "first": "Marcus",
+      "registry": {
+        "npi": "1760210579",
+        "entity": "NPI-1",
+        "name": "MARCO DELGADO",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "FL",
+        "city": "MIAMI",
+        "phone": "786-362-2869",
+        "address_1": "4689 NW 9TH ST APT 103",
+        "postal_code": "33126",
+        "enumerated": "2024-07-23",
+        "last_updated": "2024-07-23",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "15c5c1861afb": {
+      "name": "Jennifer Nguyen",
+      "email": "jnguyen@orangegrovetherapy.com",
+      "mobile": "+1 714 555 0131",
+      "tier": "probable",
+      "score": 50,
+      "npi": "1912467457",
+      "specialty": "Behavior Technician",
+      "state_code": "CA",
+      "city": "GARDENA",
+      "candidates": 9,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 9 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Jennifer",
+      "registry": {
+        "npi": "1912467457",
+        "entity": "NPI-1",
+        "name": "JENNIFER NGUYEN",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "CA",
+        "city": "GARDENA",
+        "phone": "800-249-1266",
+        "address_1": "1508 W ARTESIA SQ APT B",
+        "postal_code": "90248",
+        "enumerated": "2019-03-21",
+        "last_updated": "2019-03-21",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.739639+00:00"
+    },
+    "3a8f99227848": {
+      "name": "David Cohen",
+      "email": "dcohen@cohenpsychiatry.com",
+      "mobile": "+1 617 555 0127",
+      "tier": "verified",
+      "score": 75,
+      "npi": "1033694476",
+      "specialty": "Counselor, School",
+      "state_code": "MA",
+      "city": "WESTBOROUGH",
+      "candidates": 6,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record",
+        "+10 mobile area code agrees with practice state (MA)",
+        "-40 6 plausible candidates, not one"
+      ],
+      "mobile_state": "MA",
+      "first": "David",
+      "registry": {
+        "npi": "1033694476",
+        "entity": "NPI-1",
+        "name": "DAVID COHEN",
+        "credential": "",
+        "taxonomy": "Counselor, School",
+        "specialty_code": "101YS0200X",
+        "state": "MA",
+        "city": "WESTBOROUGH",
+        "phone": "508-836-7780",
+        "address_1": "6 OLDE HICKORY PATH",
+        "postal_code": "01581",
+        "enumerated": "2018-10-02",
+        "last_updated": "2024-01-29",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.739639+00:00"
+    },
+    "ab4049cd39fc": {
+      "name": "Michael Chen",
+      "email": "michaelchen88@gmail.com",
+      "mobile": "+1 646 555 0102",
+      "tier": "unresolved",
+      "score": 23,
+      "npi": "1992448997",
+      "specialty": "Psychiatry & Neurology, Psychiatry",
+      "state_code": "TX",
+      "city": "TYLER",
+      "candidates": 5,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "-32 5 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "NY",
+      "first": "Michael",
+      "registry": {
+        "npi": "1992448997",
+        "entity": "NPI-1",
+        "name": "MICHAEL CHEN",
+        "credential": "MD",
+        "taxonomy": "Psychiatry & Neurology, Psychiatry",
+        "specialty_code": "2084P0800X",
+        "state": "TX",
+        "city": "TYLER",
+        "phone": "903-877-7777",
+        "address_1": "11937 US HIGHWAY 271",
+        "postal_code": "75708",
+        "enumerated": "2022-04-18",
+        "last_updated": "2026-06-15",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "528c6335794a": {
+      "name": "Maria Garcia",
+      "email": "mgarcia.lcsw@gmail.com",
+      "mobile": "+1 619 555 0177",
+      "tier": "unresolved",
+      "score": 25,
+      "npi": "1508521725",
+      "specialty": "Behavior Analyst",
+      "state_code": "CA",
+      "city": "BAKERSFIELD",
+      "candidates": 18,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 18 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Maria",
+      "registry": {
+        "npi": "1508521725",
+        "entity": "NPI-1",
+        "name": "MARIA GARCIA",
+        "credential": "",
+        "taxonomy": "Behavior Analyst",
+        "specialty_code": "103K00000X",
+        "state": "CA",
+        "city": "BAKERSFIELD",
+        "phone": "661-258-3240",
+        "address_1": "5060 CALIFORNIA AVE STE 610",
+        "postal_code": "93309",
+        "enumerated": "2021-11-02",
+        "last_updated": "2021-11-02",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "d0acc777b443": {
+      "name": "Daniel Rivera",
+      "email": "drivera1982@hotmail.com",
+      "mobile": "+1 213 555 0144",
+      "tier": "probable",
+      "score": 40,
+      "npi": "1467913244",
+      "specialty": "Behavior Analyst",
+      "state_code": "CA",
+      "city": "GARDEN GROVE",
+      "candidates": 14,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 14 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Daniel",
+      "registry": {
+        "npi": "1467913244",
+        "entity": "NPI-1",
+        "name": "DANIEL RIVERA",
+        "credential": "MS, BCBA",
+        "taxonomy": "Behavior Analyst",
+        "specialty_code": "103K00000X",
+        "state": "CA",
+        "city": "GARDEN GROVE",
+        "phone": "909-952-2860",
+        "address_1": "12630 BROOKHURST ST STE D",
+        "postal_code": "92840",
+        "enumerated": "2019-03-26",
+        "last_updated": "2019-03-26",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "d1e9aa8166af": {
+      "name": "Sarah Goldberg",
+      "email": "sarahgoldberg@icloud.com",
+      "mobile": "+1 973 555 0166",
+      "tier": "unresolved",
+      "score": 15,
+      "npi": "1538551189",
+      "specialty": "Social Worker, Clinical",
+      "state_code": "IL",
+      "city": "CHICAGO",
+      "candidates": 7,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "-40 7 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "NJ",
+      "first": "Sarah",
+      "registry": {
+        "npi": "1538551189",
+        "entity": "NPI-1",
+        "name": "SARAH GOLDBERG",
+        "credential": "L.C.S.W.",
+        "taxonomy": "Social Worker, Clinical",
+        "specialty_code": "1041C0700X",
+        "state": "IL",
+        "city": "CHICAGO",
+        "phone": "773-791-9571",
+        "address_1": "122 S MICHIGAN AVE # 1305B",
+        "postal_code": "60603",
+        "enumerated": "2015-02-19",
+        "last_updated": "2015-02-19",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "525b41f206ae": {
+      "name": "Jennifer Nguyen",
+      "email": "jen.nguyen.pmhnp@gmail.com",
+      "mobile": "+1 949 555 0111",
+      "tier": "unresolved",
+      "score": 25,
+      "npi": "1912467457",
+      "specialty": "Behavior Technician",
+      "state_code": "CA",
+      "city": "GARDENA",
+      "candidates": 9,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-40 9 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Jennifer",
+      "registry": {
+        "npi": "1912467457",
+        "entity": "NPI-1",
+        "name": "JENNIFER NGUYEN",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "CA",
+        "city": "GARDENA",
+        "phone": "800-249-1266",
+        "address_1": "1508 W ARTESIA SQ APT B",
+        "postal_code": "90248",
+        "enumerated": "2019-03-21",
+        "last_updated": "2019-03-21",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "abd5782a5b72": {
+      "name": "Thaddeus Okonkwo-Vance",
+      "email": "t.okonkwo@vancebehavioralpartners.com",
+      "mobile": "+1 512 555 0121",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "TX",
+      "first": "Thaddeus",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "9f71be493610": {
+      "name": "Ingrid Halvorsen-Reyes",
+      "email": "ingrid@halvorsenreyes.com",
+      "mobile": "+1 503 555 0135",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "OR",
+      "first": "Ingrid",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "5142d0b8b578": {
+      "name": "Cassius Brightwater",
+      "email": "cassius.brightwater@gmail.com",
+      "mobile": "+1 720 555 0149",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "CO",
+      "first": "Cassius",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "068067bd51bc": {
+      "name": "Odalys Fernandez-Kwan",
+      "email": "odalys@fkbehavioralhealth.com",
+      "mobile": "+1 786 555 0152",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "FL",
+      "first": "Odalys",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "6fc9ad566634": {
+      "name": "Zephyr Nakamura-Ostrowski",
+      "email": "zephyr.n@northstarpsychgroup.com",
+      "mobile": "+1 206 555 0163",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "WA",
+      "first": "Zephyr",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "67a326797b8d": {
+      "name": "Marisol Vantongeren",
+      "email": "marisol.v@gmail.com",
+      "mobile": "+1 415 555 0170",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "CA",
+      "first": "Marisol",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "16840369ea0c": {
+      "name": "Bartholomew Quintanilla",
+      "email": "bquintanilla@quintanillacounseling.com",
+      "mobile": "+1 210 555 0184",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "TX",
+      "first": "Bartholomew",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "f315de559c48": {
+      "name": "Anneliese Sorokin",
+      "email": "a.sorokin@lakeshoremindhealth.com",
+      "mobile": "+1 312 555 0193",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "IL",
+      "first": "Anneliese",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "81be1545b9cc": {
+      "name": "Chen, Michael",
+      "email": "m.chen+jotpsych@harborpointbh.com",
+      "mobile": "212-555-0142",
+      "tier": "unresolved",
+      "score": 33,
+      "npi": "1992448997",
+      "specialty": "Psychiatry & Neurology, Psychiatry",
+      "state_code": "TX",
+      "city": "TYLER",
+      "candidates": 5,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "-32 5 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "NY",
+      "first": "Michael",
+      "registry": {
+        "npi": "1992448997",
+        "entity": "NPI-1",
+        "name": "MICHAEL CHEN",
+        "credential": "MD",
+        "taxonomy": "Psychiatry & Neurology, Psychiatry",
+        "specialty_code": "2084P0800X",
+        "state": "TX",
+        "city": "TYLER",
+        "phone": "903-877-7777",
+        "address_1": "11937 US HIGHWAY 271",
+        "postal_code": "75708",
+        "enumerated": "2022-04-18",
+        "last_updated": "2026-06-15",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "76862dd33866": {
+      "name": "R. Patel",
+      "email": "rpatel@patelpsychiatric.com",
+      "mobile": "+1 908 555 0158",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "NJ",
+      "first": "R.",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "cef1d963df80": {
+      "name": "K. Williams",
+      "email": "kwilliams@gmail.com",
+      "mobile": "",
+      "tier": "probable",
+      "score": 55,
+      "npi": "1487109062",
+      "specialty": "Case Manager/Care Coordinator",
+      "state_code": "OK",
+      "city": "OKLAHOMA CITY",
+      "candidates": 1,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 email local-part matches the name"
+      ],
+      "mobile_state": "",
+      "first": "K.",
+      "registry": {
+        "npi": "1487109062",
+        "entity": "NPI-1",
+        "name": "K. WILLIAMS",
+        "credential": "",
+        "taxonomy": "Case Manager/Care Coordinator",
+        "specialty_code": "171M00000X",
+        "state": "OK",
+        "city": "OKLAHOMA CITY",
+        "phone": "405-972-5324",
+        "address_1": "10400 NORTH COUNCIL ROAD",
+        "postal_code": "73162",
+        "enumerated": "2016-08-24",
+        "last_updated": "2018-09-12",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "0d99fce07bda": {
+      "name": "Jordan Blake",
+      "email": "jordan.blake@meadowlarkbh.com",
+      "mobile": "+1 802 555 0179",
+      "tier": "probable",
+      "score": 57,
+      "npi": "1396308086",
+      "specialty": "Behavior Technician",
+      "state_code": "CA",
+      "city": "ELK GROVE",
+      "candidates": 2,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "-8 2 plausible candidates, not one",
+        "-15 tied top candidates in different states"
+      ],
+      "mobile_state": "VT",
+      "first": "Jordan",
+      "registry": {
+        "npi": "1396308086",
+        "entity": "NPI-1",
+        "name": "JORDAN BLAKE",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "CA",
+        "city": "ELK GROVE",
+        "phone": "209-667-2273",
+        "address_1": "9370 W STOCKTON BLVD STE 100",
+        "postal_code": "95758",
+        "enumerated": "2019-04-17",
+        "last_updated": "2019-04-17",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.739639+00:00"
+    },
+    "0aab33fd9faf": {
+      "name": "Amara Osei",
+      "email": "aosei@oseibehavioral.com",
+      "mobile": "+1 404 555 0186",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "GA",
+      "first": "Amara",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "90a78c7fd4a7": {
+      "name": "Tomas Lindqvist",
+      "email": "tlindqvist@northbaypsychiatry.com",
+      "mobile": "+1 707 555 0192",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "CA",
+      "first": "Tomas",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "a154f7d0e704": {
+      "name": "Rebecca Sterling",
+      "email": "rsterling@sterlingmindcare.com",
+      "mobile": "+1 480 555 0104",
+      "tier": "probable",
+      "score": 65,
+      "npi": "1083764955",
+      "specialty": "Counselor, Professional",
+      "state_code": "TX",
+      "city": "SAN ANTONIO",
+      "candidates": 1,
+      "signals": [
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record"
+      ],
+      "mobile_state": "AZ",
+      "first": "Rebecca",
+      "registry": {
+        "npi": "1083764955",
+        "entity": "NPI-1",
+        "name": "REBECCA CUNNINGHAM",
+        "credential": "LMFT , LPC",
+        "taxonomy": "Counselor, Professional",
+        "specialty_code": "101YP2500X",
+        "state": "TX",
+        "city": "SAN ANTONIO",
+        "phone": "210-697-8191",
+        "address_1": "8535 WURZBACH RD",
+        "postal_code": "78240",
+        "enumerated": "2007-01-11",
+        "last_updated": "2007-07-08",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "417074ba96c3": {
+      "name": "Hyun-Woo Park",
+      "email": "hpark@parkbehavioralmed.com",
+      "mobile": "+1 425 555 0117",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "WA",
+      "first": "Hyun-Woo",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "d7850ecf9582": {
+      "name": "Fatima Al-Rashid",
+      "email": "falrashid@crescentcounselingaz.com",
+      "mobile": "+1 602 555 0128",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "AZ",
+      "first": "Fatima",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "da9ae0d3ea4f": {
+      "name": "Gabriel Santos",
+      "email": "gsantos@santosmentalhealth.com",
+      "mobile": "+1 813 555 0139",
+      "tier": "verified",
+      "score": 105,
+      "npi": "1730908955",
+      "specialty": "Behavior Technician",
+      "state_code": "CA",
+      "city": "ANAHEIM",
+      "candidates": 1,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record"
+      ],
+      "mobile_state": "FL",
+      "first": "Gabriel",
+      "registry": {
+        "npi": "1730908955",
+        "entity": "NPI-1",
+        "name": "GABRIEL SANTOS",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "CA",
+        "city": "ANAHEIM",
+        "phone": "800-249-1266",
+        "address_1": "1301 E ORANGEWOOD AVE",
+        "postal_code": "92805",
+        "enumerated": "2024-10-04",
+        "last_updated": "2024-10-04",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "5bb316f5ea77": {
+      "name": "Nadia Petrov",
+      "email": "npetrov@petrovpsychology.com",
+      "mobile": "+1 702 555 0141",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "NV",
+      "first": "Nadia",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "4a1355d9dcee": {
+      "name": "Elias Mbeki",
+      "email": "emeki@harmonybehavioralga.com",
+      "mobile": "+1 678 555 0153",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "GA",
+      "first": "Elias",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "7a717a4e6354": {
+      "name": "Yuki Tanaka",
+      "email": "ytanaka@tanakacounseling.com",
+      "mobile": "+1 858 555 0165",
+      "tier": "verified",
+      "score": 107,
+      "npi": "1518347848",
+      "specialty": "Social Worker, Clinical",
+      "state_code": "CA",
+      "city": "NORTHRIDGE",
+      "candidates": 2,
+      "signals": [
+        "+40 full name matches an individual NPI",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record",
+        "+10 mobile area code agrees with practice state (CA)",
+        "-8 2 plausible candidates, not one"
+      ],
+      "mobile_state": "CA",
+      "first": "Yuki",
+      "registry": {
+        "npi": "1518347848",
+        "entity": "NPI-1",
+        "name": "YUKI TANAKA",
+        "credential": "",
+        "taxonomy": "Social Worker, Clinical",
+        "specialty_code": "1041C0700X",
+        "state": "CA",
+        "city": "NORTHRIDGE",
+        "phone": "818-709-7745",
+        "address_1": "8724 ETIWANDA AVE APT 108",
+        "postal_code": "91325",
+        "enumerated": "2015-06-02",
+        "last_updated": "2015-06-02",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "ee1e332cc2c6": {
+      "name": "Colm Fitzgerald",
+      "email": "cfitzgerald@shamrockbehavioral.com",
+      "mobile": "+1 617 555 0176",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "MA",
+      "first": "Colm",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "cc6572038101": {
+      "name": "Sofia Duarte",
+      "email": "sduarte@duartepsychiatricnp.com",
+      "mobile": "+1 786 555 0187",
+      "tier": "verified",
+      "score": 85,
+      "npi": "1992645899",
+      "specialty": "Behavior Technician",
+      "state_code": "CA",
+      "city": "FREMONT",
+      "candidates": 1,
+      "signals": [
+        "+20 surname matches",
+        "+15 behavioral-health taxonomy",
+        "+15 email local-part matches the name",
+        "+10 practice email domain, not free-mail",
+        "+25 practice domain corroborated by the registry record"
+      ],
+      "mobile_state": "FL",
+      "first": "Sofia",
+      "registry": {
+        "npi": "1992645899",
+        "entity": "NPI-1",
+        "name": "SOPHIA DUARTE",
+        "credential": "",
+        "taxonomy": "Behavior Technician",
+        "specialty_code": "106S00000X",
+        "state": "CA",
+        "city": "FREMONT",
+        "phone": "510-347-8105",
+        "address_1": "39201 STATE ST",
+        "postal_code": "94538",
+        "enumerated": "2026-03-30",
+        "last_updated": "2026-04-07",
+        "source": "NPPES"
+      },
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    },
+    "a0eaa7b5a560": {
+      "name": "Leilani Kahananui",
+      "email": "lkahananui@islandmindhealth.com",
+      "mobile": "+1 808 555 0108",
+      "tier": "unresolved",
+      "score": 0,
+      "npi": "",
+      "specialty": "",
+      "state_code": "",
+      "city": "",
+      "candidates": 0,
+      "signals": [
+        "no NPPES record for this name"
+      ],
+      "mobile_state": "HI",
+      "first": "Leilani",
+      "registry": {},
+      "resolved_at": "2026-08-18T19:22:03.561563+00:00"
+    }
+  },
+  "resolve_coverage": {
+    "list_size": 38,
+    "reread_this_run": 6,
+    "budget": 400,
+    "ttl_days": 14,
+    "runs_for_full_sweep": 1,
+    "profiled": 37
+  },
   "resolution_scores": {
     "522f104b8680": {
       "score": 33,
@@ -165,687 +1265,6 @@
       "tier": "unresolved"
     }
   },
-  "roster": {
-    "522f104b8680": {
-      "name": "dr. michael chen",
-      "email": "M.CHEN@HARBORPOINTBH.COM",
-      "mobile": "(212) 555-0142",
-      "tier": "unresolved",
-      "score": 33,
-      "npi": "1992448997",
-      "specialty": "Psychiatry & Neurology, Psychiatry",
-      "state_code": "TX",
-      "city": "TYLER",
-      "candidates": 5,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "-32 5 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "NY"
-    },
-    "fe700ae60016": {
-      "name": "Maria Garcia",
-      "email": "maria.garcia@riverbendcounseling.com",
-      "mobile": "+1 909 555 0188",
-      "tier": "probable",
-      "score": 50,
-      "npi": "1508521725",
-      "specialty": "Behavior Analyst",
-      "state_code": "CA",
-      "city": "BAKERSFIELD",
-      "candidates": 18,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 18 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "19ef84aecb5c": {
-      "name": "Lisa Johnson",
-      "email": "ljohnson@elderscrossingclinical.com",
-      "mobile": "+1 410 555 0119",
-      "tier": "unresolved",
-      "score": 25,
-      "npi": "1770853798",
-      "specialty": "Social Worker, Clinical",
-      "state_code": "NJ",
-      "city": "BELLEVILLE",
-      "candidates": 16,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "-40 16 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "MD"
-    },
-    "55319365c2df": {
-      "name": "Sarah Goldberg",
-      "email": "sgoldberg@westbankpsychotherapy.com",
-      "mobile": "+1 201 555 0173",
-      "tier": "unresolved",
-      "score": 25,
-      "npi": "1538551189",
-      "specialty": "Social Worker, Clinical",
-      "state_code": "IL",
-      "city": "CHICAGO",
-      "candidates": 7,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "-40 7 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "NJ"
-    },
-    "af4a8f4ddbb3": {
-      "name": "Daniel Rivera",
-      "email": "d.rivera@canyonoaksbehavioral.com",
-      "mobile": "+1 818 555 0164",
-      "tier": "probable",
-      "score": 50,
-      "npi": "1467913244",
-      "specialty": "Behavior Analyst",
-      "state_code": "CA",
-      "city": "GARDEN GROVE",
-      "candidates": 14,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 14 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "e0f36a8ceef4": {
-      "name": "Marcus Delgado",
-      "email": "marcus@delgadobehavioral.com",
-      "mobile": "+1 305 555 0155",
-      "tier": "verified",
-      "score": 72,
-      "npi": "1760210579",
-      "specialty": "Behavior Technician",
-      "state_code": "FL",
-      "city": "MIAMI",
-      "candidates": 2,
-      "signals": [
-        "+20 surname matches",
-        "+15 behavioral-health taxonomy",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record",
-        "+10 mobile area code agrees with practice state (FL)",
-        "-8 2 plausible candidates, not one"
-      ],
-      "mobile_state": "FL"
-    },
-    "15c5c1861afb": {
-      "name": "Jennifer Nguyen",
-      "email": "jnguyen@orangegrovetherapy.com",
-      "mobile": "+1 714 555 0131",
-      "tier": "probable",
-      "score": 50,
-      "npi": "1912467457",
-      "specialty": "Behavior Technician",
-      "state_code": "CA",
-      "city": "GARDENA",
-      "candidates": 9,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 9 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "3a8f99227848": {
-      "name": "David Cohen",
-      "email": "dcohen@cohenpsychiatry.com",
-      "mobile": "+1 617 555 0127",
-      "tier": "verified",
-      "score": 75,
-      "npi": "1033694476",
-      "specialty": "Counselor, School",
-      "state_code": "MA",
-      "city": "WESTBOROUGH",
-      "candidates": 6,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record",
-        "+10 mobile area code agrees with practice state (MA)",
-        "-40 6 plausible candidates, not one"
-      ],
-      "mobile_state": "MA"
-    },
-    "ab4049cd39fc": {
-      "name": "Michael Chen",
-      "email": "michaelchen88@gmail.com",
-      "mobile": "+1 646 555 0102",
-      "tier": "unresolved",
-      "score": 23,
-      "npi": "1992448997",
-      "specialty": "Psychiatry & Neurology, Psychiatry",
-      "state_code": "TX",
-      "city": "TYLER",
-      "candidates": 5,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "-32 5 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "NY"
-    },
-    "528c6335794a": {
-      "name": "Maria Garcia",
-      "email": "mgarcia.lcsw@gmail.com",
-      "mobile": "+1 619 555 0177",
-      "tier": "unresolved",
-      "score": 25,
-      "npi": "1508521725",
-      "specialty": "Behavior Analyst",
-      "state_code": "CA",
-      "city": "BAKERSFIELD",
-      "candidates": 18,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 18 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "d0acc777b443": {
-      "name": "Daniel Rivera",
-      "email": "drivera1982@hotmail.com",
-      "mobile": "+1 213 555 0144",
-      "tier": "probable",
-      "score": 40,
-      "npi": "1467913244",
-      "specialty": "Behavior Analyst",
-      "state_code": "CA",
-      "city": "GARDEN GROVE",
-      "candidates": 14,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 14 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "d1e9aa8166af": {
-      "name": "Sarah Goldberg",
-      "email": "sarahgoldberg@icloud.com",
-      "mobile": "+1 973 555 0166",
-      "tier": "unresolved",
-      "score": 15,
-      "npi": "1538551189",
-      "specialty": "Social Worker, Clinical",
-      "state_code": "IL",
-      "city": "CHICAGO",
-      "candidates": 7,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "-40 7 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "NJ"
-    },
-    "525b41f206ae": {
-      "name": "Jennifer Nguyen",
-      "email": "jen.nguyen.pmhnp@gmail.com",
-      "mobile": "+1 949 555 0111",
-      "tier": "unresolved",
-      "score": 25,
-      "npi": "1912467457",
-      "specialty": "Behavior Technician",
-      "state_code": "CA",
-      "city": "GARDENA",
-      "candidates": 9,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-40 9 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "abd5782a5b72": {
-      "name": "Thaddeus Okonkwo-Vance",
-      "email": "t.okonkwo@vancebehavioralpartners.com",
-      "mobile": "+1 512 555 0121",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "TX"
-    },
-    "9f71be493610": {
-      "name": "Ingrid Halvorsen-Reyes",
-      "email": "ingrid@halvorsenreyes.com",
-      "mobile": "+1 503 555 0135",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "OR"
-    },
-    "5142d0b8b578": {
-      "name": "Cassius Brightwater",
-      "email": "cassius.brightwater@gmail.com",
-      "mobile": "+1 720 555 0149",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "CO"
-    },
-    "068067bd51bc": {
-      "name": "Odalys Fernandez-Kwan",
-      "email": "odalys@fkbehavioralhealth.com",
-      "mobile": "+1 786 555 0152",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "FL"
-    },
-    "6fc9ad566634": {
-      "name": "Zephyr Nakamura-Ostrowski",
-      "email": "zephyr.n@northstarpsychgroup.com",
-      "mobile": "+1 206 555 0163",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "WA"
-    },
-    "67a326797b8d": {
-      "name": "Marisol Vantongeren",
-      "email": "marisol.v@gmail.com",
-      "mobile": "+1 415 555 0170",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "CA"
-    },
-    "16840369ea0c": {
-      "name": "Bartholomew Quintanilla",
-      "email": "bquintanilla@quintanillacounseling.com",
-      "mobile": "+1 210 555 0184",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "TX"
-    },
-    "f315de559c48": {
-      "name": "Anneliese Sorokin",
-      "email": "a.sorokin@lakeshoremindhealth.com",
-      "mobile": "+1 312 555 0193",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "IL"
-    },
-    "81be1545b9cc": {
-      "name": "Chen, Michael",
-      "email": "m.chen+jotpsych@harborpointbh.com",
-      "mobile": "212-555-0142",
-      "tier": "unresolved",
-      "score": 33,
-      "npi": "1992448997",
-      "specialty": "Psychiatry & Neurology, Psychiatry",
-      "state_code": "TX",
-      "city": "TYLER",
-      "candidates": 5,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "-32 5 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "NY"
-    },
-    "76862dd33866": {
-      "name": "R. Patel",
-      "email": "rpatel@patelpsychiatric.com",
-      "mobile": "+1 908 555 0158",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "NJ"
-    },
-    "cef1d963df80": {
-      "name": "K. Williams",
-      "email": "kwilliams@gmail.com",
-      "mobile": "",
-      "tier": "probable",
-      "score": 55,
-      "npi": "1487109062",
-      "specialty": "Case Manager/Care Coordinator",
-      "state_code": "OK",
-      "city": "OKLAHOMA CITY",
-      "candidates": 1,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 email local-part matches the name"
-      ],
-      "mobile_state": ""
-    },
-    "0d99fce07bda": {
-      "name": "Jordan Blake",
-      "email": "jordan.blake@meadowlarkbh.com",
-      "mobile": "+1 802 555 0179",
-      "tier": "probable",
-      "score": 57,
-      "npi": "1396308086",
-      "specialty": "Behavior Technician",
-      "state_code": "CA",
-      "city": "ELK GROVE",
-      "candidates": 2,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "-8 2 plausible candidates, not one",
-        "-15 tied top candidates in different states"
-      ],
-      "mobile_state": "VT"
-    },
-    "0aab33fd9faf": {
-      "name": "Amara Osei",
-      "email": "aosei@oseibehavioral.com",
-      "mobile": "+1 404 555 0186",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "GA"
-    },
-    "90a78c7fd4a7": {
-      "name": "Tomas Lindqvist",
-      "email": "tlindqvist@northbaypsychiatry.com",
-      "mobile": "+1 707 555 0192",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "CA"
-    },
-    "a154f7d0e704": {
-      "name": "Rebecca Sterling",
-      "email": "rsterling@sterlingmindcare.com",
-      "mobile": "+1 480 555 0104",
-      "tier": "probable",
-      "score": 65,
-      "npi": "1083764955",
-      "specialty": "Counselor, Professional",
-      "state_code": "TX",
-      "city": "SAN ANTONIO",
-      "candidates": 1,
-      "signals": [
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record"
-      ],
-      "mobile_state": "AZ"
-    },
-    "417074ba96c3": {
-      "name": "Hyun-Woo Park",
-      "email": "hpark@parkbehavioralmed.com",
-      "mobile": "+1 425 555 0117",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "WA"
-    },
-    "d7850ecf9582": {
-      "name": "Fatima Al-Rashid",
-      "email": "falrashid@crescentcounselingaz.com",
-      "mobile": "+1 602 555 0128",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "AZ"
-    },
-    "da9ae0d3ea4f": {
-      "name": "Gabriel Santos",
-      "email": "gsantos@santosmentalhealth.com",
-      "mobile": "+1 813 555 0139",
-      "tier": "verified",
-      "score": 105,
-      "npi": "1730908955",
-      "specialty": "Behavior Technician",
-      "state_code": "CA",
-      "city": "ANAHEIM",
-      "candidates": 1,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record"
-      ],
-      "mobile_state": "FL"
-    },
-    "5bb316f5ea77": {
-      "name": "Nadia Petrov",
-      "email": "npetrov@petrovpsychology.com",
-      "mobile": "+1 702 555 0141",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "NV"
-    },
-    "4a1355d9dcee": {
-      "name": "Elias Mbeki",
-      "email": "emeki@harmonybehavioralga.com",
-      "mobile": "+1 678 555 0153",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "GA"
-    },
-    "7a717a4e6354": {
-      "name": "Yuki Tanaka",
-      "email": "ytanaka@tanakacounseling.com",
-      "mobile": "+1 858 555 0165",
-      "tier": "verified",
-      "score": 107,
-      "npi": "1518347848",
-      "specialty": "Social Worker, Clinical",
-      "state_code": "CA",
-      "city": "NORTHRIDGE",
-      "candidates": 2,
-      "signals": [
-        "+40 full name matches an individual NPI",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record",
-        "+10 mobile area code agrees with practice state (CA)",
-        "-8 2 plausible candidates, not one"
-      ],
-      "mobile_state": "CA"
-    },
-    "ee1e332cc2c6": {
-      "name": "Colm Fitzgerald",
-      "email": "cfitzgerald@shamrockbehavioral.com",
-      "mobile": "+1 617 555 0176",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "MA"
-    },
-    "cc6572038101": {
-      "name": "Sofia Duarte",
-      "email": "sduarte@duartepsychiatricnp.com",
-      "mobile": "+1 786 555 0187",
-      "tier": "verified",
-      "score": 85,
-      "npi": "1992645899",
-      "specialty": "Behavior Technician",
-      "state_code": "CA",
-      "city": "FREMONT",
-      "candidates": 1,
-      "signals": [
-        "+20 surname matches",
-        "+15 behavioral-health taxonomy",
-        "+15 email local-part matches the name",
-        "+10 practice email domain, not free-mail",
-        "+25 practice domain corroborated by the registry record"
-      ],
-      "mobile_state": "FL"
-    },
-    "a0eaa7b5a560": {
-      "name": "Leilani Kahananui",
-      "email": "lkahananui@islandmindhealth.com",
-      "mobile": "+1 808 555 0108",
-      "tier": "unresolved",
-      "score": 0,
-      "npi": "",
-      "specialty": "",
-      "state_code": "",
-      "city": "",
-      "candidates": 0,
-      "signals": [
-        "no NPPES record for this name"
-      ],
-      "mobile_state": "HI"
-    }
-  },
   "returns": {
     "3a8f99227848": {
       "event": "trial_restarted",
@@ -874,32 +1293,45 @@
   },
   "contacted": {
     "d1e9aa8166af": {
-      "last_ts": "2026-08-18T18:57:36.598108+00:00",
+      "last_ts": "2026-08-18T19:22:03.570713+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "068067bd51bc": {
-      "last_ts": "2026-08-18T18:57:36.599587+00:00",
+      "last_ts": "2026-08-18T19:22:03.572546+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "f315de559c48": {
-      "last_ts": "2026-08-18T18:57:36.600909+00:00",
+      "last_ts": "2026-08-18T19:22:03.574035+00:00",
       "count": 1,
       "angle": "denials",
       "channel": "email",
       "trigger": "keep_warm"
     },
     "15c5c1861afb": {
-      "last_ts": "2026-08-18T18:57:36.745597+00:00",
+      "last_ts": "2026-08-18T19:22:03.746814+00:00",
       "count": 1,
       "angle": "no_migration",
       "channel": "email",
       "trigger": "practice_move"
     }
-  }
+  },
+  "queue": [
+    {
+      "target_id": "0d99fce07bda",
+      "name": "Jordan Blake",
+      "email": "jordan.blake@meadowlarkbh.com",
+      "tier": "probable",
+      "score": 57,
+      "why": "their practice moved to another state",
+      "peer": "Tessa Nolan",
+      "peer_line": "Supervision notes and session notes finally live in the same place.",
+      "peer_role": "Behavior Technician — CA"
+    }
+  ]
 }

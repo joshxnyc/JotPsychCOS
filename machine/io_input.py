@@ -5,7 +5,7 @@ Two sources, both real:
   2. NPPES  - the free federal NPI registry API. Live, public, no key.
      https://npiregistry.cms.hhs.gov/api-page
 """
-import csv, json, hashlib, urllib.parse, urllib.request
+import csv, io, json, hashlib, os, urllib.parse, urllib.request
 from . import config
 
 NPPES = "https://npiregistry.cms.hhs.gov/api/"
@@ -81,3 +81,50 @@ def enrich(rows: list[dict]) -> list[dict]:
         r["registry"] = hit[0] if hit and "_error" not in hit[0] else {}
         r["registry_verified"] = bool(r["registry"].get("npi"))
     return rows
+
+
+# --------------------------------------------------------------- sources ---
+# The list does not have to be a file in this repo. Anything that can produce
+# CSV over HTTPS works, which covers the three things a team actually has:
+#   Google Sheets   File > Share > Publish to web > CSV        -> paste the URL
+#   Airtable        share view > CSV download link             -> paste the URL
+#   CRM / warehouse  any endpoint or signed S3 URL that returns CSV
+# Set DORMANT_URL and the machine reads from there instead of inbox/.
+# Column names are the contract either way: name, email, mobile.
+
+def read_url(url: str, timeout: int = 60) -> list[dict]:
+    """Fetch a CSV over HTTPS and parse it exactly like a local file."""
+    req = urllib.request.Request(url, headers={"User-Agent": config.USER_AGENT})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        text = r.read().decode("utf-8-sig", errors="replace")
+    rows = [{k.strip(): (v or "").strip() for k, v in row.items() if k}
+            for row in csv.DictReader(io.StringIO(text))]
+    for row in rows:
+        row.setdefault("id", _rid(row))
+    return rows
+
+
+def read_source(name: str, url_env: str = "") -> list[dict]:
+    """Resolve one input in priority order, and say out loud where it came from.
+
+        1. an HTTPS URL in the environment   (Sheets, Airtable, CRM export, S3)
+        2. inbox/<name>.csv                  (the real list, dropped in)
+        3. inbox/<name>.sample.csv           (what ships with the repo)
+    """
+    url = (os.getenv(url_env) or "").strip() if url_env else ""
+    if url:
+        try:
+            rows = read_url(url)
+            print(f"[input]  {len(rows):>5} rows from {url_env} ({url.split('?')[0][:60]})")
+            return rows
+        except Exception as e:
+            # A broken URL must not silently fall back to sample data and look
+            # like a successful run against the real list.
+            raise RuntimeError(f"{url_env} is set but could not be read: {e}") from e
+    for candidate, label in ((f"{name}.csv", "your list"),
+                             (f"{name}.sample.csv", "SAMPLE DATA")):
+        rows = read_csv(candidate)
+        if rows:
+            print(f"[input]  {len(rows):>5} rows from inbox/{candidate}  [{label}]")
+            return rows
+    return []

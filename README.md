@@ -8,6 +8,7 @@ Built for the JotPsych Chief of Staff case study.
 Live dashboard → **https://joshxnyc.github.io/JotPsychCOS/**
 It runs itself → **[Actions](https://github.com/joshxnyc/JotPsychCOS/actions)**
 
+- **[SETUP.md](SETUP.md)** — run it yourself: your own fork, your own keys, your own list. Nothing depends on my accounts.
 - **[RECOMMENDATION.md](RECOMMENDATION.md)** — what I chose to build and why, in one page.
 - **[PROOF.md](PROOF.md)** — one full pass end to end, including what QC rejected.
 
@@ -45,6 +46,11 @@ python -m pytest -q                  # 16 tests
 ## Replace our data with yours
 
 **Drop your list at `inbox/dormant.csv`. That is the entire change.**
+
+Or point it at a **Google Sheet, an Airtable view, or a CRM export** — set
+`DORMANT_URL` to any URL that returns CSV and the sheet becomes the list. See
+[SETUP.md](SETUP.md). To try it at real scale first:
+`python tools/make_list.py 15000 > inbox/dormant.csv`.
 
 If that file exists it is used; otherwise the machine falls back to
 `inbox/dormant.sample.csv`. Three columns, exactly the three fields a signup
