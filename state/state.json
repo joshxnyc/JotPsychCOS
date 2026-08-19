@@ -1,7 +1,7 @@
 {
-  "run_count": 2,
+  "run_count": 3,
   "first_run": "2026-08-18T20:57:06.731188+00:00",
-  "last_run": "2026-08-18T20:57:06.906784+00:00",
+  "last_run": "2026-08-19T13:41:23.808841+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -12,6 +12,11 @@
       "sent": 1,
       "replied": 0,
       "blocked": 0
+    },
+    "audit": {
+      "sent": 0,
+      "replied": 0,
+      "blocked": 3
     }
   },
   "notes": [],
@@ -1109,12 +1114,12 @@
   },
   "resolve_coverage": {
     "list_size": 38,
-    "reread_this_run": 6,
+    "reread_this_run": 0,
     "budget": 400,
     "ttl_days": 14,
     "runs_for_full_sweep": 1,
     "profiled": 37,
-    "reused": 32
+    "reused": 38
   },
   "resolution_scores": {
     "522f104b8680": {
@@ -1322,19 +1327,5 @@
       "trigger": "practice_move"
     }
   },
-  "queue": [
-    {
-      "target_id": "0d99fce07bda",
-      "name": "Jordan Blake",
-      "email": "jordan.blake@meadowlarkbh.com",
-      "tier": "probable",
-      "score": 57,
-      "why": "their practice moved to another state",
-      "peer": "Tessa Nolan",
-      "peer_line": "Supervision notes and session notes finally live in the same place.",
-      "subject": "Running JotPsych beside what you already use",
-      "body": "You looked at JotPsych a while back and stayed where you were. That is usually the right call mid-contract.\n\nWorth knowing: you do not have to move anything. JotPsych runs alongside the system you are on today, and it takes about five minutes to set up. Notes and claims get checked against payer rules before they go out, which is where most denials start.\n\nIf it is useful later, it will still be here.\n\n— Josh, JotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nUnsubscribe: https://jotpsych-second-window.fly.dev/unsubscribe?t=jordan.blake@meadowlarkbh.com:7eac3b1133d05cdf\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
-      "peer_role": "Behavior Technician — CA"
-    }
-  ]
+  "queue": []
 }

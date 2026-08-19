@@ -1,0 +1,92 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Wed, 19 Aug 2026 13:42:11 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============8673938372572436309=="
+
+--===============8673938372572436309==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 3 =C2=B7 19 Aug 2026 13:42 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    3  drafts stopped by quality control
+   33  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Notes that hold up when the payer asks"
+    judge: The email states 'Behavioral health documentation gets audited mor=
+e than most specialties' =E2=80=94 this is presented as fact but does not app=
+ear in the FACT PACK.
+
+  "Notes that hold up when the payer asks"
+    judge: The opening line 'You tried JotPsych once' states a fact about the=
+ recipient's behavior that is not in the RECIPIENT RECORD. The record only sa=
+ys 'they signed up for JotPsych at some point and did not become a paying cus=
+tomer' =E2=80=94 it does not establish that they 'tried' the product.
+
+  "Notes that hold up when the payer asks"
+    judge: The draft states 'You tried JotPsych once. You didn't buy' as esta=
+blished fact, but the RECIPIENT RECORD only confirms 'they signed up for JotP=
+sych at some point and did not become a paying customer.' The draft assumes t=
+hey actively tried/used the product, which is not verified.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============8673938372572436309==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 3 =C2=B7 19 Aug 2026 13:42 UTC</p><p style=3D'margin:0 0 14p=
+x'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest wer=
+e still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detect=
+ed<br>    0  messages staged<br>    3  drafts stopped by quality control<br> =
+  33  clinicians deliberately left alone<br>    0  waiting for you (~0 minute=
+s)</p><p style=3D'margin:0 0 14px'>------------------------------------------=
+--------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING</=
+p><p style=3D'margin:0 0 14px'>  &quot;Notes that hold up when the payer asks=
+&quot;<br>    judge: The email states &#x27;Behavioral health documentation g=
+ets audited more than most specialties&#x27; =E2=80=94 this is presented as f=
+act but does not appear in the FACT PACK.</p><p style=3D'margin:0 0 14px'>  &=
+quot;Notes that hold up when the payer asks&quot;<br>    judge: The opening l=
+ine &#x27;You tried JotPsych once&#x27; states a fact about the recipient&#x2=
+7;s behavior that is not in the RECIPIENT RECORD. The record only says &#x27;=
+they signed up for JotPsych at some point and did not become a paying custome=
+r&#x27; =E2=80=94 it does not establish that they &#x27;tried&#x27; the produ=
+ct.</p><p style=3D'margin:0 0 14px'>  &quot;Notes that hold up when the payer=
+ asks&quot;<br>    judge: The draft states &#x27;You tried JotPsych once. You=
+ didn&#x27;t buy&#x27; as established fact, but the RECIPIENT RECORD only con=
+firms &#x27;they signed up for JotPsych at some point and did not become a pa=
+ying customer.&#x27; The draft assumes they actively tried/used the product, =
+which is not verified.</p><p style=3D'margin:0 0 14px'>----------------------=
+----------------------------------------</p><p style=3D'margin:0 0 14px'>This=
+ workspace runs on sample data: clinician and peer details are<br>invented, a=
+nd nothing in it is delivered to any real clinician.</p><p style=3D'margin:0 =
+0 14px'>Full report: https://joshxnyc.github.io/JotPsychCOS/<br>Change what i=
+t says or when: config/brand.md and config/guardrails.yaml.</p><p style=3D'ma=
+rgin:0 0 14px'>=E2=80=94 Second Window</p></div>
+
+--===============8673938372572436309==--
