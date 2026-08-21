@@ -1,0 +1,49 @@
+{
+  "draft": {
+    "to": "aosei@oseibehavioral.com",
+    "subject": "Notes that hold up when the payer asks",
+    "body": "Amara,\n\nMost denials happen weeks after the session. The payer pulls the note, finds a mismatch between the code and the documentation, and sends it back.\n\nJotPsych scans every note against 150+ payer rules before you submit the claim. It flags the gaps \u2014 missing time, vague language, code misalignment \u2014 while you can still fix them.\n\nThe note either supports the code or it doesn't. This just tells you which before the payer does.\n\nWorks with any EHR. Or replaces it entirely. No migration required \u2014 up in 5 minutes.\n\nWorth another look?\n\nBest,\n\n[Name]\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "JotPsych scans every note against 150+ payer rules",
+      "JotPsych flags gaps in documentation including missing time, vague language, and code misalignment",
+      "JotPsych works with any EHR or can replace it entirely",
+      "No migration required",
+      "Up in 5 minutes"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "unfilled placeholder / template artifact left in the draft",
+      "judge: The draft states 'Most denials happen weeks after the session' as a general industry fact. This specific claim about denial timing does not appear in the FACT PACK.",
+      "judge: The draft states 'The payer pulls the note, finds a mismatch between the code and the documentation, and sends it back' as a description of how denials work. This process description is not in the FACT PACK.",
+      "judge: The phrase 'up in 5 minutes' appears in the draft. The FACT PACK states 'no migration, up in 5 minutes' but this refers specifically to adding JotPsych to an existing system with no migration. The draft uses it in a context that could apply to either scenario, making the claim ambiguous and potentially misleading."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Amara Osei",
+    "first_name": "Amara",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "unresolved",
+    "score": 0,
+    "forbidden_facts": {},
+    "npi": "",
+    "signals": [
+      "no NPPES record for this name"
+    ],
+    "allowed_facts": {},
+    "tier_permissions": [],
+    "registry_verified": false,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
