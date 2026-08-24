@@ -1,0 +1,50 @@
+{
+  "draft": {
+    "to": "zephyr.n@northstarpsychgroup.com",
+    "subject": "Notes that hold up when the payer asks",
+    "body": "Zephyr,\n\nMost denials happen weeks after the session. The payer pulls the note, runs it against their contract rules, and decides the documentation doesn't support the code.\n\nJotPsych checks every note against 150+ payer rules before you submit the claim. It flags gaps while you can still fix them \u2014 missing elements, weak medical necessity, code mismatches.\n\nIt works with the EHR you have today. No migration. Up in five minutes. Or replace the whole system when you're ready.\n\nIf audit risk is on your mind, I can walk you through how the documentation check works. Fifteen minutes, your schedule.\n\nNathan\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "JotPsych checks every note against 150+ payer rules",
+      "It flags documentation gaps before claim submission",
+      "Works with existing EHR systems",
+      "No migration required",
+      "Setup takes five minutes",
+      "Can replace entire EHR system",
+      "Checks for missing elements, weak medical necessity, and code mismatches"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The email states 'Most denials happen weeks after the session. The payer pulls the note, runs it against their contract rules, and decides the documentation doesn't support the code.' This is presented as factual claim about insurance company behavior and denial timing that does not appear in the FACT PACK.",
+      "judge: The email implies a reimbursement guarantee with 'checks every note against 150+ payer rules before you submit the claim. It flags gaps while you can still fix them' \u2014 suggesting that fixing flagged items will prevent denials. The FACT PACK explicitly states under DOES NOT FIT: 'Any guarantee about reimbursement, payment, or passing an audit. JotPsych reduces denials and flags risk; it does not guarantee an outcome.'",
+      "judge: The phrase 'If audit risk is on your mind' presumes knowledge about the recipient's concerns that is not in the RECIPIENT RECORD. We know only that they signed up and did not convert \u2014 nothing about their motivations or concerns."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Zephyr Nakamura-Ostrowski",
+    "first_name": "Zephyr",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "unresolved",
+    "score": 0,
+    "forbidden_facts": {},
+    "npi": "",
+    "signals": [
+      "no NPPES record for this name"
+    ],
+    "allowed_facts": {},
+    "tier_permissions": [],
+    "registry_verified": false,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}

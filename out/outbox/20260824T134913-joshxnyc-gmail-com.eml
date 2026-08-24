@@ -1,0 +1,84 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Mon, 24 Aug 2026 13:49:13 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============6281389348811388148=="
+
+--===============6281389348811388148==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 6 =C2=B7 24 Aug 2026 13:49 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    2  drafts stopped by quality control
+   35  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Notes that hold up when the payer asks"
+    judge: The draft states 'Most denials happen weeks after the session' as =
+a general fact about insurance denials. This clinical/reimbursement claim abo=
+ut denial timing is not in the FACT PACK and constitutes the kind of reimburs=
+ement statement the guidelines warn against.
+
+  "Notes that hold up when the payer asks"
+    judge: The email states 'Most denials happen weeks after the session. The=
+ payer pulls the note, runs it against their contract rules, and decides the =
+documentation doesn't support the code.' This is presented as factual claim a=
+bout insurance company behavior and denial timing that does not appear in the=
+ FACT PACK.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============6281389348811388148==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 6 =C2=B7 24 Aug 2026 13:49 UTC</p><p style=3D'margin:0 0 14p=
+x'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest wer=
+e still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detect=
+ed<br>    0  messages staged<br>    2  drafts stopped by quality control<br> =
+  35  clinicians deliberately left alone<br>    0  waiting for you (~0 minute=
+s)</p><p style=3D'margin:0 0 14px'>------------------------------------------=
+--------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING</=
+p><p style=3D'margin:0 0 14px'>  &quot;Notes that hold up when the payer asks=
+&quot;<br>    judge: The draft states &#x27;Most denials happen weeks after t=
+he session&#x27; as a general fact about insurance denials. This clinical/rei=
+mbursement claim about denial timing is not in the FACT PACK and constitutes =
+the kind of reimbursement statement the guidelines warn against.</p><p style=
+=3D'margin:0 0 14px'>  &quot;Notes that hold up when the payer asks&quot;<br>=
+    judge: The email states &#x27;Most denials happen weeks after the session=
+. The payer pulls the note, runs it against their contract rules, and decides=
+ the documentation doesn&#x27;t support the code.&#x27; This is presented as =
+factual claim about insurance company behavior and denial timing that does no=
+t appear in the FACT PACK.</p><p style=3D'margin:0 0 14px'>------------------=
+--------------------------------------------</p><p style=3D'margin:0 0 14px'>=
+This workspace runs on sample data: clinician and peer details are<br>invente=
+d, and nothing in it is delivered to any real clinician.</p><p style=3D'margi=
+n:0 0 14px'>Full report: https://joshxnyc.github.io/JotPsychCOS/<br>Change wh=
+at it says or when: config/brand.md and config/guardrails.yaml.</p><p style=
+=3D'margin:0 0 14px'>=E2=80=94 Second Window</p></div>
+
+--===============6281389348811388148==--
