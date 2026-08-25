@@ -1,0 +1,72 @@
+{
+  "draft": {
+    "to": "sduarte@duartepsychiatricnp.com",
+    "subject": "Notes that hold up",
+    "body": "Sofia,\n\nYou tried JotPsych once. You didn't stay.\n\nIf it was timing, or you were mid-contract with another system, that may have changed.\n\nJotPsych now works with any EHR. No migration. Up in 5 minutes. You can add it to what you have today and let it handle documentation while your current system stays in place. When you're ready, it can become the whole practice.\n\nEvery note runs through 150+ payer rules before you sign it. Surfaces recommended codes, flags audit risk, aligns to your contracts. The goal is fewer denials and notes that stand up when a payer asks for them.\n\n2.5M+ notes written. 45M+ audit-rule checks. HIPAA compliant.\n\nIf you want to see it again, I'll set up a short call.\n\nNathan\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "JotPsych works with any EHR",
+      "No migration required",
+      "Up in 5 minutes",
+      "Can be added to existing systems",
+      "Can become the whole practice",
+      "Every note runs through 150+ payer rules",
+      "Surfaces recommended codes",
+      "Flags audit risk",
+      "Aligns to contracts",
+      "Reduces denials",
+      "Notes stand up when payer asks for them",
+      "2.5M+ notes written",
+      "45M+ audit-rule checks",
+      "HIPAA compliant"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The email states 'aligns to your contracts' as a specific capability directed at the recipient, but the FACT PACK only says JotPsych 'Aligns notes to the practice's specific payer contracts' as a general feature. The RECIPIENT RECORD contains no information about this person having payer contracts, and a Behavior Technician may not hold contracts in the same way prescribers do.",
+      "judge: The opening 'You tried JotPsych once. You didn't stay.' makes a factual claim about the recipient's behavior that is not in the RECIPIENT RECORD. The known_relationship states only that 'they signed up for JotPsych at some point and did not become a paying customer'\u2014it does not establish that they 'tried' the product or actively used it before leaving.",
+      "judge: The phrase 'If it was timing, or you were mid-contract with another system' speculates about reasons for the recipient's past behavior that are not established in the RECIPIENT RECORD."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Sofia Duarte",
+    "first_name": "Sofia",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "verified",
+    "score": 85,
+    "forbidden_facts": {
+      "practice_name": "SOPHIA DUARTE"
+    },
+    "npi": "1992645899",
+    "signals": [
+      "+20 surname matches",
+      "+15 behavioral-health taxonomy",
+      "+15 email local-part matches the name",
+      "+10 practice email domain, not free-mail",
+      "+25 practice domain corroborated by the registry record"
+    ],
+    "allowed_facts": {
+      "specialty": "Behavior Technician",
+      "state": "CA",
+      "city": "FREMONT"
+    },
+    "tier_permissions": [
+      "specialty",
+      "state",
+      "city",
+      "practice_type"
+    ],
+    "registry_verified": true,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}

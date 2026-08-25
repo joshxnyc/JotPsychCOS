@@ -1,0 +1,86 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Tue, 25 Aug 2026 13:46:25 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============5105036282166904369=="
+
+--===============5105036282166904369==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 7 =C2=B7 25 Aug 2026 13:46 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    2  drafts stopped by quality control
+   35  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Notes that hold up"
+    judge: The draft states 'You tried JotPsych once' as established fact, bu=
+t the RECIPIENT RECORD only confirms 'they signed up for JotPsych at some poi=
+nt and did not become a paying customer.' Signing up does not mean they tried=
+ or used the product.
+
+  "Notes that hold up"
+    judge: The email states 'aligns to your contracts' as a specific capabili=
+ty directed at the recipient, but the FACT PACK only says JotPsych 'Aligns no=
+tes to the practice's specific payer contracts' as a general feature. The REC=
+IPIENT RECORD contains no information about this person having payer contract=
+s, and a Behavior Technician may not hold contracts in the same way prescribe=
+rs do.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============5105036282166904369==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 7 =C2=B7 25 Aug 2026 13:46 UTC</p><p style=3D'margin:0 0 14p=
+x'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest wer=
+e still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detect=
+ed<br>    0  messages staged<br>    2  drafts stopped by quality control<br> =
+  35  clinicians deliberately left alone<br>    0  waiting for you (~0 minute=
+s)</p><p style=3D'margin:0 0 14px'>------------------------------------------=
+--------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING</=
+p><p style=3D'margin:0 0 14px'>  &quot;Notes that hold up&quot;<br>    judge:=
+ The draft states &#x27;You tried JotPsych once&#x27; as established fact, bu=
+t the RECIPIENT RECORD only confirms &#x27;they signed up for JotPsych at som=
+e point and did not become a paying customer.&#x27; Signing up does not mean =
+they tried or used the product.</p><p style=3D'margin:0 0 14px'>  &quot;Notes=
+ that hold up&quot;<br>    judge: The email states &#x27;aligns to your contr=
+acts&#x27; as a specific capability directed at the recipient, but the FACT P=
+ACK only says JotPsych &#x27;Aligns notes to the practice&#x27;s specific pay=
+er contracts&#x27; as a general feature. The RECIPIENT RECORD contains no inf=
+ormation about this person having payer contracts, and a Behavior Technician =
+may not hold contracts in the same way prescribers do.</p><p style=3D'margin:=
+0 0 14px'>--------------------------------------------------------------</p><=
+p style=3D'margin:0 0 14px'>This workspace runs on sample data: clinician and=
+ peer details are<br>invented, and nothing in it is delivered to any real cli=
+nician.</p><p style=3D'margin:0 0 14px'>Full report: https://joshxnyc.github.=
+io/JotPsychCOS/<br>Change what it says or when: config/brand.md and config/gu=
+ardrails.yaml.</p><p style=3D'margin:0 0 14px'>=E2=80=94 Second Window</p></d=
+iv>
+
+--===============5105036282166904369==--
