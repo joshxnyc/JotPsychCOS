@@ -1,0 +1,53 @@
+{
+  "draft": {
+    "to": "cfitzgerald@shamrockbehavioral.com",
+    "subject": "Notes that hold up when the payer asks",
+    "body": "Colm,\n\nMost denials come weeks after the session. The payer pulls the note, runs it against their contract rules, and finds a gap you didn't know mattered.\n\nJotPsych checks every note against 150+ payer rules before you close it. It flags missing elements, suggests CPT and ICD codes aligned to the documentation, and shows you what won't survive a post-pay audit.\n\nIt works with any EHR. Or replaces it entirely. No migration required \u2014 up in 5 minutes.\n\nIf audit risk or denials are still costing you time, it's worth another look.\n\nNathan\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "Most denials come weeks after the session",
+      "JotPsych checks every note against 150+ payer rules",
+      "It flags missing elements",
+      "Suggests CPT and ICD codes aligned to the documentation",
+      "Shows you what won't survive a post-pay audit",
+      "Works with any EHR or replaces it entirely",
+      "No migration required",
+      "Up in 5 minutes"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The statement 'Most denials come weeks after the session' is not supported by the FACT PACK. This is presented as a factual claim about denial timing that does not appear in the provided materials.",
+      "judge: The phrase 'The payer pulls the note, runs it against their contract rules, and finds a gap you didn't know mattered' makes specific claims about payer behavior and the recipient's knowledge that are not in the FACT PACK.",
+      "judge: The statement 'shows you what won't survive a post-pay audit' comes dangerously close to an audit guarantee, which the FACT PACK explicitly forbids under 'DOES NOT FIT \u2014 Any guarantee about reimbursement, payment, or passing an audit.'",
+      "judge: The closing 'If audit risk or denials are still costing you time' assumes facts about the recipient's practice (that they are experiencing audit risk or denials) that are not in the RECIPIENT RECORD. The known_relationship only establishes they signed up and didn't convert\u2014nothing about their practice challenges.",
+      "judge: The company location is given as 'Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205' but the FACT PACK only states 'Small team, New York' without this specific address."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Colm Fitzgerald",
+    "first_name": "Colm",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "unresolved",
+    "score": 0,
+    "forbidden_facts": {},
+    "npi": "",
+    "signals": [
+      "no NPPES record for this name"
+    ],
+    "allowed_facts": {},
+    "tier_permissions": [],
+    "registry_verified": false,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
