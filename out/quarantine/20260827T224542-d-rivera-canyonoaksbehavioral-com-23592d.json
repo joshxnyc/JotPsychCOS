@@ -1,0 +1,65 @@
+{
+  "draft": {
+    "to": "d.rivera@canyonoaksbehavioral.com",
+    "subject": "Notes that hold up when the payer asks",
+    "body": "Daniel,\n\nYou tried JotPsych once. If the timing wasn't right then, one thing has changed: we now scan every note against 150+ payer rules before you close it.\n\nBehavioral health documentation gets audited more than most specialties. JotPsych flags what's missing, surfaces the CPT and ICD codes that fit the session, and builds notes that answer the questions payers actually ask.\n\nWorks with any EHR. Or replaces it entirely. No migration required \u2014 add it to the system you have today and you're up in five minutes.\n\nIf audit risk or denials are on your mind, I can show you how the documentation check works. Worth a second look?\n\nNathan\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "JotPsych scans every note against 150+ payer rules",
+      "JotPsych flags what's missing in documentation",
+      "JotPsych surfaces CPT and ICD codes that fit the session",
+      "JotPsych builds notes that answer payer questions",
+      "JotPsych works with any EHR or replaces it entirely",
+      "No migration required",
+      "Can be added to existing system",
+      "Setup takes five minutes"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The draft states 'Behavioral health documentation gets audited more than most specialties' \u2014 this is presented as a fact but does not appear in the FACT PACK.",
+      "judge: The draft implies Daniel Rivera is a clinician who writes documentation subject to payer audits, but his allowed specialty is 'Behavior Analyst' \u2014 a role that typically does not bill insurance for psychotherapy sessions or produce the kind of clinical documentation JotPsych is describing. The messaging assumes clinical documentation practices not established in the RECIPIENT RECORD.",
+      "judge: The sign-off 'Nathan' without a last name is inconsistent with the company leadership facts. The FACT PACK identifies 'Nathan Peereboom (CEO)' \u2014 using only a first name in a business email from a CEO creates ambiguity about whether this is actually from the named executive."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Daniel Rivera",
+    "first_name": "Daniel",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "probable",
+    "score": 50,
+    "forbidden_facts": {
+      "city": "GARDEN GROVE",
+      "practice_name": "DANIEL RIVERA"
+    },
+    "npi": "1467913244",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 behavioral-health taxonomy",
+      "+15 email local-part matches the name",
+      "+10 practice email domain, not free-mail",
+      "+10 mobile area code agrees with practice state (CA)",
+      "-40 14 plausible candidates, not one"
+    ],
+    "allowed_facts": {
+      "specialty": "Behavior Analyst",
+      "state": "CA"
+    },
+    "tier_permissions": [
+      "specialty",
+      "state"
+    ],
+    "registry_verified": true,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: 1 message staged, nothing needs you
+Date: Thu, 27 Aug 2026 22:46:15 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============0938011215083653234=="
+
+--===============0938011215083653234==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 9 =C2=B7 27 Aug 2026 22:46 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    1  messages staged
+    2  drafts stopped by quality control
+   34  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Notes that hold up when the payer asks"
+    judge: The draft states 'Behavioral health documentation gets audited mor=
+e than most specialties' =E2=80=94 this is presented as a fact but does not a=
+ppear in the FACT PACK.
+
+  "Notes that hold up when the payer asks"
+    judge: The draft states 'you signed up for JotPsych' in the footer, but t=
+he RECIPIENT RECORD shows registry_verified: false and score: 25 (low confide=
+nce). The known_relationship says 'they signed up for JotPsych at some point'=
+ but this is contradicted by the signals showing '-40 18 plausible candidates=
+, not one' and the forbidden_facts being separated from allowed_facts (which =
+is empty). This is not established fact.
+
+--------------------------------------------------------------
+
+1 approved message is staged in out/outbox/ and NOT delivered to anyone.
+Nothing reaches a clinician until SEND_TO_CLINICIANS is turned on.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============0938011215083653234==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 9 =C2=B7 27 Aug 2026 22:46 UTC</p><p style=3D'margin:0 0 14p=
+x'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest wer=
+e still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detect=
+ed<br>    1  messages staged<br>    2  drafts stopped by quality control<br> =
+  34  clinicians deliberately left alone<br>    0  waiting for you (~0 minute=
+s)</p><p style=3D'margin:0 0 14px'>------------------------------------------=
+--------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING</=
+p><p style=3D'margin:0 0 14px'>  &quot;Notes that hold up when the payer asks=
+&quot;<br>    judge: The draft states &#x27;Behavioral health documentation g=
+ets audited more than most specialties&#x27; =E2=80=94 this is presented as a=
+ fact but does not appear in the FACT PACK.</p><p style=3D'margin:0 0 14px'> =
+ &quot;Notes that hold up when the payer asks&quot;<br>    judge: The draft s=
+tates &#x27;you signed up for JotPsych&#x27; in the footer, but the RECIPIENT=
+ RECORD shows registry_verified: false and score: 25 (low confidence). The kn=
+own_relationship says &#x27;they signed up for JotPsych at some point&#x27; b=
+ut this is contradicted by the signals showing &#x27;-40 18 plausible candida=
+tes, not one&#x27; and the forbidden_facts being separated from allowed_facts=
+ (which is empty). This is not established fact.</p><p style=3D'margin:0 0 14=
+px'>--------------------------------------------------------------</p><p styl=
+e=3D'margin:0 0 14px'>1 approved message is staged in out/outbox/ and NOT del=
+ivered to anyone.<br>Nothing reaches a clinician until SEND_TO_CLINICIANS is =
+turned on.</p><p style=3D'margin:0 0 14px'>----------------------------------=
+----------------------------</p><p style=3D'margin:0 0 14px'>This workspace r=
+uns on sample data: clinician and peer details are<br>invented, and nothing i=
+n it is delivered to any real clinician.</p><p style=3D'margin:0 0 14px'>Full=
+ report: https://joshxnyc.github.io/JotPsychCOS/<br>Change what it says or wh=
+en: config/brand.md and config/guardrails.yaml.</p><p style=3D'margin:0 0 14p=
+x'>=E2=80=94 Second Window</p></div>
+
+--===============0938011215083653234==--

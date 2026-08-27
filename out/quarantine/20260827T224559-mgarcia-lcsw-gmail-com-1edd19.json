@@ -1,0 +1,57 @@
+{
+  "draft": {
+    "to": "mgarcia.lcsw@gmail.com",
+    "subject": "Notes that hold up when the payer asks",
+    "body": "Maria,\n\nMost denials happen weeks after the session, when an auditor decides the note doesn't support the code.\n\nJotPsych checks every note against 150+ payer rules before you submit it. It flags audit risk in the documentation itself \u2014 missing elements, weak support for the CPT code, misalignment with your contracted rates.\n\nThe system scans for the things auditors look for. You fix it before it becomes a denial.\n\nWorks with any EHR. Or replaces it entirely. Add JotPsych to the system you have today: no migration, up in 5 minutes.\n\nWorth another look?\n\nLiam\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "audit",
+    "claims": [
+      "Most denials happen weeks after the session, when an auditor decides the note doesn't support the code",
+      "JotPsych checks every note against 150+ payer rules",
+      "It flags audit risk in the documentation itself",
+      "The system scans for the things auditors look for",
+      "Works with any EHR. Or replaces it entirely",
+      "Add JotPsych to the system you have today: no migration, up in 5 minutes"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The draft states 'you signed up for JotPsych' in the footer, but the RECIPIENT RECORD shows registry_verified: false and score: 25 (low confidence). The known_relationship says 'they signed up for JotPsych at some point' but this is contradicted by the signals showing '-40 18 plausible candidates, not one' and the forbidden_facts being separated from allowed_facts (which is empty). This is not established fact.",
+      "judge: The draft implies knowledge of the recipient's contracted rates ('misalignment with your contracted rates') when there is no information in the RECIPIENT RECORD about this person having contracts or being a current user.",
+      "judge: The phrase 'Worth another look?' implies prior engagement or evaluation that is not established in the RECIPIENT RECORD beyond uncertain signup data."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Maria Garcia",
+    "first_name": "Maria",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "unresolved",
+    "score": 25,
+    "forbidden_facts": {
+      "specialty": "Behavior Analyst",
+      "state": "CA",
+      "city": "BAKERSFIELD",
+      "practice_name": "MARIA GARCIA"
+    },
+    "npi": "1508521725",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 behavioral-health taxonomy",
+      "+10 mobile area code agrees with practice state (CA)",
+      "-40 18 plausible candidates, not one"
+    ],
+    "allowed_facts": {},
+    "tier_permissions": [],
+    "registry_verified": false,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
