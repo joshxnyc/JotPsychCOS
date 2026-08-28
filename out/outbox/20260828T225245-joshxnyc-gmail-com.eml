@@ -1,0 +1,103 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Fri, 28 Aug 2026 22:52:45 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============0315150465558936101=="
+
+--===============0315150465558936101==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 10 =C2=B7 28 Aug 2026 22:52 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    3  drafts stopped by quality control
+   34  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Five minutes to see if it fits"
+    judge: The draft states a fact about the recipient that is not in the REC=
+IPIENT RECORD: 'Most clinicians who try JotPsych once and don't buy tell us t=
+he same thing: they weren't sure it would work with what they already have in=
+ place.' The RECIPIENT RECORD only establishes that Jennifer 'signed up for J=
+otPsych at some point and did not become a paying customer.' It does NOT esta=
+blish that she tried the product, nor does it establish her reason for not bu=
+ying. This is fabricated motivation attributed to the recipient.
+
+  "The documentation time comes back"
+    judge: The subject line 'The documentation time comes back' makes an unqu=
+alified promise about a clinical workflow outcome that is not stated as fact =
+in the FACT PACK. The FACT PACK says 'Time back from documentation' under FIT=
+S, but does not authorize a declarative promise that time 'comes back.'
+
+  "The documentation time comes back"
+    judge: The draft states as fact that Lisa tried JotPsych: 'Most clinician=
+s who try JotPsych once and don't buy tell us the same thing.' The RECIPIENT =
+RECORD only establishes that she 'signed up for JotPsych at some point and di=
+d not become a paying customer.' Signing up does not mean she tried the produ=
+ct=E2=80=94she may have only created an account.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============0315150465558936101==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 10 =C2=B7 28 Aug 2026 22:52 UTC</p><p style=3D'margin:0 0 14=
+px'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest we=
+re still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detec=
+ted<br>    0  messages staged<br>    3  drafts stopped by quality control<br>=
+   34  clinicians deliberately left alone<br>    0  waiting for you (~0 minut=
+es)</p><p style=3D'margin:0 0 14px'>-----------------------------------------=
+---------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING<=
+/p><p style=3D'margin:0 0 14px'>  &quot;Five minutes to see if it fits&quot;<=
+br>    judge: The draft states a fact about the recipient that is not in the =
+RECIPIENT RECORD: &#x27;Most clinicians who try JotPsych once and don&#x27;t =
+buy tell us the same thing: they weren&#x27;t sure it would work with what th=
+ey already have in place.&#x27; The RECIPIENT RECORD only establishes that Je=
+nnifer &#x27;signed up for JotPsych at some point and did not become a paying=
+ customer.&#x27; It does NOT establish that she tried the product, nor does i=
+t establish her reason for not buying. This is fabricated motivation attribut=
+ed to the recipient.</p><p style=3D'margin:0 0 14px'>  &quot;The documentatio=
+n time comes back&quot;<br>    judge: The subject line &#x27;The documentatio=
+n time comes back&#x27; makes an unqualified promise about a clinical workflo=
+w outcome that is not stated as fact in the FACT PACK. The FACT PACK says &#x=
+27;Time back from documentation&#x27; under FITS, but does not authorize a de=
+clarative promise that time &#x27;comes back.&#x27;</p><p style=3D'margin:0 0=
+ 14px'>  &quot;The documentation time comes back&quot;<br>    judge: The draf=
+t states as fact that Lisa tried JotPsych: &#x27;Most clinicians who try JotP=
+sych once and don&#x27;t buy tell us the same thing.&#x27; The RECIPIENT RECO=
+RD only establishes that she &#x27;signed up for JotPsych at some point and d=
+id not become a paying customer.&#x27; Signing up does not mean she tried the=
+ product=E2=80=94she may have only created an account.</p><p style=3D'margin:=
+0 0 14px'>--------------------------------------------------------------</p><=
+p style=3D'margin:0 0 14px'>This workspace runs on sample data: clinician and=
+ peer details are<br>invented, and nothing in it is delivered to any real cli=
+nician.</p><p style=3D'margin:0 0 14px'>Full report: https://joshxnyc.github.=
+io/JotPsychCOS/<br>Change what it says or when: config/brand.md and config/gu=
+ardrails.yaml.</p><p style=3D'margin:0 0 14px'>=E2=80=94 Second Window</p></d=
+iv>
+
+--===============0315150465558936101==--
