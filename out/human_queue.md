@@ -1,6 +1,6 @@
 # The human hour
 
-_Generated 2026-08-28 22:52 UTC · run 10_
+_Generated 2026-08-31 19:22 UTC · run 11_
 
 These are the only clinicians this cycle where a person beats a message.
 Each one hit the strongest class of signal **and** has a consenting peer

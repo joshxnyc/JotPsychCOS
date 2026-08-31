@@ -1,0 +1,55 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Mon, 31 Aug 2026 19:22:13 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============5840378890465546407=="
+
+--===============5840378890465546407==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 11 =C2=B7 31 Aug 2026 19:22 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    0  drafts stopped by quality control
+   37  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============5840378890465546407==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 11 =C2=B7 31 Aug 2026 19:22 UTC</p><p style=3D'margin:0 0 14=
+px'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest we=
+re still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detec=
+ted<br>    0  messages staged<br>    0  drafts stopped by quality control<br>=
+   37  clinicians deliberately left alone<br>    0  waiting for you (~0 minut=
+es)</p><p style=3D'margin:0 0 14px'>-----------------------------------------=
+---------------------</p><p style=3D'margin:0 0 14px'>This workspace runs on =
+sample data: clinician and peer details are<br>invented, and nothing in it is=
+ delivered to any real clinician.</p><p style=3D'margin:0 0 14px'>Full report=
+: https://joshxnyc.github.io/JotPsychCOS/<br>Change what it says or when: con=
+fig/brand.md and config/guardrails.yaml.</p><p style=3D'margin:0 0 14px'>=E2=
+=80=94 Second Window</p></div>
+
+--===============5840378890465546407==--
