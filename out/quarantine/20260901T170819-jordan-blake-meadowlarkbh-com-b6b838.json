@@ -1,0 +1,72 @@
+{
+  "draft": {
+    "to": "jordan.blake@meadowlarkbh.com",
+    "subject": "Five minutes to set up, zero migration",
+    "body": "Jordan,\n\nDocumentation adds up fast when you're working with clients all day.\n\nJotPsych writes structured behavioral health notes from your session audio \u2014 on any device, in real time. Pre-built templates, or upload your own. No EHR change required.\n\nYou can add it to whatever system you use now. No migration, no IT project, up in five minutes. When you're ready, it can become the whole practice: notes, scheduling, billing, e-prescribing, telehealth.\n\nOver 10,000 behavioral health practices use it. 2.5M+ notes written. HIPAA compliant.\n\nIf you want to see it again, I'll set up a quick walkthrough. Or you can start a trial directly at jotpsych.com.\n\nThanks,\n\n[Name]\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "time_back",
+    "claims": [
+      "JotPsych writes structured behavioral health notes from session audio",
+      "Works on any device",
+      "Works in real time",
+      "Has pre-built templates",
+      "Allows users to upload their own templates",
+      "No EHR change required to add JotPsych",
+      "No migration needed",
+      "Can be set up in five minutes",
+      "Can become the whole practice when ready",
+      "Includes notes, scheduling, billing, e-prescribing, telehealth",
+      "Over 10,000 behavioral health practices use JotPsych",
+      "2.5M+ notes written",
+      "HIPAA compliant"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "unfilled placeholder / template artifact left in the draft",
+      "judge: The email describes JotPsych primarily as a documentation/note-taking tool ('JotPsych writes structured behavioral health notes from your session audio') when the FACT PACK explicitly states: 'It is no longer positioned as a scribe bolted onto someone else's EHR. It is the EHR. Writing to a clinician as if it were only a note-taker is wrong.'",
+      "judge: The email omits JotPsych's core differentiator entirely. The FACT PACK states the current positioning is 'the behavioral health EHR that defends you from insurance companies' with '150+ payer rules' checked per note and claim. None of this appears in the draft.",
+      "judge: The recipient's specialty is 'Behavior Technician' (from allowed_facts), not a prescriber or licensed clinician who would typically manage 'clients,' use an EHR, or handle e-prescribing. The email assumes clinical responsibilities that may not match this role.",
+      "judge: The phrase 'working with clients all day' makes an assumption about the recipient's practice pattern that is not in the RECIPIENT RECORD."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Jordan Blake",
+    "first_name": "Jordan",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "probable",
+    "score": 57,
+    "forbidden_facts": {
+      "city": "ELK GROVE",
+      "practice_name": "JORDAN BLAKE"
+    },
+    "npi": "1396308086",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 behavioral-health taxonomy",
+      "+15 email local-part matches the name",
+      "+10 practice email domain, not free-mail",
+      "-8 2 plausible candidates, not one",
+      "-15 tied top candidates in different states"
+    ],
+    "allowed_facts": {
+      "specialty": "Behavior Technician",
+      "state": "CA"
+    },
+    "tier_permissions": [
+      "specialty",
+      "state"
+    ],
+    "registry_verified": true,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
