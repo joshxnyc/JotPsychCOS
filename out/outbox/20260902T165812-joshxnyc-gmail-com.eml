@@ -1,0 +1,71 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Wed, 02 Sep 2026 16:58:12 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============5635789722783805854=="
+
+--===============5635789722783805854==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 13 =C2=B7 02 Sep 2026 16:58 UTC
+
+Looked at 38 clinicians. Re-read 38 from the federal registry; the rest were =
+still fresh.
+
+    0  practice changes detected
+    0  messages staged
+    1  drafts stopped by quality control
+   36  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "The time you spend on notes"
+    judge: The draft states 'Most clinicians we talk to spend 90=E2=80=93120 =
+minutes a day on documentation' as a factual claim. This specific time range =
+does not appear in the FACT PACK and constitutes an unverified assertion abou=
+t clinician behavior.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============5635789722783805854==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 13 =C2=B7 02 Sep 2026 16:58 UTC</p><p style=3D'margin:0 0 14=
+px'>Looked at 38 clinicians. Re-read 38 from the federal registry; the rest w=
+ere still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes dete=
+cted<br>    0  messages staged<br>    1  drafts stopped by quality control<br=
+>   36  clinicians deliberately left alone<br>    0  waiting for you (~0 minu=
+tes)</p><p style=3D'margin:0 0 14px'>----------------------------------------=
+----------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING=
+</p><p style=3D'margin:0 0 14px'>  &quot;The time you spend on notes&quot;<br=
+>    judge: The draft states &#x27;Most clinicians we talk to spend 90=E2=80=
+=93120 minutes a day on documentation&#x27; as a factual claim. This specific=
+ time range does not appear in the FACT PACK and constitutes an unverified as=
+sertion about clinician behavior.</p><p style=3D'margin:0 0 14px'>-----------=
+---------------------------------------------------</p><p style=3D'margin:0 0=
+ 14px'>This workspace runs on sample data: clinician and peer details are<br>=
+invented, and nothing in it is delivered to any real clinician.</p><p style=
+=3D'margin:0 0 14px'>Full report: https://joshxnyc.github.io/JotPsychCOS/<br>=
+Change what it says or when: config/brand.md and config/guardrails.yaml.</p><=
+p style=3D'margin:0 0 14px'>=E2=80=94 Second Window</p></div>
+
+--===============5635789722783805854==--

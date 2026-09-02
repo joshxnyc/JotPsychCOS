@@ -1,7 +1,7 @@
 {
-  "run_count": 12,
+  "run_count": 13,
   "first_run": "2026-08-18T20:57:06.731188+00:00",
-  "last_run": "2026-09-01T17:08:04.458532+00:00",
+  "last_run": "2026-09-02T16:57:56.980682+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -21,7 +21,7 @@
     "time_back": {
       "sent": 0,
       "replied": 0,
-      "blocked": 4
+      "blocked": 5
     }
   },
   "notes": [],
@@ -63,7 +63,7 @@
         "last_updated": "2026-06-15",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.912214+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "fe700ae60016": {
       "name": "Maria Garcia",
@@ -102,7 +102,7 @@
         "last_updated": "2021-11-02",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "19ef84aecb5c": {
       "name": "Lisa Johnson",
@@ -141,7 +141,7 @@
         "last_updated": "2012-01-06",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.912214+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "55319365c2df": {
       "name": "Sarah Goldberg",
@@ -180,7 +180,7 @@
         "last_updated": "2015-02-19",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "af4a8f4ddbb3": {
       "name": "Daniel Rivera",
@@ -219,7 +219,7 @@
         "last_updated": "2019-03-26",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "e0f36a8ceef4": {
       "name": "Marcus Delgado",
@@ -258,7 +258,7 @@
         "last_updated": "2024-07-23",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "15c5c1861afb": {
       "name": "Jennifer Nguyen",
@@ -297,7 +297,7 @@
         "last_updated": "2019-03-21",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.912214+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "3a8f99227848": {
       "name": "David Cohen",
@@ -337,7 +337,7 @@
         "last_updated": "2024-01-29",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.912214+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "ab4049cd39fc": {
       "name": "Michael Chen",
@@ -375,7 +375,7 @@
         "last_updated": "2026-06-15",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "528c6335794a": {
       "name": "Maria Garcia",
@@ -412,7 +412,7 @@
         "last_updated": "2021-11-02",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "d0acc777b443": {
       "name": "Daniel Rivera",
@@ -450,7 +450,7 @@
         "last_updated": "2019-03-26",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "d1e9aa8166af": {
       "name": "Sarah Goldberg",
@@ -488,7 +488,7 @@
         "last_updated": "2015-02-19",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "525b41f206ae": {
       "name": "Jennifer Nguyen",
@@ -525,7 +525,7 @@
         "last_updated": "2019-03-21",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "abd5782a5b72": {
       "name": "Thaddeus Okonkwo-Vance",
@@ -544,7 +544,7 @@
       "mobile_state": "TX",
       "first": "Thaddeus",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "9f71be493610": {
       "name": "Ingrid Halvorsen-Reyes",
@@ -563,7 +563,7 @@
       "mobile_state": "OR",
       "first": "Ingrid",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "5142d0b8b578": {
       "name": "Cassius Brightwater",
@@ -582,7 +582,7 @@
       "mobile_state": "CO",
       "first": "Cassius",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "068067bd51bc": {
       "name": "Odalys Fernandez-Kwan",
@@ -601,7 +601,7 @@
       "mobile_state": "FL",
       "first": "Odalys",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "6fc9ad566634": {
       "name": "Zephyr Nakamura-Ostrowski",
@@ -620,7 +620,7 @@
       "mobile_state": "WA",
       "first": "Zephyr",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "67a326797b8d": {
       "name": "Marisol Vantongeren",
@@ -639,7 +639,7 @@
       "mobile_state": "CA",
       "first": "Marisol",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "16840369ea0c": {
       "name": "Bartholomew Quintanilla",
@@ -658,7 +658,7 @@
       "mobile_state": "TX",
       "first": "Bartholomew",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "f315de559c48": {
       "name": "Anneliese Sorokin",
@@ -677,7 +677,7 @@
       "mobile_state": "IL",
       "first": "Anneliese",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "81be1545b9cc": {
       "name": "Chen, Michael",
@@ -716,7 +716,7 @@
         "last_updated": "2026-06-15",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "76862dd33866": {
       "name": "R. Patel",
@@ -735,7 +735,7 @@
       "mobile_state": "NJ",
       "first": "R.",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "cef1d963df80": {
       "name": "K. Williams",
@@ -770,7 +770,7 @@
         "last_updated": "2018-09-12",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "0d99fce07bda": {
       "name": "Jordan Blake",
@@ -809,7 +809,7 @@
         "last_updated": "2019-04-17",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.912214+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "0aab33fd9faf": {
       "name": "Amara Osei",
@@ -828,7 +828,7 @@
       "mobile_state": "GA",
       "first": "Amara",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "90a78c7fd4a7": {
       "name": "Tomas Lindqvist",
@@ -847,7 +847,7 @@
       "mobile_state": "CA",
       "first": "Tomas",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "a154f7d0e704": {
       "name": "Rebecca Sterling",
@@ -884,7 +884,7 @@
         "last_updated": "2007-07-08",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "417074ba96c3": {
       "name": "Hyun-Woo Park",
@@ -903,7 +903,7 @@
       "mobile_state": "WA",
       "first": "Hyun-Woo",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "d7850ecf9582": {
       "name": "Fatima Al-Rashid",
@@ -922,7 +922,7 @@
       "mobile_state": "AZ",
       "first": "Fatima",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "da9ae0d3ea4f": {
       "name": "Gabriel Santos",
@@ -960,7 +960,7 @@
         "last_updated": "2024-10-04",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "5bb316f5ea77": {
       "name": "Nadia Petrov",
@@ -979,7 +979,7 @@
       "mobile_state": "NV",
       "first": "Nadia",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "4a1355d9dcee": {
       "name": "Elias Mbeki",
@@ -998,7 +998,7 @@
       "mobile_state": "GA",
       "first": "Elias",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "7a717a4e6354": {
       "name": "Yuki Tanaka",
@@ -1038,7 +1038,7 @@
         "last_updated": "2015-06-02",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "ee1e332cc2c6": {
       "name": "Colm Fitzgerald",
@@ -1057,7 +1057,7 @@
       "mobile_state": "MA",
       "first": "Colm",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "cc6572038101": {
       "name": "Sofia Duarte",
@@ -1095,7 +1095,7 @@
         "last_updated": "2026-04-07",
         "source": "NPPES"
       },
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     },
     "a0eaa7b5a560": {
       "name": "Leilani Kahananui",
@@ -1114,17 +1114,17 @@
       "mobile_state": "HI",
       "first": "Leilani",
       "registry": {},
-      "resolved_at": "2026-08-18T20:57:06.740297+00:00"
+      "resolved_at": "2026-09-02T16:57:59.063221+00:00"
     }
   },
   "resolve_coverage": {
     "list_size": 38,
-    "reread_this_run": 0,
+    "reread_this_run": 38,
     "budget": 400,
     "ttl_days": 14,
     "runs_for_full_sweep": 1,
     "profiled": 37,
-    "reused": 38
+    "reused": 0
   },
   "resolution_scores": {
     "522f104b8680": {
