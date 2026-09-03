@@ -1,7 +1,7 @@
 {
-  "run_count": 13,
+  "run_count": 14,
   "first_run": "2026-08-18T20:57:06.731188+00:00",
-  "last_run": "2026-09-02T16:57:56.980682+00:00",
+  "last_run": "2026-09-03T16:54:19.270615+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -21,7 +21,7 @@
     "time_back": {
       "sent": 0,
       "replied": 0,
-      "blocked": 5
+      "blocked": 6
     }
   },
   "notes": [],
@@ -1119,12 +1119,12 @@
   },
   "resolve_coverage": {
     "list_size": 38,
-    "reread_this_run": 38,
+    "reread_this_run": 0,
     "budget": 400,
     "ttl_days": 14,
     "runs_for_full_sweep": 1,
     "profiled": 37,
-    "reused": 0
+    "reused": 38
   },
   "resolution_scores": {
     "522f104b8680": {
