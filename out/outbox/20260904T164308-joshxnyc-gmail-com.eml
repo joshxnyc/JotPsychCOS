@@ -1,0 +1,74 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Fri, 04 Sep 2026 16:43:08 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============0749005615753510845=="
+
+--===============0749005615753510845==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 15 =C2=B7 04 Sep 2026 16:43 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    1  drafts stopped by quality control
+   36  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Five minutes to see if it fits"
+    judge: The email states as fact why this specific person 'tried JotPsych =
+once and walk away' =E2=80=94 claiming knowledge of their behavior and motiva=
+tions that is not in the RECIPIENT RECORD. The record only says 'they signed =
+up for JotPsych at some point and did not become a paying customer.' It does =
+not establish that they tried it, walked away, or why.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============0749005615753510845==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 15 =C2=B7 04 Sep 2026 16:43 UTC</p><p style=3D'margin:0 0 14=
+px'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest we=
+re still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detec=
+ted<br>    0  messages staged<br>    1  drafts stopped by quality control<br>=
+   36  clinicians deliberately left alone<br>    0  waiting for you (~0 minut=
+es)</p><p style=3D'margin:0 0 14px'>-----------------------------------------=
+---------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING<=
+/p><p style=3D'margin:0 0 14px'>  &quot;Five minutes to see if it fits&quot;<=
+br>    judge: The email states as fact why this specific person &#x27;tried J=
+otPsych once and walk away&#x27; =E2=80=94 claiming knowledge of their behavi=
+or and motivations that is not in the RECIPIENT RECORD. The record only says =
+&#x27;they signed up for JotPsych at some point and did not become a paying c=
+ustomer.&#x27; It does not establish that they tried it, walked away, or why.=
+</p><p style=3D'margin:0 0 14px'>--------------------------------------------=
+------------------</p><p style=3D'margin:0 0 14px'>This workspace runs on sam=
+ple data: clinician and peer details are<br>invented, and nothing in it is de=
+livered to any real clinician.</p><p style=3D'margin:0 0 14px'>Full report: h=
+ttps://joshxnyc.github.io/JotPsychCOS/<br>Change what it says or when: config=
+/brand.md and config/guardrails.yaml.</p><p style=3D'margin:0 0 14px'>=E2=80=
+=94 Second Window</p></div>
+
+--===============0749005615753510845==--
