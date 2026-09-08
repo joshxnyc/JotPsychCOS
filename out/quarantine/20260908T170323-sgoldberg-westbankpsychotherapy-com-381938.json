@@ -1,0 +1,60 @@
+{
+  "draft": {
+    "to": "sgoldberg@westbankpsychotherapy.com",
+    "subject": "Five minutes to see if it fits",
+    "body": "Sarah,\n\nMost clinicians who try JotPsych once and don't buy tell us the same thing: they weren't sure it would work with what they already have in place.\n\nIt does. JotPsych works with any EHR. No migration, up in five minutes. You can run it beside the system you use today and switch on your timeline. Or replace it entirely when you're ready.\n\nNotes, billing, e-prescribing, telehealth, and 150+ payer rules checked on every note and claim. One system that follows every dollar from the visit to the bank account.\n\nIf you want to see how it handles your templates and your workflow, I can walk you through it in fifteen minutes.\n\nLet me know.\n\nMark\nJotPsych\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "time_back",
+    "claims": [
+      "JotPsych works with any EHR",
+      "No migration required",
+      "Up in five minutes",
+      "Can run beside current system",
+      "Can replace EHR entirely",
+      "Includes notes, billing, e-prescribing, telehealth",
+      "150+ payer rules checked per note and claim",
+      "One system that follows every dollar from visit to bank account"
+    ],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "judge: The opening sentence states a fact about the recipient's behavior that is not in the RECIPIENT RECORD: 'Most clinicians who try JotPsych once and don't buy tell us the same thing: they weren't sure it would work with what they already have in place.' The RECIPIENT RECORD only establishes that Sarah 'signed up for JotPsych at some point and did not become a paying customer.' It does not establish that she tried the product, nor does it establish her reason for not buying.",
+      "judge: The phrase 'If you want to see how it handles your templates and your workflow' implies knowledge of the recipient having templates and a specific workflow. The RECIPIENT RECORD contains no information about her templates or workflow, and the forbidden_facts section explicitly prohibits mentioning specialty, practice details, or other specifics that would justify this assumption."
+    ],
+    "warnings": []
+  },
+  "context": {
+    "name": "Sarah Goldberg",
+    "first_name": "Sarah",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "unresolved",
+    "score": 25,
+    "forbidden_facts": {
+      "specialty": "Social Worker, Clinical",
+      "state": "IL",
+      "city": "CHICAGO",
+      "practice_name": "SARAH GOLDBERG"
+    },
+    "npi": "1538551189",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 behavioral-health taxonomy",
+      "+15 email local-part matches the name",
+      "+10 practice email domain, not free-mail",
+      "-40 7 plausible candidates, not one",
+      "-15 tied top candidates in different states"
+    ],
+    "allowed_facts": {},
+    "tier_permissions": [],
+    "registry_verified": false,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}

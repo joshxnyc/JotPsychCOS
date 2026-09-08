@@ -1,0 +1,98 @@
+From: Joshua's JotPsych Case <onboarding@resend.dev>
+To: joshxnyc@gmail.com
+Subject: Quiet cycle =?utf-8?b?4oCU?= nothing worth sending
+Date: Tue, 08 Sep 2026 17:03:50 +0000
+X-Machine-Simulated: DRY_RUN
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============7248922371561810514=="
+
+--===============7248922371561810514==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Run 17 =C2=B7 08 Sep 2026 17:03 UTC
+
+Looked at 38 clinicians. Re-read 0 from the federal registry; the rest were s=
+till fresh.
+
+    0  practice changes detected
+    0  messages staged
+    3  drafts stopped by quality control
+   33  clinicians deliberately left alone
+    0  waiting for you (~0 minutes)
+
+--------------------------------------------------------------
+
+STOPPED BEFORE SENDING
+
+  "Five minutes to see if it fits"
+    judge: The opening sentence states a fact about the recipient's behavior =
+that is not in the RECIPIENT RECORD: 'Most clinicians who try JotPsych once a=
+nd don't buy tell us the same thing: they weren't sure it would work with wha=
+t they already have in place.' The RECIPIENT RECORD only establishes that Sar=
+ah 'signed up for JotPsych at some point and did not become a paying customer=
+.' It does not establish that she tried the product, nor does it establish he=
+r reason for not buying.
+
+  "The documentation time comes back"
+    judge: The draft states as fact that the recipient tried JotPsych: 'Most =
+clinicians who try JotPsych once and don't buy tell us the same thing'. The R=
+ECIPIENT RECORD only establishes that they 'signed up for JotPsych at some po=
+int'=E2=80=94signing up does not mean they tried the product or used it.
+
+  "The time you spend writing notes"
+    judge: The draft states a clinical/time fact not in the FACT PACK: 'Most =
+behavioral health clinicians spend 90=E2=80=93120 minutes a day on documentat=
+ion.' This specific time range does not appear in the provided facts.
+
+--------------------------------------------------------------
+
+This workspace runs on sample data: clinician and peer details are
+invented, and nothing in it is delivered to any real clinician.
+
+Full report: https://joshxnyc.github.io/JotPsychCOS/
+Change what it says or when: config/brand.md and config/guardrails.yaml.
+
+=E2=80=94 Second Window
+
+--===============7248922371561810514==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<div style=3D"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;f=
+ont-size:15px;line-height:1.6;color:#1a1f2e;max-width:560px"><p style=3D'marg=
+in:0 0 14px'>Run 17 =C2=B7 08 Sep 2026 17:03 UTC</p><p style=3D'margin:0 0 14=
+px'>Looked at 38 clinicians. Re-read 0 from the federal registry; the rest we=
+re still fresh.</p><p style=3D'margin:0 0 14px'>    0  practice changes detec=
+ted<br>    0  messages staged<br>    3  drafts stopped by quality control<br>=
+   33  clinicians deliberately left alone<br>    0  waiting for you (~0 minut=
+es)</p><p style=3D'margin:0 0 14px'>-----------------------------------------=
+---------------------</p><p style=3D'margin:0 0 14px'>STOPPED BEFORE SENDING<=
+/p><p style=3D'margin:0 0 14px'>  &quot;Five minutes to see if it fits&quot;<=
+br>    judge: The opening sentence states a fact about the recipient&#x27;s b=
+ehavior that is not in the RECIPIENT RECORD: &#x27;Most clinicians who try Jo=
+tPsych once and don&#x27;t buy tell us the same thing: they weren&#x27;t sure=
+ it would work with what they already have in place.&#x27; The RECIPIENT RECO=
+RD only establishes that Sarah &#x27;signed up for JotPsych at some point and=
+ did not become a paying customer.&#x27; It does not establish that she tried=
+ the product, nor does it establish her reason for not buying.</p><p style=3D=
+'margin:0 0 14px'>  &quot;The documentation time comes back&quot;<br>    judg=
+e: The draft states as fact that the recipient tried JotPsych: &#x27;Most cli=
+nicians who try JotPsych once and don&#x27;t buy tell us the same thing&#x27;=
+. The RECIPIENT RECORD only establishes that they &#x27;signed up for JotPsyc=
+h at some point&#x27;=E2=80=94signing up does not mean they tried the product=
+ or used it.</p><p style=3D'margin:0 0 14px'>  &quot;The time you spend writi=
+ng notes&quot;<br>    judge: The draft states a clinical/time fact not in the=
+ FACT PACK: &#x27;Most behavioral health clinicians spend 90=E2=80=93120 minu=
+tes a day on documentation.&#x27; This specific time range does not appear in=
+ the provided facts.</p><p style=3D'margin:0 0 14px'>------------------------=
+--------------------------------------</p><p style=3D'margin:0 0 14px'>This w=
+orkspace runs on sample data: clinician and peer details are<br>invented, and=
+ nothing in it is delivered to any real clinician.</p><p style=3D'margin:0 0 =
+14px'>Full report: https://joshxnyc.github.io/JotPsychCOS/<br>Change what it =
+says or when: config/brand.md and config/guardrails.yaml.</p><p style=3D'marg=
+in:0 0 14px'>=E2=80=94 Second Window</p></div>
+
+--===============7248922371561810514==--
