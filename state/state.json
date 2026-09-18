@@ -1,7 +1,7 @@
 {
-  "run_count": 24,
+  "run_count": 25,
   "first_run": "2026-08-18T20:57:06.731188+00:00",
-  "last_run": "2026-09-17T17:26:48.194386+00:00",
+  "last_run": "2026-09-18T16:55:14.962668+00:00",
   "angles": {
     "denials": {
       "sent": 3,
@@ -21,7 +21,7 @@
     "time_back": {
       "sent": 0,
       "replied": 0,
-      "blocked": 16
+      "blocked": 19
     }
   },
   "notes": [],
