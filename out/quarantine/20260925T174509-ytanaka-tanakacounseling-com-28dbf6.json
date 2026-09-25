@@ -1,0 +1,62 @@
+{
+  "draft": {
+    "to": "ytanaka@tanakacounseling.com",
+    "subject": "",
+    "body": "\n\n--\nYou are receiving this because you signed up for JotPsych.\nTo stop receiving these, reply with the word STOP.\nJotPsych, Brooklyn Navy Yard, Dock 72, 7th Floor, Brooklyn, NY 11205",
+    "angle": "time_back",
+    "claims": [],
+    "action": "keep_warm",
+    "channel": "email"
+  },
+  "verdict": {
+    "ok": false,
+    "failures": [
+      "empty subject",
+      "body too short (31 words)",
+      "judge: judge did not return a verdict (could not obtain JSON from the model \u2014 json_mode=True: 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}' | json_mode=False: 401: b'{\"error\":{\"message\":\"User not found.\",\"code\":401}}') \u2014 refusing to send an unreviewed draft"
+    ],
+    "warnings": [
+      "unsourced figure '72,' - not in fact pack",
+      "unsourced figure '11205' - not in fact pack"
+    ]
+  },
+  "context": {
+    "name": "Yuki Tanaka",
+    "first_name": "Yuki",
+    "known_relationship": "they signed up for JotPsych at some point and did not become a paying customer",
+    "tier": "verified",
+    "score": 107,
+    "forbidden_facts": {
+      "practice_name": "YUKI TANAKA"
+    },
+    "npi": "1518347848",
+    "signals": [
+      "+40 full name matches an individual NPI",
+      "+15 behavioral-health taxonomy",
+      "+15 email local-part matches the name",
+      "+10 practice email domain, not free-mail",
+      "+25 practice domain corroborated by the registry record",
+      "+10 mobile area code agrees with practice state (CA)",
+      "-8 2 plausible candidates, not one"
+    ],
+    "allowed_facts": {
+      "specialty": "Social Worker, Clinical",
+      "state": "CA",
+      "city": "NORTHRIDGE"
+    },
+    "tier_permissions": [
+      "specialty",
+      "state",
+      "city",
+      "practice_type"
+    ],
+    "registry_verified": true,
+    "trigger": null,
+    "peer": null,
+    "must_not_mention": [
+      "NPI",
+      "registry",
+      "records"
+    ]
+  }
+}
